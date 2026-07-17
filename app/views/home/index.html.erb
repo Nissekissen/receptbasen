@@ -1,0 +1,47 @@
+<section class="hero">
+    <div class="hero--overlay">
+        <%= image_tag(asset_path('hero.jpg'), alt: '') %>
+    </div>
+    <div class="hero--content">
+        <h1>Spara alla dina recept.<br>På <em>ett</em> ställe.</h1>
+        <%= form_with url: "/save-recipe", method: :post, class: "save-recipe" do |form| %>
+            <%= form.text_field :recipe, placeholder: "https://example.se/recept/kladdkaka", autocomplete: "off" %>
+            <%= form.submit "Spara recept", class: "btn btn--primary" %>
+        <% end %>
+    </div>
+</section>
+
+<section class="about">
+    <div class="about--inner">
+        <div class="about--image">
+            <%= image_tag(asset_path('hero.jpg'), alt: '') %>
+        </div>
+        <div class="about--content">
+            <h2>Från länk till lagat.</h2>
+            <p>Klistra in en länk till ditt favoritrecept så sparar vi det åt dig – ingredienser, steg och allt, samlat på ett ställe du faktiskt kommer ihåg var det är.</p>
+        </div>
+    </div>
+</section>
+
+<section class="how-it-works">
+    <div class="how-it-works--inner">
+        <h2>Så funkar det.</h2>
+        <div class="how-it-works--steps">
+            <div class="step">
+                <span class="step--number">01</span>
+                <h3>Klistra in länken</h3>
+                <p>Hitta ett recept du gillar var som helst på nätet och klistra in länken hos oss.</p>
+            </div>
+            <div class="step">
+                <span class="step--number">02</span>
+                <h3>Vi sparar det åt dig</h3>
+                <p>Ingredienser, steg och allt annat sparas automatiskt, redigerat och läsbart.</p>
+            </div>
+            <div class="step">
+                <span class="step--number">03</span>
+                <h3>Laga när du vill</h3>
+                <p>Hitta det igen när du faktiskt står i köket, utan att leta genom bokmärken.</p>
+            </div>
+        </div>
+    </div>
+</section>

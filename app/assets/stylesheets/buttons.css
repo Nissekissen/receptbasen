@@ -1,0 +1,41 @@
+.btn {
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 3px;
+    font-size: 13px;
+    text-decoration: none;
+    font-family: var(--font-mono);
+    letter-spacing: 0.03em;
+}
+
+.btn--primary {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-color-dark);
+}
+
+.btn--secondary.inverted {
+    background: none;
+    color: white;
+    border: 1px solid white;
+}
+
+.btn--secondary.inverted:hover {
+    background-color: var(--accent-transparent);
+    color: white;
+}
+
+
+.btn--secondary {
+    background: none;
+    color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+}
+.btn--secondary:hover {
+    background-color: var(--accent-color);
+    color: white;
+}
