@@ -7,6 +7,7 @@
     text-decoration: none;
     font-family: var(--font-mono);
     letter-spacing: 0.03em;
+    transition: 0.3s ease-in-out;
 }
 
 .btn--primary {
@@ -14,7 +15,7 @@
     color: white;
 }
 
-.btn-primary:hover {
+.btn--primary:hover {
     background-color: var(--accent-color-dark);
 }
 

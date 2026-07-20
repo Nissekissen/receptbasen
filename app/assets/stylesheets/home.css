@@ -1,6 +1,6 @@
 .hero {
     position: relative;
-    height: 100vh;
+    height: 90vh;
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -85,11 +85,13 @@ h1 em {
     background: var(--background-color);
     font-family: var(--font-sans);
     box-sizing: border-box;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .save-recipe input[type="submit"] {
     height: 100%;
     flex-shrink: 0;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 @media (max-width: 480px) {

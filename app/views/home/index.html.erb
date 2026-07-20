@@ -4,8 +4,8 @@
     </div>
     <div class="hero--content">
         <h1>Spara alla dina recept.<br>På <em>ett</em> ställe.</h1>
-        <%= form_with url: "/save-recipe", method: :post, class: "save-recipe" do |form| %>
-            <%= form.text_field :recipe, placeholder: "https://example.se/recept/kladdkaka", autocomplete: "off" %>
+        <%= form_with url: recipes_path, method: :post, class: "save-recipe" do |form| %>
+            <%= form.text_field :url, placeholder: "https://example.se/recept/kladdkaka", autocomplete: "off" %>
             <%= form.submit "Spara recept", class: "btn btn--primary" %>
         <% end %>
     </div>
