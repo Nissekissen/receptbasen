@@ -1,0 +1,68 @@
+class LlmParser < Parser
+  RESPONSE_SCHEMA = {
+    type: "object",
+    properties: {
+      is_recipe: { type: "boolean" },
+      title: { type: "string" },
+      description: { type: "string" },
+      image_url: { type: "string" },
+      prep_time: { type: "string" },
+      cook_time: { type: "string" },
+      servings: { type: "string" },
+      source_domain: { type: "string" },
+      ingredients: { type: "array", items: { type: "string" } },
+      steps: { type: "array", items: { type: "string" } },
+    },
+    required: ["is_recipe"],
+    additionalProperties: false
+  }
+
+  attr_reader :error
+
+  def initialize(html)
+    @html = html
+    @error = nil
+  end
+
+  def call
+    response = client.messages.create(
+      model: :"claude-haiku-4-5",
+      max_tokens: 2048,
+      output_config: { format: { type: "json_schema", schema: RESPONSE_SCHEMA } },
+      messages: [{ role: "user", content: prompt }]
+    )
+
+    result = JSON.parse(response.content.find { |b| b.type == :text }.text)
+
+    @error = "Not a recipe" unless result["is_recipe"]
+    @error = "No ingredients or steps" if result["ingredients"].blank? || result["steps"].blank?
+
+    return nil if @error.present?
+
+    normalize(result)
+  end
+
+  private
+
+  def client
+    @client ||= Anthropic::Client.new
+  end
+
+  def shrink_html
+    # Remove all script and style tags
+    @html = @html.gsub(/<script[^>]*>.*?<\/script>/m, "")
+    @html = @html.gsub(/<style[^>]*>.*?<\/style>/m, "")
+    @html
+  end
+
+  def prompt
+    <<~PROMPT
+    Extract the recipe from this page if one exists. If this page does not contain an actual recipe with ingredients and steps, set is_recipe to false and don't fabricate content.
+
+    Provide the ingredients and steps exactly as they appear in the HTML.
+    Provide prep time and cook time in the ISO 8601 format.
+
+    #{shrink_html}
+    PROMPT
+  end
+end

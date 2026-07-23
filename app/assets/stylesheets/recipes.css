@@ -60,6 +60,11 @@
     color: var(--accent-color-dark);
 }
 
+.recipe-loading--icon-svg {
+    width: 14px;
+    height: 14px;
+}
+
 .recipe-loading--step.is-failed .recipe-loading--icon {
     color: #8a8a86;
 }
