@@ -1,7 +1,28 @@
 class Recipe < ApplicationRecord
+  TRACKING_PARAMS = %w[
+    utm_source utm_medium utm_campaign utm_term utm_content utm_id
+    fbclid gclid msclkid mc_cid mc_eid ref igshid si
+  ].freeze
+
+  normalizes :source_url, with: ->(url) do
+    uri = URI.parse(url)
+    uri.host = uri.host.downcase.sub(/\Awww\./, "")
+    uri.path = uri.path.sub(%r{/+\z}, "")
+    uri.fragment = nil
+
+    if uri.query.present?
+      params = URI.decode_www_form(uri.query).reject { |key, _| TRACKING_PARAMS.include?(key) }
+      uri.query = params.empty? ? nil : URI.encode_www_form(params)
+    end
+
+    uri.to_s
+  rescue URI::InvalidURIError
+    url
+  end
+
   enum :status, { pending: 0, done: 1, failed: 2 }
 
-  validates :source_url, presence: true
+  validates :source_url, presence: true, uniqueness: true
 
   def published?
     published_at.present?

@@ -3,7 +3,6 @@ class ParseRecipeJob < ApplicationJob
 
   def perform(recipe_id)
     recipe = Recipe.find(recipe_id)
-    broadcast_step(recipe, :fetch, :active)
 
     html = fetch_page(recipe.source_url)
     broadcast_step(recipe, :fetch, :done)
@@ -36,9 +35,10 @@ class ParseRecipeJob < ApplicationJob
     end
 
     recipe.update!(result)
+    recipe.update!(status: :done)
 
-
-
+    sleep 0.5
+    broadcast_ready(recipe)
   end
 
   private
@@ -61,7 +61,17 @@ class ParseRecipeJob < ApplicationJob
     )
   end
 
+  def broadcast_ready(recipe)
+    Turbo::StreamsChannel.broadcast_update_to(
+      "recipe_#{recipe.id}_loading",
+      target: "recipe_card",
+      partial: "recipes/steps/ready",
+      locals: { recipe: recipe }
+    )
+  end
+
   def fetch_page(url)
+    p "url: #{url}"
     connection = Faraday.new do |f|
       f.use Faraday::FollowRedirects::Middleware
       f.options.timeout = 10

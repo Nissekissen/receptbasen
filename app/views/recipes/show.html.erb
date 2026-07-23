@@ -1,26 +1,7 @@
 <%= turbo_stream_from "recipe_#{@recipe.id}_loading" %>
 
-<% unless @recipe.published? %>
-
-  <section class="recipe-loading">
-      <div class="recipe-loading--card">
-          <p class="recipe-loading--title">Sparar ditt recept</p>
-          <p class="recipe-loading--url"><%= @recipe.source_url %></p>
-
-          <%= render "loading_error", error: "" %>
-
-          <% if @recipe.pending? %>
-          <%= render "loading_step", step: :fetch, state: :pending %>
-          <%= render "loading_step", step: :parse, state: :pending %>
-          <%= render "loading_step", step: :parse_ai, state: :hidden %>
-          <%= render "loading_step", step: :tags, state: :hidden %>
-        <% end %>
-
-          <div class="recipe-loading--actions">
-              <button type="button" class="btn btn--secondary">Avbryt</button>
-              <button type="button" class="btn btn--secondary" disabled>Nästa</button>
-          </div>
-      </div>
-  </section>
-
-<% end %>
+<section class="recipe-flow">
+    <div class="recipe-flow--card" id="recipe_card" data-controller="recipe-flow">
+      <%= render "recipes/steps/#{recipe_flow_step(@recipe)}", recipe: @recipe %>
+    </div>
+</section>

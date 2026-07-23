@@ -1,0 +1,13 @@
+<div data-recipe-flow-target="working">
+  <%= render "recipes/step_indicators", active: 0 %>
+
+  <p class="recipe-loading--title">Sparar ditt recept</p>
+  <p class="recipe-loading--url"><%= recipe.source_url %></p>
+
+  <%= render "recipes/loading_error", error: "" %>
+
+  <%= render "recipes/loading_step", step: :fetch, state: :active %>
+  <%= render "recipes/loading_step", step: :parse, state: :pending %>
+  <%= render "recipes/loading_step", step: :parse_ai, state: :hidden %>
+  <%= render "recipes/loading_step", step: :tags, state: :hidden %>
+</div>

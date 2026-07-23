@@ -1,0 +1,10 @@
+<div data-recipe-flow-target="failed">
+  <p class="recipe-loading--title">Det gick inte att spara receptet</p>
+  <p class="recipe-loading--url"><%= recipe.source_url %></p>
+
+  <div class="recipe-loading--error">
+    <p>Något gick fel när receptet analyserades. Prova gärna en annan länk.</p>
+  </div>
+
+  <%= render "recipes/actions" %>
+</div>

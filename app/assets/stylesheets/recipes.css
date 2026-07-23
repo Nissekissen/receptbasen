@@ -1,4 +1,4 @@
-.recipe-loading {
+.recipe-flow {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -6,7 +6,7 @@
     padding: 1.5rem;
 }
 
-.recipe-loading--card {
+.recipe-flow--card {
     width: 100%;
     max-width: 420px;
     background: white;
@@ -96,20 +96,118 @@
     to { transform: rotate(360deg); }
 }
 
-.recipe-loading--actions {
+.recipe-flow--actions {
     display: flex;
     gap: 10px;
     margin-top: 1.5rem;
 }
 
-.recipe-loading--actions .btn {
+.recipe-flow--actions .btn {
     flex: 1;
     text-align: center;
 }
 
-.recipe-loading--actions .btn:disabled {
+.recipe-flow--actions .btn:disabled {
     color: #b6b4ac;
     border-color: #ddd9cd;
     cursor: not-allowed;
     pointer-events: none;
+}
+
+.recipe-loading--error {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: #a94442;
+    background: #fbe9e7;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin: 0 0 1.25rem;
+}
+
+.recipe-preview--image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin: 0 0 1rem;
+}
+
+.recipe-preview--title {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 1.3rem;
+    color: var(--accent-color-dark);
+    margin: 0 0 0.5rem;
+}
+
+.recipe-preview--meta {
+    display: flex;
+    gap: 12px;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: #8a8a86;
+    margin: 0 0 1.5rem;
+}
+
+.recipe-collection--title {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 1.3rem;
+    color: var(--accent-color-dark);
+    margin: 0 0 0.75rem;
+}
+
+.recipe-collection--select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd9cd;
+    border-radius: 3px;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    color: var(--accent-color-dark);
+    background: white;
+}
+
+.recipe-flow--viewport {
+    overflow: hidden;
+    transition: height 0.35s ease;
+    animation: recipe-flow-reveal 0.4s ease;
+}
+
+.recipe-flow--track {
+    display: flex;
+    transition: transform 0.35s ease;
+}
+
+.recipe-flow--panel {
+    flex: 0 0 100%;
+    min-width: 0;
+}
+
+@keyframes recipe-flow-reveal {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.recipe-flow--dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin: 0 0 1.25rem;
+}
+
+.recipe-flow--dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #ddd9cd;
+    transition: background 0.2s ease;
+}
+
+.recipe-flow--dot.is-active {
+    background: var(--accent-color);
+}
+
+.recipe-flow--dot.is-done {
+    background: var(--accent-color-light);
 }

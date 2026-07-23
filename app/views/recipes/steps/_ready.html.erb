@@ -1,0 +1,15 @@
+<%= render "recipes/step_indicators", active: 1 %>
+
+<div class="recipe-flow--viewport" data-recipe-flow-target="viewport">
+  <div class="recipe-flow--track" data-recipe-flow-target="track">
+    <div class="recipe-flow--panel" data-recipe-flow-target="panel">
+      <%= render "recipes/preview_card", recipe: recipe %>
+      <%= render "recipes/actions", label: "Nästa", action: "recipe-flow#advance" %>
+    </div>
+
+    <div class="recipe-flow--panel" data-recipe-flow-target="panel">
+      <%= render "recipes/collection_select", recipe: recipe %>
+      <%= render "recipes/actions", label: "Spara", action: "recipe-flow#save" %>
+    </div>
+  </div>
+</div>

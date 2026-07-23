@@ -1,0 +1,16 @@
+<div class="recipe-preview">
+  <% if recipe.image_url.present? %>
+    <img src="<%= recipe.image_url %>" alt="" class="recipe-preview--image">
+  <% end %>
+
+  <p class="recipe-preview--title"><%= recipe.title %></p>
+
+  <div class="recipe-preview--meta">
+    <% if (total_time = recipe_total_time(recipe)) %>
+      <span><%= total_time %></span>
+    <% end %>
+    <% if recipe.servings.present? %>
+      <span><%= recipe.servings %></span>
+    <% end %>
+  </div>
+</div>

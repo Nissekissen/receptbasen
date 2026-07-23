@@ -10,7 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_20_203801) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_23_212306) do
+  create_table "ingredients", force: :cascade do |t|
+    t.string "content"
+    t.datetime "created_at", null: false
+    t.integer "recipe_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["recipe_id"], name: "index_ingredients_on_recipe_id"
+  end
+
   create_table "recipes", force: :cascade do |t|
     t.string "cook_time"
     t.datetime "created_at", null: false
@@ -22,7 +30,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_20_203801) do
     t.string "source_domain"
     t.string "source_url", null: false
     t.integer "status", default: 0, null: false
+    t.json "steps"
     t.string "title"
     t.datetime "updated_at", null: false
+    t.index ["source_url"], name: "index_recipes_on_source_url", unique: true
   end
+
+  add_foreign_key "ingredients", "recipes"
 end

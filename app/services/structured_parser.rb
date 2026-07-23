@@ -14,7 +14,7 @@ class StructuredParser < Parser
       prep_time: node["prepTime"],
       cook_time: node["cookTime"],
       servings: extract_servings(node["recipeYield"]),
-      source_domain: extract_source_domain(node["url"]),
+      source_domain: extract_source_domain(node["url"] || node["image"]),
       steps: extract_instructions(node["recipeInstructions"])
     )
   end
