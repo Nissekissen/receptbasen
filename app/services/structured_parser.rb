@@ -13,6 +13,7 @@ class StructuredParser < Parser
       image_url: extract_image_url(node["image"]),
       prep_time: node["prepTime"],
       cook_time: node["cookTime"],
+      total_time: node["totalTime"],
       servings: extract_servings(node["recipeYield"]),
       source_domain: extract_source_domain(node["url"] || node["image"]),
       steps: extract_instructions(node["recipeInstructions"])

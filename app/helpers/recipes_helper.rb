@@ -10,6 +10,8 @@ module RecipesHelper
   end
 
   def recipe_total_time(recipe)
+    return "#{(ActiveSupport::Duration.parse(recipe.total_time) / 60).round} min" if recipe.total_time.present?
+
     durations = [recipe.prep_time, recipe.cook_time].compact.map { |duration| ActiveSupport::Duration.parse(duration) }
     return nil if durations.empty?
 
