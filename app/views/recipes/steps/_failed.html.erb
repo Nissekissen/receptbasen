@@ -3,7 +3,7 @@
   <p class="recipe-loading--url"><%= recipe.source_url %></p>
 
   <div class="recipe-loading--error">
-    <p>Något gick fel när receptet analyserades. Prova gärna en annan länk.</p>
+    <p><%= local_assigns[:error].presence || "Något gick fel när receptet analyserades. Prova gärna en annan länk." %></p>
   </div>
 
   <%= render "recipes/actions" %>

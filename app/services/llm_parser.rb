@@ -23,6 +23,7 @@ class LlmParser < Parser
   def initialize(html)
     @html = html
     @error = nil
+    @ingredients = nil
   end
 
   def call
@@ -39,6 +40,8 @@ class LlmParser < Parser
     @error = "No ingredients or steps" if result["ingredients"].blank? || result["steps"].blank?
 
     return nil if @error.present?
+
+    @ingredients = result["ingredients"]
 
     normalize(result)
   end

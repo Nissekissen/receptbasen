@@ -9,11 +9,11 @@ class ParseRecipeJob < ApplicationJob
 
     broadcast_step(recipe, :parse, :active)
 
-    # parser = StructuredParser.new(html)
-    # result = parser.call
+    ingredients = nil
 
     structured_parser = StructuredParser.new(html)
     result = structured_parser.call
+    ingredients = structured_parser.ingredients unless result.nil?
 
     if result.nil?
       # Use LLM parser instead
@@ -25,9 +25,11 @@ class ParseRecipeJob < ApplicationJob
 
       if result.nil?
         broadcast_step(recipe, :parse_ai, :failed)
-        broadcast_error(recipe, llm_parser.error)
+        broadcast_failed(recipe, llm_parser.error)
         return
       end
+
+      ingredients = llm_parser.ingredients
 
       broadcast_step(recipe, :parse_ai, :done)
     else
@@ -36,6 +38,22 @@ class ParseRecipeJob < ApplicationJob
 
     recipe.update!(result)
     recipe.update!(status: :done)
+
+    recipe.ingredients.create!(ingredients.map { |content| { content: content } })
+
+    broadcast_step(recipe, :tags, :active)
+
+    tag_extractor = TagExtractor.new(title: recipe.title, description: recipe.description, ingredients: recipe.ingredients.map(&:content))
+    result = tag_extractor.call
+
+    if result.nil?
+      broadcast_failed(recipe, tag_extractor.error)
+      return
+    end
+
+    recipe.tags = result.map { |name| Tag.find_or_create_by!(name: name)}
+
+    broadcast_step(recipe, :tags, :done)
 
     sleep 0.5
     broadcast_ready(recipe)
@@ -52,12 +70,14 @@ class ParseRecipeJob < ApplicationJob
     )
   end
 
-  def broadcast_error(recipe, error)
-    Turbo::StreamsChannel.broadcast_replace_to(
+  def broadcast_failed(recipe, error)
+    recipe.update!(status: :failed)
+
+    Turbo::StreamsChannel.broadcast_update_to(
       "recipe_#{recipe.id}_loading",
-      target: "error",
-      partial: "recipes/loading_error",
-      locals: { error: error }
+      target: "recipe_card",
+      partial: "recipes/steps/failed",
+      locals: { recipe: recipe, error: error }
     )
   end
 

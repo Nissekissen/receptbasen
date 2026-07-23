@@ -1,11 +1,16 @@
 class StructuredParser < Parser
+  attr_reader :ingredients
+
   def initialize(html)
     @html = html
+    @ingredients = nil
   end
 
   def call
     node = find_recipe_node
     return nil unless node
+
+    @ingredients = extract_ingredients(node["recipeIngredient"])
 
     normalize(
       title: node["name"],
@@ -21,6 +26,10 @@ class StructuredParser < Parser
   end
 
   private
+
+  def extract_ingredients(ingredients)
+    Array(ingredients).map(&:to_s)
+  end
 
   def extract_source_domain(url)
     URI.parse(url).host

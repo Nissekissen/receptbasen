@@ -24,6 +24,10 @@ class Recipe < ApplicationRecord
 
   validates :source_url, presence: true, uniqueness: true
 
+  has_many :ingredients
+  has_many :taggings
+  has_many :tags, through: :taggings
+
   def published?
     published_at.present?
   end
