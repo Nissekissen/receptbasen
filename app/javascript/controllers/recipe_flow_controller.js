@@ -18,9 +18,6 @@ export default class extends Controller {
     this.goTo(1)
   }
 
-  save() {
-  }
-
   goTo(index) {
     this.trackTarget.style.transform = `translateX(-${index * 100}%)`
     this.setHeight(index)

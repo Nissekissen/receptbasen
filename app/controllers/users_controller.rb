@@ -10,6 +10,9 @@ class UsersController < ApplicationController
 
     if @user.save
       start_new_session_for @user
+
+      @user.collections.create!(name: "Favoriter", locked: true)
+
       redirect_to after_authentication_url
     else
       render :new, status: :unprocessable_entity

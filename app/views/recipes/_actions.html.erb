@@ -1,10 +1,15 @@
 <% label = local_assigns[:label] %>
 <% action = local_assigns.fetch(:action, nil) %>
 <% disabled = local_assigns.fetch(:disabled, false) %>
+<% form_id = local_assigns.fetch(:form, nil) %>
 
 <div class="recipe-flow--actions">
   <%= button_to "Avbryt", recipe_path(recipe), method: :delete, class: "btn btn--secondary" %>
   <% if label %>
-    <%= tag.button label, type: "button", class: "btn btn--primary", disabled: disabled, data: (action ? { action: action } : {}) %>
+    <% if action %>
+      <%= tag.button label, type: "button", class: "btn btn--primary", disabled: disabled, data: { action: action } %>
+    <% else %>
+      <%= tag.button label, type: "submit", class: "btn btn--primary", disabled: disabled, form: form_id %>
+    <% end %>
   <% end %>
 </div>

@@ -8,8 +8,11 @@
     </div>
 
     <div class="recipe-flow--panel" data-recipe-flow-target="panel">
-      <%= render "recipes/collection_select", recipe: recipe %>
-      <%= render "recipes/actions", recipe: recipe, label: "Spara", action: "recipe-flow#save" %>
+      <%= form_with url: saved_recipes_path, method: :post, id: "save-recipe-form" do |form| %>
+        <%= form.hidden_field :recipe_id, value: recipe.id %>
+        <%= render "recipes/collection_select", recipe: recipe, collections: local_assigns[:collections] %>
+      <% end %>
+      <%= render "recipes/actions", recipe: recipe, label: "Spara", form: "save-recipe-form" %>
     </div>
   </div>
 </div>

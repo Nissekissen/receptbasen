@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
   resources :recipes, only: [:index, :create, :show, :destroy]
+  resources :saved_recipes, only: [:create]
   resources :users, only: %i[new create]
   get "home/index"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

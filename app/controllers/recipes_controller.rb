@@ -4,6 +4,8 @@ class RecipesController < ApplicationController
   def show
     @recipe = Recipe.find(params[:id])
     return request_authentication if @recipe.done? && !authenticated?
+
+    @collections = Current.user.collections if authenticated?
   end
 
   def create
@@ -16,7 +18,7 @@ class RecipesController < ApplicationController
   end
 
   def index
-    @recipes = Recipe.all
+    @recipes = Current.user.recipes.distinct
   end
 
   def destroy

@@ -1,7 +1,13 @@
-<div class="recipe-collection">
+<div class="recipe-collection" data-controller="collection-select">
   <p class="recipe-collection--title">Välj en samling</p>
 
-  <select class="recipe-collection--select" disabled>
+  <select name="collection_id" class="recipe-collection--select" data-collection-select-target="select" data-action="change->collection-select#toggle">
     <option>Välj samling...</option>
+    <% (local_assigns[:collections] || []).each do |collection| %>
+      <option value="<%= collection.id %>" <%= "selected" if collection.locked? %>><%= collection.name %></option>
+    <% end %>
+    <option value="new">Ny samling</option>
   </select>
+
+  <input type="text" name="new_collection_name" placeholder="Namn på samlingen" class="recipe-collection--field" data-collection-select-target="newName" hidden>
 </div>

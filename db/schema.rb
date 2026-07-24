@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_24_194114) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_24_222352) do
+  create_table "collections", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.boolean "locked", default: false, null: false
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["user_id"], name: "index_collections_on_user_id"
+  end
+
   create_table "ingredients", force: :cascade do |t|
     t.string "content"
     t.datetime "created_at", null: false
@@ -35,6 +44,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_24_194114) do
     t.string "total_time"
     t.datetime "updated_at", null: false
     t.index ["source_url"], name: "index_recipes_on_source_url", unique: true
+  end
+
+  create_table "saved_recipes", force: :cascade do |t|
+    t.integer "collection_id", null: false
+    t.datetime "created_at", null: false
+    t.text "note"
+    t.integer "rating"
+    t.integer "recipe_id", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["collection_id", "recipe_id"], name: "index_saved_recipes_on_collection_id_and_recipe_id", unique: true
+    t.index ["collection_id"], name: "index_saved_recipes_on_collection_id"
+    t.index ["recipe_id"], name: "index_saved_recipes_on_recipe_id"
+    t.index ["user_id"], name: "index_saved_recipes_on_user_id"
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -73,7 +96,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_24_194114) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
+  add_foreign_key "collections", "users", on_delete: :cascade
   add_foreign_key "ingredients", "recipes", on_delete: :cascade
+  add_foreign_key "saved_recipes", "collections", on_delete: :cascade
+  add_foreign_key "saved_recipes", "recipes", on_delete: :cascade
+  add_foreign_key "saved_recipes", "users", on_delete: :cascade
   add_foreign_key "sessions", "users"
   add_foreign_key "taggings", "recipes", on_delete: :cascade
   add_foreign_key "taggings", "tags", on_delete: :cascade
