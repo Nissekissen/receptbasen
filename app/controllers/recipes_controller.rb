@@ -1,6 +1,9 @@
 class RecipesController < ApplicationController
+  allow_unauthenticated_access only: %i[show create]
+
   def show
     @recipe = Recipe.find(params[:id])
+    return request_authentication if @recipe.done? && !authenticated?
   end
 
   def create

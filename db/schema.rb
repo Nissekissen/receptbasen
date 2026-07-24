@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_23_224441) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_24_194114) do
   create_table "ingredients", force: :cascade do |t|
     t.string "content"
     t.datetime "created_at", null: false
@@ -37,6 +37,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_23_224441) do
     t.index ["source_url"], name: "index_recipes_on_source_url", unique: true
   end
 
+  create_table "sessions", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "ip_address"
+    t.datetime "updated_at", null: false
+    t.string "user_agent"
+    t.integer "user_id", null: false
+    t.index ["user_id"], name: "index_sessions_on_user_id"
+  end
+
   create_table "taggings", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "recipe_id", null: false
@@ -54,7 +63,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_23_224441) do
     t.index ["name"], name: "index_tags_on_name", unique: true
   end
 
+  create_table "users", force: :cascade do |t|
+    t.string "avatar_url"
+    t.datetime "created_at", null: false
+    t.string "email_address", null: false
+    t.string "name", null: false
+    t.string "password_digest", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email_address"], name: "index_users_on_email_address", unique: true
+  end
+
   add_foreign_key "ingredients", "recipes", on_delete: :cascade
+  add_foreign_key "sessions", "users"
   add_foreign_key "taggings", "recipes", on_delete: :cascade
   add_foreign_key "taggings", "tags", on_delete: :cascade
 end

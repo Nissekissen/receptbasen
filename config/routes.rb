@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
+  resource :session
+  resources :passwords, param: :token
   resources :recipes, only: [:create, :show]
+  resources :users, only: %i[new create]
   get "home/index"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -16,4 +19,6 @@ Rails.application.routes.draw do
   root "home#index"
 
   get "login", to: "sessions#new", as: :login
+
+  get "signup", to: "users#new", as: :signup
 end

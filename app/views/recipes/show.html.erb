@@ -1,7 +1,7 @@
 <%= turbo_stream_from "recipe_#{@recipe.id}_loading" %>
 
 <section class="recipe-flow">
-    <div class="recipe-flow--card" id="recipe_card" data-controller="recipe-flow">
+    <div class="recipe-flow--card" id="recipe_card" data-controller="recipe-flow" data-recipe-flow-authenticated-value="<%= authenticated? %>">
       <%= render "recipes/steps/#{recipe_flow_step(@recipe)}", recipe: @recipe %>
     </div>
 </section>

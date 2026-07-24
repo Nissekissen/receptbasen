@@ -2,8 +2,14 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["viewport", "track", "panel", "dot"]
+  static values = { authenticated: Boolean }
 
   trackTargetConnected() {
+    if (!this.authenticatedValue) {
+      window.location.reload()
+      return
+    }
+
     this.setHeight(0)
     this.setActiveDot(1)
   }

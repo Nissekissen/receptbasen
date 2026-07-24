@@ -1,0 +1,27 @@
+<section class="auth-flow">
+  <div class="auth-flow--card">
+    <p class="auth-flow--title">Skapa konto</p>
+    <p class="auth-flow--subtitle">Spara dina recept på ett ställe.</p>
+
+    <% if @user.errors.any? %>
+      <div class="auth-flow--error">
+        <p><%= @user.errors.full_messages.to_sentence %></p>
+      </div>
+    <% end %>
+
+    <%= form_with model: @user, url: users_path do |form| %>
+      <%= form.text_field :name, required: true, autofocus: true, placeholder: "Namn", class: "auth-flow--field" %>
+      <%= form.email_field :email_address, required: true, autocomplete: "username", placeholder: "E-postadress", class: "auth-flow--field" %>
+      <%= form.password_field :password, required: true, autocomplete: "new-password", placeholder: "Lösenord", maxlength: 72, class: "auth-flow--field" %>
+      <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password", placeholder: "Upprepa lösenord", maxlength: 72, class: "auth-flow--field" %>
+
+      <div class="auth-flow--actions">
+        <%= form.submit "Skapa konto", class: "btn btn--primary" %>
+      </div>
+    <% end %>
+
+    <p class="auth-flow--footer">
+      Har du redan ett konto? <%= link_to "Logga in", login_path %>
+    </p>
+  </div>
+</section>
