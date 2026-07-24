@@ -36,10 +36,15 @@ class LlmParser < Parser
 
     result = JSON.parse(response.content.find { |b| b.type == :text }.text)
 
-    @error = "Not a recipe" unless result["is_recipe"]
-    @error = "No ingredients or steps" if result["ingredients"].blank? || result["steps"].blank?
+    unless result["is_recipe"]
+      @error = "Not a recipe"
+      return nil
+    end
 
-    return nil if @error.present?
+    if result["ingredients"].blank? || result["steps"].blank?
+      @error = "No ingredients or steps"
+      return nil
+    end
 
     @ingredients = result["ingredients"]
 

@@ -107,6 +107,15 @@
     text-align: center;
 }
 
+.recipe-flow--actions form.button_to {
+    flex: 1;
+    margin: 0;
+}
+
+.recipe-flow--actions form.button_to .btn {
+    width: 100%;
+}
+
 .recipe-flow--actions .btn:disabled {
     color: #b6b4ac;
     border-color: #ddd9cd;

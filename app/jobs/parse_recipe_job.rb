@@ -1,6 +1,8 @@
 class ParseRecipeJob < ApplicationJob
   queue_as :default
 
+  class FetchError < StandardError; end
+
   def perform(recipe_id)
     recipe = Recipe.find(recipe_id)
 
@@ -25,7 +27,7 @@ class ParseRecipeJob < ApplicationJob
 
       if result.nil?
         broadcast_step(recipe, :parse_ai, :failed)
-        broadcast_failed(recipe, llm_parser.error)
+        broadcast_failed(recipe, user_facing_error(llm_parser.error))
         return
       end
 
@@ -47,7 +49,7 @@ class ParseRecipeJob < ApplicationJob
     result = tag_extractor.call
 
     if result.nil?
-      broadcast_failed(recipe, tag_extractor.error)
+      broadcast_failed(recipe, nil)
       return
     end
 
@@ -57,6 +59,9 @@ class ParseRecipeJob < ApplicationJob
 
     sleep 0.5
     broadcast_ready(recipe)
+  rescue Faraday::Error, FetchError
+    broadcast_step(recipe, :fetch, :failed)
+    broadcast_failed(recipe, "Det gick inte att hämta sidan. Kontrollera länken och försök igen.")
   end
 
   private
@@ -68,6 +73,10 @@ class ParseRecipeJob < ApplicationJob
       partial: "recipes/loading_step",
       locals: { step: step, state: state }
     )
+  end
+
+  def user_facing_error(error)
+    "Länken verkar inte leda till ett recept. Prova en annan länk." if error == "Not a recipe"
   end
 
   def broadcast_failed(recipe, error)
@@ -91,7 +100,6 @@ class ParseRecipeJob < ApplicationJob
   end
 
   def fetch_page(url)
-    p "url: #{url}"
     connection = Faraday.new do |f|
       f.use Faraday::FollowRedirects::Middleware
       f.options.timeout = 10
@@ -99,7 +107,7 @@ class ParseRecipeJob < ApplicationJob
     end
 
     response = connection.get(url)
-    raise "Failed to fetch page: #{response.status}" unless response.success?
+    raise FetchError, "Failed to fetch page: #{response.status}" unless response.success?
 
     response.body
   end

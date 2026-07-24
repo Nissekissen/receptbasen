@@ -1,5 +1,5 @@
 class RecipesController < ApplicationController
-  allow_unauthenticated_access only: %i[show create]
+  allow_unauthenticated_access only: %i[show create destroy]
 
   def show
     @recipe = Recipe.find(params[:id])
@@ -17,5 +17,10 @@ class RecipesController < ApplicationController
 
   def index
     @recipes = Recipe.all
+  end
+
+  def destroy
+    Recipe.find(params[:id]).destroy
+    redirect_to root_path
   end
 end

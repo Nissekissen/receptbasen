@@ -6,6 +6,8 @@ class Recipe < ApplicationRecord
 
   normalizes :source_url, with: ->(url) do
     uri = URI.parse(url)
+    return url if uri.host.nil?
+
     uri.host = uri.host.downcase.sub(/\Awww\./, "")
     uri.path = uri.path.sub(%r{/+\z}, "")
     uri.fragment = nil

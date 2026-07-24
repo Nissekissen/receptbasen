@@ -6,5 +6,5 @@
     <p><%= local_assigns[:error].presence || "Något gick fel när receptet analyserades. Prova gärna en annan länk." %></p>
   </div>
 
-  <%= render "recipes/actions" %>
+  <%= render "recipes/actions", recipe: recipe %>
 </div>
