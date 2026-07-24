@@ -3,7 +3,7 @@
 <% disabled = local_assigns.fetch(:disabled, false) %>
 
 <div class="recipe-flow--actions">
-  <%= tag.button "Avbryt", type: "button", class: "btn btn--secondary" %>
+  <%= link_to "Avbryt", root_path, class: "btn btn--secondary" %>
   <% if label %>
     <%= tag.button label, type: "button", class: "btn btn--primary", disabled: disabled, data: (action ? { action: action } : {}) %>
   <% end %>

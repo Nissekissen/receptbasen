@@ -14,4 +14,8 @@ class RecipesController < ApplicationController
     ParseRecipeJob.set(wait: 1.second).perform_later(recipe.id)
     redirect_to recipe
   end
+
+  def index
+    @recipes = Recipe.all
+  end
 end
