@@ -1,4 +1,21 @@
 <header class="navbar" data-controller="navbar">
-    <div class="logo">Receptbasen</div>
-    <%= link_to "Logga in", login_path, class: "btn btn--secondary inverted" %>
+    <%= link_to "Receptbasen", root_path, class: "logo" %>
+
+    <% if authenticated? %>
+      <div class="navbar--user" data-controller="dropdown">
+        <button type="button" class="navbar--user-toggle" data-action="click->dropdown#toggle">
+          <%= Current.user.name %>
+          <svg class="navbar--chevron" viewBox="0 0 24 24" width="14" height="14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m6 9 6 6 6-6"/>
+          </svg>
+        </button>
+
+        <div class="navbar--dropdown" data-dropdown-target="menu" hidden>
+          <%= link_to "Profil", "#", class: "navbar--dropdown-item" %>
+          <%= button_to "Logga ut", session_path, method: :delete, class: "navbar--dropdown-item" %>
+        </div>
+      </div>
+    <% else %>
+      <%= link_to "Logga in", login_path, class: "btn btn--secondary inverted" %>
+    <% end %>
 </header>
