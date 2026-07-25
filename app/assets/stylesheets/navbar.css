@@ -16,6 +16,12 @@
     align-items: center;
 }
 
+.navbar--brand {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
 .navbar .logo {
     display: inline-flex;
     align-items: center;
@@ -32,7 +38,20 @@
     transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
 }
 
+.navbar--nav-link {
+    color: white;
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
 .navbar--scrolled .logo {
+    color: var(--accent-color-dark);
+}
+
+.navbar--scrolled .navbar--nav-link {
     color: var(--accent-color-dark);
 }
 

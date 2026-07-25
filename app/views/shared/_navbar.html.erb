@@ -1,8 +1,14 @@
 <header class="navbar" data-controller="navbar">
-    <%= link_to root_path, class: "logo" do %>
-      <%= render "icons/book" %>
-      Receptbasen
-    <% end %>
+    <div class="navbar--brand">
+      <%= link_to root_path, class: "logo" do %>
+        <%= render "icons/book" %>
+        Receptbasen
+      <% end %>
+
+      <% if authenticated? %>
+        <%= link_to "Mina recept", recipes_path, class: "navbar--nav-link" %>
+      <% end %>
+    </div>
 
     <% if authenticated? %>
       <div class="navbar--group">
