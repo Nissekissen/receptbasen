@@ -25,12 +25,13 @@ test:
   <<: *default
   database: storage/test.sqlite3
 
-# Store production database in the storage/ directory, which by default
-# is mounted as a persistent Docker volume in config/deploy.yml.
+# Primary uses Postgres in production (see docker-compose.yml, receptbasen-db).
+# cache/queue/cable stay on SQLite in the storage/ directory, which is mounted
+# as a persistent Docker volume in docker-compose.yml.
 production:
   primary:
-    <<: *default
-    database: storage/production.sqlite3
+    adapter: postgresql
+    url: <%= ENV["DATABASE_URL"] %>
   cache:
     <<: *default
     database: storage/production_cache.sqlite3
