@@ -21,8 +21,7 @@ class RecipesController < ApplicationController
   end
 
   def index
-    @recipes = Current.user.recipes.distinct
-    # @recipes = Recipe.all
+    @recipes = Recipe.where(id: Current.user.saved_recipes.select(:recipe_id))
     @recipes = @recipes.where(id: SavedRecipe.where(collection_id: params[:collection_id]).select(:recipe_id)) if params[:collection_id].present?
     @recipes = @recipes.where(id: Tagging.where(tag_id: params[:maltidstyp_tag_id]).select(:recipe_id)) if params[:maltidstyp_tag_id].present?
     @recipes = @recipes.where(id: Tagging.where(tag_id: params[:kok_tag_id]).select(:recipe_id)) if params[:kok_tag_id].present?
