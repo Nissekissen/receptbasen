@@ -1,9 +1,15 @@
 <header class="navbar" data-controller="navbar">
-    <%= link_to "Receptbasen", root_path, class: "logo" %>
+    <%= link_to root_path, class: "logo" do %>
+      <%= render "icons/book" %>
+      Receptbasen
+    <% end %>
 
     <% if authenticated? %>
       <div class="navbar--group">
-      <%= link_to "Nytt recept", new_recipe_path, class: "btn btn--primary" %>
+      <%= link_to new_recipe_path, class: "btn btn--primary" do %>
+        <%= render "icons/plus" %>
+        Nytt recept
+      <% end %>
       <div class="navbar--user" data-controller="dropdown">
         <button type="button" class="navbar--user-toggle" data-action="click->dropdown#toggle">
           <%= Current.user.name %>
