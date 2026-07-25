@@ -1,0 +1,13 @@
+<section class="auth-flow">
+  <div class="auth-flow--card profile-card">
+    <div class="profile-card--avatar"><%= @user.name.first.upcase %></div>
+
+    <h1 class="auth-flow--title"><%= @user.name %></h1>
+    <p class="auth-flow--subtitle"><%= @user.email_address %></p>
+
+    <div class="profile-card--row">
+      <span class="profile-card--label">Medlem sedan</span>
+      <span class="profile-card--value"><%= @user.created_at.strftime("%Y-%m-%d") %></span>
+    </div>
+  </div>
+</section>
