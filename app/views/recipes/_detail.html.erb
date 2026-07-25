@@ -9,24 +9,16 @@
     <p class="recipe-detail--title"><%= recipe.title %></p>
 
     <% if authenticated? %>
-      <% favorites = Current.user.collections.find_by(locked: true) %>
-      <% already_saved = favorites && SavedRecipe.exists?(user: Current.user, collection: favorites, recipe: recipe) %>
+      <% saved = saved_recipe_lookup(recipe) %>
 
-      <% if already_saved %>
-        <span class="btn btn--secondary recipe-detail--save">
-          <%= render "icons/bookmark", filled: true %>
-          Sparat
-        </span>
-      <% else %>
-        <%= form_with url: saved_recipes_path, method: :post, class: "recipe-detail--save-form" do |form| %>
-          <%= form.hidden_field :recipe_id, value: recipe.id %>
-          <%= form.hidden_field :collection_id, value: favorites&.id %>
-          <%= form.button type: "submit", class: "btn btn--primary recipe-detail--save" do %>
-            <%= render "icons/bookmark" %>
-            Spara
-          <% end %>
-        <% end %>
-      <% end %>
+      <div class="recipe-detail--save-wrap" data-controller="dropdown save-menu">
+        <button type="button" class="btn btn--primary recipe-detail--save" data-action="click->dropdown#toggle" data-save-menu-target="trigger" aria-label="Spara">
+          <%= render "icons/bookmark", filled: saved.any? %>
+          <span data-save-menu-target="label"><%= saved.any? ? "Sparat" : "Spara" %></span>
+        </button>
+
+        <%= render "recipes/save_menu", recipe: recipe, saved: saved %>
+      </div>
     <% end %>
 
     <div class="recipe-detail--meta">

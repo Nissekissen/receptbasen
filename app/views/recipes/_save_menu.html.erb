@@ -1,0 +1,15 @@
+<div class="recipe-preview--save-menu" data-dropdown-target="menu" hidden>
+  <% Current.user.collections.each do |collection| %>
+    <% saved_recipe = saved[collection.id] %>
+
+    <%= form_with url: toggle_saved_recipe_path, method: :post, class: "recipe-preview--save-option", data: { controller: "auto-submit" } do |form| %>
+      <%= form.hidden_field :recipe_id, value: recipe.id %>
+      <%= form.hidden_field :collection_id, value: collection.id %>
+
+      <label>
+        <%= check_box_tag "collection_#{collection.id}", "1", saved_recipe.present?, data: { action: "change->auto-submit#submit change->save-menu#refresh", save_menu_target: "checkbox" } %>
+        <%= collection.name %>
+      </label>
+    <% end %>
+  <% end %>
+</div>

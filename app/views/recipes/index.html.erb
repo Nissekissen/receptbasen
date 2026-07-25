@@ -5,9 +5,20 @@
     <% if @recipes.any? %>
       <div class="recipes-index--grid">
         <% @recipes.each do |recipe| %>
-          <%= link_to recipe, class: "recipes-index--card" do %>
-            <%= render "recipes/preview_card", recipe: recipe, index_card: true %>
-          <% end %>
+            <% saved = saved_recipe_lookup(recipe) %>
+            <div class="recipes-index--card-wrap">
+                <%= link_to recipe, class: "recipes-index--card" do %>
+                <%= render "recipes/preview_card", recipe: recipe, index_card: true %>
+                <% end %>
+
+                <div class="recipe-preview--save-wrap" data-controller="dropdown save-menu">
+                <button type="button" class="recipe-preview--save" data-action="click->dropdown#toggle" data-save-menu-target="trigger" aria-label="Spara">
+                    <%= render "icons/bookmark", filled: saved.any? %>
+                </button>
+
+                <%= render "recipes/save_menu", recipe: recipe, saved: saved %>
+                </div>
+            </div>
         <% end %>
       </div>
     <% else %>

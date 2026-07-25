@@ -196,6 +196,55 @@
     align-items: center;
     justify-content: center;
     color: var(--accent-color-dark);
+    border: none;
+    box-shadow: 0 0 20px 4px rgba(0, 0, 0, 0.16);
+    cursor: pointer;
+}
+
+.recipe-preview--save:hover {
+    background: #eee;
+}
+
+.recipe-preview--save-menu {
+    position: absolute;
+    top: 48px;
+    right: 10px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    min-width: 180px;
+    padding: 6px;
+    z-index: 3;
+}
+
+.recipe-preview--save-option {
+    display: block;
+    margin: 0;
+}
+
+.recipe-preview--save-option label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 4px;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: var(--accent-color-dark);
+    cursor: pointer;
+}
+
+.recipe-preview--save-option label:hover {
+    background: var(--background-color);
+}
+
+
+.recipe-preview--save svg path {
+    fill: none;
+}
+
+.recipe-preview--save.is-saved svg path {
+    fill: currentColor !important;
 }
 
 .recipe-preview--source {

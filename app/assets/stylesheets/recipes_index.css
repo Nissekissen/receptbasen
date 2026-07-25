@@ -23,16 +23,22 @@
     gap: 1.5rem;
 }
 
+.recipes-index--card-wrap {
+    position: relative;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    border-radius: 12px;
+}
+
 .recipes-index--card {
     display: block;
     background: white;
     border-radius: 12px;
     overflow: hidden;
     text-decoration: none;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+
 }
 
-.recipes-index--card:hover {
+.recipes-index--card-wrap:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }

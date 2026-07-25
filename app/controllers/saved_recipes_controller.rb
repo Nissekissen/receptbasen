@@ -11,11 +11,32 @@ class SavedRecipesController < ApplicationController
 
     if saved_recipe.save
       recipe.publish!
-      redirect_to recipe
+      params[:silent] == "true" ? head(:no_content) : redirect_to(recipe)
     else
       redirect_to recipe, alert: "Det gick inte att spara receptet i den samlingen."
     end
   end
+
+  def destroy
+    Current.user.saved_recipes.find(params[:id]).destroy
+    head :no_content
+  end
+
+  def toggle
+    recipe = Recipe.find(params[:recipe_id])
+    collection = Current.user.collections.find(params[:collection_id])
+    saved_recipe = Current.user.saved_recipes.find_by(recipe: recipe, collection: collection)
+
+    if saved_recipe
+      saved_recipe.destroy
+    else
+      Current.user.saved_recipes.create!(recipe: recipe, collection: collection)
+      recipe.publish!
+    end
+
+    head :no_content
+  end
+
 
   private
 

@@ -9,6 +9,10 @@ module RecipesHelper
     :working
   end
 
+  def saved_recipe_lookup(recipe)
+    Current.user.saved_recipes.where(recipe: recipe).index_by(&:collection_id)
+  end
+
   def recipe_total_time(recipe)
     return "#{(ActiveSupport::Duration.parse(recipe.total_time) / 60).round} min" if recipe.total_time.present?
 

@@ -21,7 +21,8 @@ class RecipesController < ApplicationController
   end
 
   def index
-    @recipes = Current.user.recipes.distinct
+    # @recipes = Current.user.recipes.distinct
+    @recipes = Recipe.all
   end
 
   def destroy

@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
   resources :recipes, only: [:index, :new, :create, :show, :destroy]
-  resources :saved_recipes, only: [:create]
+  resources :saved_recipes, only: [:create, :destroy]
   resources :users, only: %i[new create]
   get "home/index"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
@@ -22,4 +22,6 @@ Rails.application.routes.draw do
   get "login", to: "sessions#new", as: :login
 
   get "signup", to: "users#new", as: :signup
+
+  post "saved_recipes/toggle", to: "saved_recipes#toggle", as: :toggle_saved_recipe
 end

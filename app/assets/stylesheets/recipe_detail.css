@@ -163,6 +163,37 @@
     padding-top: 2px;
 }
 
+.recipe-detail--save svg path {
+    fill: none;
+}
+
+.recipe-detail--save.is-saved svg path {
+    fill: currentColor;
+}
+
+.recipe-detail--save.is-saved {
+    background-color: transparent;
+    color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+}
+
+.recipe-detail--save.is-saved:hover {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.recipe-detail--save-wrap {
+    position: relative;
+    display: inline-block;
+    margin: 0 0 1.25rem;
+}
+
+.recipe-detail--save-wrap .recipe-preview--save-menu {
+    top: calc(100% + 8px);
+    right: auto;
+    left: 0;
+}
+
 @media (max-width: 720px) {
     .recipe-detail--content {
         grid-template-columns: 1fr;

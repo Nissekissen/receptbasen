@@ -2,6 +2,8 @@
     <%= link_to "Receptbasen", root_path, class: "logo" %>
 
     <% if authenticated? %>
+      <div class="navbar--group">
+      <%= link_to "Nytt recept", new_recipe_path, class: "btn btn--primary" %>
       <div class="navbar--user" data-controller="dropdown">
         <button type="button" class="navbar--user-toggle" data-action="click->dropdown#toggle">
           <%= Current.user.name %>
@@ -10,9 +12,12 @@
           </svg>
         </button>
 
-        <div class="navbar--dropdown" data-dropdown-target="menu" hidden>
-          <%= link_to "Profil", "#", class: "navbar--dropdown-item" %>
-          <%= button_to "Logga ut", session_path, method: :delete, class: "navbar--dropdown-item" %>
+
+
+            <div class="navbar--dropdown" data-dropdown-target="menu" hidden>
+            <%= link_to "Profil", "#", class: "navbar--dropdown-item" %>
+            <%= button_to "Logga ut", session_path, method: :delete, class: "navbar--dropdown-item" %>
+            </div>
         </div>
       </div>
     <% else %>
