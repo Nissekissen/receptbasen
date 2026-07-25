@@ -11,7 +11,7 @@ class SavedRecipesController < ApplicationController
 
     if saved_recipe.save
       recipe.publish!
-      redirect_to recipes_path
+      redirect_to recipe
     else
       redirect_to recipe, alert: "Det gick inte att spara receptet i den samlingen."
     end

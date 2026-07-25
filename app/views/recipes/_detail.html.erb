@@ -1,0 +1,91 @@
+<section class="recipe-detail">
+  <div class="recipe-detail--inner">
+    <%= link_to "← Dina recept", recipes_path, class: "recipe-detail--back" %>
+
+    <% if recipe.image_url.present? %>
+      <img src="<%= recipe.image_url %>" alt="" class="recipe-detail--image">
+    <% end %>
+
+    <p class="recipe-detail--title"><%= recipe.title %></p>
+
+    <% if authenticated? %>
+      <% favorites = Current.user.collections.find_by(locked: true) %>
+      <% already_saved = favorites && SavedRecipe.exists?(user: Current.user, collection: favorites, recipe: recipe) %>
+
+      <% if already_saved %>
+        <span class="btn btn--secondary recipe-detail--save">
+          <%= render "icons/bookmark", filled: true %>
+          Sparat
+        </span>
+      <% else %>
+        <%= form_with url: saved_recipes_path, method: :post, class: "recipe-detail--save-form" do |form| %>
+          <%= form.hidden_field :recipe_id, value: recipe.id %>
+          <%= form.hidden_field :collection_id, value: favorites&.id %>
+          <%= form.button type: "submit", class: "btn btn--primary recipe-detail--save" do %>
+            <%= render "icons/bookmark" %>
+            Spara
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+
+    <div class="recipe-detail--meta">
+      <% if (total_time = recipe_total_time(recipe)) %>
+        <span class="recipe-detail--badge">
+          <%= render "icons/clock" %>
+          <%= total_time %>
+        </span>
+      <% end %>
+      <% if (difficulty = recipe_difficulty(recipe)) %>
+        <span class="recipe-detail--badge">
+          <%= render "icons/#{recipe_difficulty_icon(difficulty)}" %>
+          <%= difficulty %>
+        </span>
+      <% end %>
+      <% if recipe.servings.present? %>
+        <span class="recipe-detail--badge">
+          <%= render "icons/servings" %>
+          <%= recipe.servings %>
+        </span>
+      <% end %>
+
+      <% if recipe.source_domain.present? %>
+        <%= link_to "#{recipe.source_domain} ↗", recipe.source_url, class: "recipe-detail--source", target: "_blank", rel: "noopener" %>
+      <% end %>
+    </div>
+
+    <% other_tags = recipe.tags.where.not(category: :svarighetsgrad) %>
+    <% if other_tags.any? %>
+      <div class="recipe-detail--tags">
+        <% other_tags.each do |tag| %>
+          <span class="recipe-detail--tag"><%= tag.name %></span>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if recipe.description.present? %>
+      <p class="recipe-detail--description"><%= recipe.description %></p>
+    <% end %>
+
+    <div class="recipe-detail--content">
+      <div class="recipe-detail--ingredients">
+        <p class="recipe-detail--heading">Ingredienser</p>
+        <ul class="recipe-detail--ingredients-list">
+          <% recipe.ingredients.each do |ingredient| %>
+            <li><%= ingredient.content %></li>
+          <% end %>
+        </ul>
+      </div>
+
+      <div class="recipe-detail--steps">
+        <p class="recipe-detail--heading">Gör så här</p>
+        <% (recipe.steps || []).each.with_index(1) do |step, index| %>
+          <div class="recipe-detail--step">
+            <span class="recipe-detail--step-number"><%= format("%02d", index) %></span>
+            <span class="recipe-detail--step-text"><%= step %></span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</section>

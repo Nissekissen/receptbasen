@@ -1,0 +1,13 @@
+<section class="recipe-flow">
+  <div class="recipe-flow--card">
+    <p class="recipe-loading--title">Spara ett recept</p>
+
+    <%= form_with url: recipes_path, method: :post do |form| %>
+      <%= form.text_field :url, placeholder: "https://example.se/recept/kladdkaka", autocomplete: "off", class: "recipe-collection--field" %>
+
+      <div class="recipe-flow--actions">
+        <%= form.submit "Spara recept", class: "btn btn--primary" %>
+      </div>
+    <% end %>
+  </div>
+</section>

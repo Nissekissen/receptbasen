@@ -5,9 +5,7 @@
 
       <% if local_assigns[:index_card] %>
         <span class="recipe-preview--save" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 4h12v16l-6-4-6 4V4Z"/>
-          </svg>
+          <%= render "icons/bookmark" %>
         </span>
       <% end %>
     </div>
@@ -19,10 +17,7 @@
     <div class="recipe-preview--meta">
       <% if (total_time = recipe_total_time(recipe)) %>
         <span class="recipe-preview--badge">
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.5"/>
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 7.5V12l3 2"/>
-          </svg>
+          <%= render "icons/clock" %>
           <%= total_time %>
         </span>
       <% end %>

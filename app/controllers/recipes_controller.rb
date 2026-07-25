@@ -1,9 +1,12 @@
 class RecipesController < ApplicationController
-  allow_unauthenticated_access only: %i[show create destroy]
+  allow_unauthenticated_access only: %i[new show create destroy]
+
+  def new
+  end
 
   def show
     @recipe = Recipe.find(params[:id])
-    return request_authentication if @recipe.done? && !authenticated?
+    return request_authentication if @recipe.done? && !@recipe.published? && !authenticated?
 
     @collections = Current.user.collections if authenticated?
   end
