@@ -150,11 +150,59 @@
 
 .recipe-preview--meta {
     display: flex;
-    gap: 12px;
-    font-family: var(--font-sans);
-    font-size: 13px;
-    color: #8a8a86;
+    gap: 8px;
     margin: 0 0 1.5rem;
+}
+
+.recipe-preview--badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    color: var(--accent-color-dark);
+    background: var(--accent-color-light);
+    padding: 4px 9px;
+    border-radius: 6px;
+}
+
+.recipe-preview--badge svg {
+    flex-shrink: 0;
+}
+
+.recipe-preview--card .recipe-preview--image-wrap {
+    position: relative;
+}
+
+.recipe-preview--card .recipe-preview--image {
+    border-radius: 0;
+    margin: 0;
+    display: block;
+}
+
+.recipe-preview--card .recipe-preview--body {
+    padding: 1rem 1.1rem 1.1rem;
+}
+
+.recipe-preview--save {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.92);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-color-dark);
+}
+
+.recipe-preview--source {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    color: #8a8a86;
+    margin: 0;
 }
 
 .recipe-collection--title {

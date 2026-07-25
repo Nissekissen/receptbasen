@@ -17,4 +17,12 @@ module RecipesHelper
 
     "#{(durations.sum(0.seconds) / 60).round} min"
   end
+
+  def recipe_difficulty(recipe)
+    recipe.tags.svarighetsgrad.first&.name&.capitalize
+  end
+
+  def recipe_difficulty_icon(difficulty)
+    { "lätt" => "easy", "medel" => "medium", "avancerad" => "hard" }[difficulty&.downcase]
+  end
 end

@@ -5,7 +5,9 @@ export default class extends Controller {
   static values = { authenticated: Boolean }
 
   trackTargetConnected() {
-    if (!this.authenticatedValue) {
+    const collectionsLoaded = this.trackTarget.dataset.collectionsLoaded === "true"
+
+    if (!this.authenticatedValue || !collectionsLoaded) {
       window.location.reload()
       return
     }

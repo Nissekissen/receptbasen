@@ -22,6 +22,12 @@ class Recipe < ApplicationRecord
     url
   end
 
+  normalizes :source_domain, with: ->(domain) do
+    PublicSuffix.domain(domain.to_s.downcase) || domain
+  rescue PublicSuffix::Error
+    domain
+  end
+
   enum :status, { pending: 0, done: 1, failed: 2 }
 
   validates :source_url, presence: true, uniqueness: true

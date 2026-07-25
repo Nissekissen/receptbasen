@@ -46,6 +46,9 @@ gem "faraday-follow_redirects"
 
 gem "anthropic"
 
+# Public Suffix List lookups for correctly extracting a registrable domain (e.g. example.co.uk, not co.uk)
+gem "public_suffix"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"

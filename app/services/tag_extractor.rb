@@ -31,7 +31,13 @@ class TagExtractor
     )
 
     result = JSON.parse(response.content.find { |b| b.type == :text }.text)
-    [result["maltidstyp"], result["kok"], *result["kost"], result["svarighetsgrad"]].compact
+
+    tags = [{ name: result["maltidstyp"], category: :maltidstyp }]
+    tags << { name: result["kok"], category: :kok } if result["kok"].present?
+    result["kost"].each { |name| tags << { name: name, category: :kost } }
+    tags << { name: result["svarighetsgrad"], category: :svarighetsgrad }
+
+    tags
   rescue => e
     @error = e.message
     nil

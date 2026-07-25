@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_24_222352) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_25_061308) do
   create_table "collections", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.boolean "locked", default: false, null: false
@@ -80,6 +80,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_24_222352) do
   end
 
   create_table "tags", force: :cascade do |t|
+    t.integer "category", null: false
     t.datetime "created_at", null: false
     t.string "name", null: false
     t.datetime "updated_at", null: false

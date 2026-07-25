@@ -27,7 +27,7 @@
     display: block;
     background: white;
     border-radius: 12px;
-    padding: 1.25rem;
+    overflow: hidden;
     text-decoration: none;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
 }

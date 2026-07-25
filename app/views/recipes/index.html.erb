@@ -6,7 +6,7 @@
       <div class="recipes-index--grid">
         <% @recipes.each do |recipe| %>
           <%= link_to recipe, class: "recipes-index--card" do %>
-            <%= render "recipes/preview_card", recipe: recipe %>
+            <%= render "recipes/preview_card", recipe: recipe, index_card: true %>
           <% end %>
         <% end %>
       </div>
