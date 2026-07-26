@@ -38,7 +38,13 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    margin: 0 0 1.25rem;
+}
+
+.recipe-detail--action-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
 }
 
 .recipe-detail--meta {
@@ -185,7 +191,6 @@
 .recipe-detail--save-wrap {
     position: relative;
     display: inline-block;
-    margin: 0 0 1.25rem;
 }
 
 .recipe-detail--save-wrap .recipe-preview--save-menu {

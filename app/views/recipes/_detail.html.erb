@@ -8,18 +8,24 @@
 
     <p class="recipe-detail--title"><%= recipe.title %></p>
 
-    <% if authenticated? %>
-      <% saved = saved_recipe_lookup(recipe) %>
+    <div class="recipe-detail--action-wrapper">
+        <% if authenticated? %>
+            <% saved = saved_recipe_lookup(recipe) %>
 
-      <div class="recipe-detail--save-wrap" data-controller="dropdown save-menu">
-        <button type="button" class="btn btn--primary recipe-detail--save" data-action="click->dropdown#toggle" data-save-menu-target="trigger" aria-label="Spara">
-          <%= render "icons/bookmark", filled: saved.any? %>
-          <span data-save-menu-target="label"><%= saved.any? ? "Sparat" : "Spara" %></span>
-        </button>
+            <div class="recipe-detail--save-wrap" data-controller="dropdown save-menu">
+                <button type="button" class="btn btn--primary recipe-detail--save" data-action="click->dropdown#toggle" data-save-menu-target="trigger" aria-label="Spara">
+                <%= render "icons/bookmark", filled: saved.any? %>
+                <span data-save-menu-target="label"><%= saved.any? ? "Sparat" : "Spara" %></span>
+                </button>
 
-        <%= render "recipes/save_menu", recipe: recipe, saved: saved %>
-      </div>
-    <% end %>
+                <%= render "recipes/save_menu", recipe: recipe, saved: saved %>
+            </div>
+        <% end %>
+
+        <% if recipe.source_domain.present? %>
+            <%= link_to "#{recipe.source_domain} ↗", recipe.source_url, class: "btn btn--secondary", target: "_blank", rel: "noopener" %>
+        <% end %>
+    </div>
 
     <div class="recipe-detail--meta">
       <% if (total_time = recipe_total_time(recipe)) %>
@@ -41,9 +47,6 @@
         </span>
       <% end %>
 
-      <% if recipe.source_domain.present? %>
-        <%= link_to "#{recipe.source_domain} ↗", recipe.source_url, class: "recipe-detail--source", target: "_blank", rel: "noopener" %>
-      <% end %>
     </div>
 
     <% other_tags = recipe.tags.where.not(category: :svarighetsgrad) %>
