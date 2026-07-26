@@ -2,12 +2,16 @@
   <div class="recipe-flow--card">
     <p class="recipe-loading--title">Spara ett recept</p>
 
-    <%= form_with url: recipes_path, method: :post do |form| %>
+    <%= form_with url: recipes_path, class: "recipe-new--form", method: :post do |form| %>
       <%= form.text_field :url, placeholder: "https://example.se/recept/kladdkaka", autocomplete: "off", class: "recipe-collection--field" %>
 
       <div class="recipe-flow--actions">
         <%= form.submit "Spara recept", class: "btn btn--primary" %>
       </div>
     <% end %>
+
+    <p class="recipe-new--divider">eller</p>
+
+    <%= link_to "Lägg till manuellt", "#", class: "btn btn--secondary recipe-new--manual-btn" %>
   </div>
 </section>

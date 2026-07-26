@@ -337,3 +337,23 @@
 .recipe-flow--dot.is-done {
     background: var(--accent-color-light);
 }
+
+.recipe-new--form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.recipe-new--divider {
+    text-align: center;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: #8a8a86;
+    margin: 1.25rem 0 1rem;
+}
+
+.recipe-new--manual-btn {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
