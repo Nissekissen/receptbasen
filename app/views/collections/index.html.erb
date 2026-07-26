@@ -1,0 +1,32 @@
+<section class="collections">
+  <div class="collections--inner">
+    <h1 class="collections--title">Mina samlingar</h1>
+
+    <% if flash[:alert] %>
+      <div class="collections--alert"><%= flash[:alert] %></div>
+    <% end %>
+
+    <% if flash[:notice] %>
+      <div class="collections--notice"><%= flash[:notice] %></div>
+    <% end %>
+
+    <div class="collections--card">
+      <%= render @collections %>
+    </div>
+
+    <div class="collections--new" data-controller="collection-form">
+      <button type="button" class="btn btn--primary" data-collection-form-target="display" data-action="click->collection-form#show">
+        <%= render "icons/plus" %>
+        Ny samling
+      </button>
+
+      <div data-collection-form-target="form" hidden>
+        <%= form_with model: Collection.new, class: "collections--form" do |form| %>
+          <%= form.text_field :name, placeholder: "Namn på samlingen", class: "collections--field", data: { collection_form_target: "field" } %>
+          <%= form.submit "Skapa", class: "collections--submit" %>
+          <button type="button" class="collections--action" data-action="click->collection-form#hide">Avbryt</button>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</section>

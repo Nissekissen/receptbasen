@@ -9,6 +9,12 @@ class Collection < ApplicationRecord
   before_destroy :prevent_locked_deletion
   before_update :prevent_locked_rename
 
+  # CollectionsController#index supplies this as a COUNT in one query; the fallback
+  # keeps the value correct for a Collection loaded any other way.
+  def recipes_count
+    attributes.fetch("recipes_count") { saved_recipes.count }
+  end
+
   private
 
   def prevent_locked_deletion

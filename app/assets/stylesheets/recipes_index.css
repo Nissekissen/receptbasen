@@ -38,6 +38,15 @@
     cursor: pointer;
 }
 
+.filter-bar--manage {
+    align-self: center;
+    margin-left: 0.4rem;
+    font-family: var(--font-sans);
+    font-size: 12.5px;
+    color: #8a8a86;
+    text-decoration: underline;
+}
+
 .filter-bar--active {
     display: flex;
     flex-wrap: wrap;

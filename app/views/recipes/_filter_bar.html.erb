@@ -12,6 +12,8 @@
     <div class="filter-pill">
       <%= select_tag :kost_tag_id, options_for_select([["Kost", ""]] + @kost_tags.map { |tag| [tag.name.capitalize, tag.id] }, params[:kost_tag_id]), data: { action: "change->auto-submit#submit" } %>
     </div>
+
+    <%= link_to "Hantera samlingar", collections_path, class: "filter-bar--manage" %>
   </div>
 <% end %>
 

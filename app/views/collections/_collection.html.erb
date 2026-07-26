@@ -1,0 +1,35 @@
+<div class="collections--row" data-controller="collection-form">
+  <div class="collections--row-display" data-collection-form-target="display">
+    <div class="collections--meta">
+      <p class="collections--name"><%= collection.name %></p>
+      <span class="collections--count"><%= collection_count_label(collection) %></span>
+    </div>
+
+    <div class="collections--actions">
+      <% if collection.locked? %>
+        <span class="collections--locked">
+          <%= render "icons/lock" %>
+          Låst
+        </span>
+      <% end %>
+
+      <%= link_to "Visa", recipes_path(collection_id: collection.id), class: "collections--action" %>
+
+      <% unless collection.locked? %>
+        <button type="button" class="collections--action" data-action="click->collection-form#show">Byt namn</button>
+
+        <%= button_to "Ta bort", collection_path(collection), method: :delete,
+              class: "collections--action collections--action-delete",
+              form: { class: "collections--delete-form", data: { turbo_confirm: collection_delete_confirm(collection) } } %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="collections--row-form" data-collection-form-target="form" hidden>
+    <%= form_with model: collection, class: "collections--form" do |form| %>
+      <%= form.text_field :name, class: "collections--field", data: { collection_form_target: "field" } %>
+      <%= form.submit "Spara", class: "collections--submit" %>
+      <button type="button" class="collections--action" data-action="click->collection-form#hide">Avbryt</button>
+    <% end %>
+  </div>
+</div>
