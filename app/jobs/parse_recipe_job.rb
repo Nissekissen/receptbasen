@@ -12,10 +12,14 @@ class ParseRecipeJob < ApplicationJob
     broadcast_step(recipe, :parse, :active)
 
     ingredients = nil
+    steps = nil
 
     structured_parser = StructuredParser.new(html)
     result = structured_parser.call
-    ingredients = structured_parser.ingredients unless result.nil?
+    if result
+      ingredients = structured_parser.ingredients
+      steps = structured_parser.steps
+    end
 
     if result.nil?
       # Use LLM parser instead
@@ -32,6 +36,7 @@ class ParseRecipeJob < ApplicationJob
       end
 
       ingredients = llm_parser.ingredients
+      steps = llm_parser.steps
 
       broadcast_step(recipe, :parse_ai, :done)
     else
@@ -42,6 +47,7 @@ class ParseRecipeJob < ApplicationJob
     recipe.update!(status: :done)
 
     recipe.ingredients.create!(ingredients.map { |content| { content: content } })
+    recipe.steps.create!(steps.each_with_index.map { |content, index| { content: content, position: index } })
 
     broadcast_step(recipe, :tags, :active)
 

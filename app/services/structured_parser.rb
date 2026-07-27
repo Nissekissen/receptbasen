@@ -1,9 +1,10 @@
 class StructuredParser < Parser
-  attr_reader :ingredients
+  attr_reader :ingredients, :steps
 
   def initialize(html)
     @html = html
     @ingredients = nil
+    @steps = nil
   end
 
   def call
@@ -11,6 +12,7 @@ class StructuredParser < Parser
     return nil unless node
 
     @ingredients = extract_ingredients(node["recipeIngredient"])
+    @steps = extract_instructions(node["recipeInstructions"])
 
     normalize(
       title: node["name"],
@@ -20,8 +22,7 @@ class StructuredParser < Parser
       cook_time: node["cookTime"],
       total_time: node["totalTime"],
       servings: extract_servings(node["recipeYield"]),
-      source_domain: extract_source_domain(node["url"] || extract_image_url(node["image"])),
-      steps: extract_instructions(node["recipeInstructions"])
+      source_domain: extract_source_domain(node["url"] || extract_image_url(node["image"]))
     )
   end
 

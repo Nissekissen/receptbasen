@@ -18,12 +18,13 @@ class LlmParser < Parser
     additionalProperties: false
   }
 
-  attr_reader :error
+  attr_reader :error, :ingredients, :steps
 
   def initialize(html)
     @html = html
     @error = nil
     @ingredients = nil
+    @steps = nil
   end
 
   def call
@@ -47,6 +48,7 @@ class LlmParser < Parser
     end
 
     @ingredients = result["ingredients"]
+    @steps = result["steps"]
 
     normalize(result)
   end

@@ -74,10 +74,10 @@
 
       <div class="recipe-detail--steps">
         <p class="recipe-detail--heading">Gör så här</p>
-        <% (recipe.steps || []).each.with_index(1) do |step, index| %>
+        <% recipe.steps.each.with_index(1) do |step, index| %>
           <div class="recipe-detail--step">
             <span class="recipe-detail--step-number"><%= format("%02d", index) %></span>
-            <span class="recipe-detail--step-text"><%= step %></span>
+            <span class="recipe-detail--step-text"><%= step.content %></span>
           </div>
         <% end %>
       </div>

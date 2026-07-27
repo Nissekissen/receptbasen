@@ -5,6 +5,8 @@ class Recipe < ApplicationRecord
   ].freeze
 
   normalizes :source_url, with: ->(url) do
+    return url if url.nil?
+
     uri = URI.parse(url)
     return url if uri.host.nil?
 
@@ -30,9 +32,11 @@ class Recipe < ApplicationRecord
 
   enum :status, { pending: 0, done: 1, failed: 2 }
 
-  validates :source_url, presence: true, uniqueness: true
+  validates :source_url, presence: { unless: :manual? }, uniqueness: { allow_nil: true }
+  validates :owner_id, absence: true, if: :source_url?
 
   has_many :ingredients
+  has_many :steps, -> { order(:position) }
   has_many :taggings
   has_many :tags, through: :taggings
   has_many :saved_recipes
@@ -44,5 +48,9 @@ class Recipe < ApplicationRecord
 
   def publish!
     update!(published_at: Time.current)
+  end
+
+  def manual?
+    owner_id.present?
   end
 end
