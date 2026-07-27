@@ -1,0 +1,91 @@
+<section class="recipe-manual">
+    <div class="recipe-manual--card">
+        <p class="recipe-manual--flow-title">Nytt recept</p>
+
+        <% if flash[:alert] %>
+          <div class="recipe-manual--alert"><%= flash[:alert] %></div>
+        <% end %>
+
+        <%= form_with model: @recipe, url: manual_recipe_path, method: :post, class: "recipe-manual--form" do |form| %>
+
+            <div class="recipe-manual--field-group">
+                <%= form.label :title, "Titel" %>
+                <%= form.text_field :title, placeholder: "Kladdkaka", autocomplete: "off", class: "recipe-collection--field" %>
+            </div>
+
+            <div class="recipe-manual--field-group">
+                <%= form.label :description, "Kort beskrivning" %>
+                <%= form.text_area :description, autocomplete: "off", class: "recipe-collection--text-area" %>
+            </div>
+
+            <div class="recipe-manual--field-group">
+                <%= form.label :image_url, "Bild-URL" %>
+                <%= form.text_field :image_url, placeholder: "https://...", autocomplete: "off", class: "recipe-collection--field" %>
+            </div>
+
+            <div class="recipe-manual--field-group">
+                <%= form.label :servings, "Antal portioner" %>
+                <%= form.text_field :servings, placeholder: "4", autocomplete: "off", class: "recipe-collection--field" %>
+            </div>
+
+            <div class="recipe-manual--section">
+                <p class="recipe-manual--heading">Tid</p>
+
+                <div class="recipe-manual--row">
+                    <div class="recipe-manual--field-group">
+                        <%= label_tag "prep_time_minutes", "Förberedelsetid (min)" %>
+                        <%= number_field_tag "prep_time_minutes", nil, class: "recipe-collection--field" %>
+                    </div>
+                    <div class="recipe-manual--field-group">
+                        <%= label_tag "cook_time_minutes", "Tillagningstid (min)" %>
+                        <%= number_field_tag "cook_time_minutes", nil, class: "recipe-collection--field" %>
+                    </div>
+                </div>
+
+                <p class="recipe-manual--divider">eller</p>
+
+                <div class="recipe-manual--field-group">
+                    <%= label_tag "total_time_minutes", "Total tid (min)" %>
+                    <%= number_field_tag "total_time_minutes", nil, class: "recipe-collection--field" %>
+                </div>
+            </div>
+
+            <div class="recipe-manual--section" data-controller="dynamic-list">
+              <p class="recipe-manual--heading">Ingredienser</p>
+
+              <div data-dynamic-list-target="list"></div>
+
+              <template data-dynamic-list-target="template">
+                <div class="recipe-manual--list-row">
+                  <%= text_field_tag "ingredients[]", nil, placeholder: "t.ex. 2 dl mjöl", class: "recipe-collection--field" %>
+                  <button type="button" class="recipe-manual--remove" data-action="click->dynamic-list#remove" aria-label="Ta bort">&times;</button>
+                </div>
+              </template>
+
+              <button type="button" class="recipe-manual--add" data-action="click->dynamic-list#add">+ Lägg till ingrediens</button>
+            </div>
+
+            <div class="recipe-manual--section" data-controller="dynamic-list">
+              <p class="recipe-manual--heading">Steg</p>
+
+              <div data-dynamic-list-target="list"></div>
+
+              <template data-dynamic-list-target="template">
+                <div class="recipe-manual--list-row">
+                  <%= text_field_tag "steps[]", nil, placeholder: "Beskriv steget", class: "recipe-collection--field" %>
+                  <button type="button" class="recipe-manual--remove" data-action="click->dynamic-list#remove" aria-label="Ta bort">&times;</button>
+                </div>
+              </template>
+
+              <button type="button" class="recipe-manual--add" data-action="click->dynamic-list#add">+ Lägg till steg</button>
+            </div>
+
+            <div class="recipe-flow--actions">
+                <button class="btn btn--secondary">Avbryt</button>
+                <%= form.submit "Spara recept", class: "btn btn--primary" %>
+            </div>
+
+
+        <% end %>
+    </div>
+</section>

@@ -26,6 +26,10 @@
     margin: 0 0 1.5rem;
 }
 
+.recipe-detail--image-placeholder {
+    background: linear-gradient(135deg, var(--accent-color-light) 0%, var(--accent-color) 100%);
+}
+
 .recipe-detail--title {
     font-family: var(--font-serif);
     font-weight: 500;

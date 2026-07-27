@@ -1,15 +1,17 @@
 <div class="recipe-preview<%= " recipe-preview--card" if local_assigns[:index_card] %>">
-  <% if recipe.image_url.present? %>
-    <div class="recipe-preview--image-wrap">
+  <div class="recipe-preview--image-wrap">
+    <% if recipe.image_url.present? %>
       <img src="<%= recipe.image_url %>" alt="" class="recipe-preview--image">
+    <% else %>
+      <div class="recipe-preview--image recipe-preview--image-placeholder" aria-hidden="true"></div>
+    <% end %>
 
-      <% if local_assigns[:index_card] %>
-        <span class="recipe-preview--save" aria-hidden="true">
-          <%= render "icons/bookmark" %>
-        </span>
-      <% end %>
-    </div>
-  <% end %>
+    <% if local_assigns[:index_card] %>
+      <span class="recipe-preview--save" aria-hidden="true">
+        <%= render "icons/bookmark" %>
+      </span>
+    <% end %>
+  </div>
 
   <div class="recipe-preview--body">
     <p class="recipe-preview--title"><%= recipe.title %></p>

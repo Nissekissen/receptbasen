@@ -6,7 +6,7 @@ class RecipesController < ApplicationController
 
   def show
     @recipe = Recipe.find(params[:id])
-    raise ActiveRecord::RecordNotFound if @recipe.manual? && Current.user != @recipe.owner
+    raise ActiveRecord::RecordNotFound if @recipe.manual? && (!authenticated? || Current.user != @recipe.owner)
     return request_authentication if @recipe.done? && !@recipe.published? && !authenticated?
 
     @collections = Current.user.collections if authenticated?

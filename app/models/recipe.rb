@@ -41,6 +41,7 @@ class Recipe < ApplicationRecord
   has_many :tags, through: :taggings
   has_many :saved_recipes
   has_many :collections, through: :saved_recipes
+  belongs_to :owner, class_name: "User", optional: true
 
   def published?
     published_at.present?

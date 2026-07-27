@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   resources :users, only: %i[new create]
   resources :collections, only: %i[index create update destroy]
   resource :profile, only: [:show]
+  resource :manual_recipe, only: [:new, :create]
   get "home/index"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
