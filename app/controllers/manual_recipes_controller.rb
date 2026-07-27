@@ -23,7 +23,7 @@ class ManualRecipesController < ApplicationController
       # discard cook and prep time
       recipe.total_time = minutes_to_duration(params[:total_time_minutes])
     else
-      recipe.prep_time = mintes_to_duration(params[:prep_time_minutes])
+      recipe.prep_time = minutes_to_duration(params[:prep_time_minutes])
       recipe.cook_time = minutes_to_duration[params[:cook_time_minutes]]
     end
 

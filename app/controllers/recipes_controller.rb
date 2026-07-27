@@ -38,4 +38,18 @@ class RecipesController < ApplicationController
     Recipe.find(params[:id]).destroy
     redirect_to root_path
   end
+
+  def extract_tags
+    @recipe = Recipe.find(params[:id])
+    raise ActiveRecord::RecordNotFound if @recipe.manual? && Current.user != @recipe.owner
+
+    tag_extractor = TagExtractor.new(title: @recipe.title, description: @recipe.description, ingredients: @recipe.ingredients.map(&:content))
+    result = tag_extractor.call
+    @recipe.tags = result.map { |tag| Tag.find_or_create_by!(name: tag[:name]) { |t| t.category = tag[:category] } } if result
+
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to @recipe }
+    end
+  end
 end

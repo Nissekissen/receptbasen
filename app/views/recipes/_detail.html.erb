@@ -51,14 +51,7 @@
 
     </div>
 
-    <% other_tags = recipe.tags.where.not(category: :svarighetsgrad) %>
-    <% if other_tags.any? %>
-      <div class="recipe-detail--tags">
-        <% other_tags.each do |tag| %>
-          <span class="recipe-detail--tag"><%= tag.name %></span>
-        <% end %>
-      </div>
-    <% end %>
+    <%= render "recipes/tags", recipe: recipe %>
 
     <% if recipe.description.present? %>
       <p class="recipe-detail--description"><%= recipe.description %></p>

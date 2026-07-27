@@ -1,0 +1,15 @@
+<div id="recipe_tags">
+  <% other_tags = recipe.tags.where.not(category: :svarighetsgrad) %>
+  <% if other_tags.any? %>
+    <div class="recipe-detail--tags">
+      <% other_tags.each do |tag| %>
+        <span class="recipe-detail--tag"><%= tag.name %></span>
+      <% end %>
+    </div>
+  <% elsif recipe.tags.empty? && authenticated? %>
+  <%= button_to "Extrahera taggar", extract_tags_recipe_path(recipe),
+        class: "btn btn--secondary",
+        data: { submit_spinner_target: "button" },
+        form: { data: { controller: "submit-spinner" } } %>
+  <% end %>
+</div>
