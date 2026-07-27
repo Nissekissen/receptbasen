@@ -24,7 +24,7 @@ class ManualRecipesController < ApplicationController
       recipe.total_time = minutes_to_duration(params[:total_time_minutes])
     else
       recipe.prep_time = minutes_to_duration(params[:prep_time_minutes])
-      recipe.cook_time = minutes_to_duration[params[:cook_time_minutes]]
+      recipe.cook_time = minutes_to_duration(params[:cook_time_minutes])
     end
 
     recipe.save!

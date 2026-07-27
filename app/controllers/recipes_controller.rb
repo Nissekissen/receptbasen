@@ -35,7 +35,15 @@ class RecipesController < ApplicationController
   end
 
   def destroy
-    Recipe.find(params[:id]).destroy
+    recipe = Recipe.find(params[:id])
+
+    if recipe.manual?
+      raise ActiveRecord::RecordNotFound unless authenticated? && Current.user == recipe.owner
+    else
+      raise ActiveRecord::RecordNotFound if recipe.published?
+    end
+
+    recipe.destroy
     redirect_to root_path
   end
 
