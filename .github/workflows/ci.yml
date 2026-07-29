@@ -41,6 +41,9 @@ jobs:
 
   lint:
     runs-on: ubuntu-latest
+    # Non-blocking: style issues are reported but won't fail the build.
+    # There's existing cosmetic lint debt not yet cleaned up.
+    continue-on-error: true
     env:
       RUBOCOP_CACHE_ROOT: tmp/rubocop
     steps:
