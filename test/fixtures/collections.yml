@@ -1,0 +1,18 @@
+# The auto-created, locked collection every user gets on signup.
+favoriter:
+  user: one
+  name: Favoriter
+  locked: true
+
+# A normal, unlocked, user-created collection.
+vardagsmat:
+  user: one
+  name: Vardagsmat
+  locked: false
+
+# A second user's own locked collection, so tests can check saving
+# behavior isn't accidentally scoped per-user instead of per-collection.
+two_favoriter:
+  user: two
+  name: Favoriter
+  locked: true

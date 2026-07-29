@@ -1,13 +1,36 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  source_url: MyString
-  status: 1
-  title: MyString
-  steps: 
+# A scraped recipe: no owner, has a source_url, published and visible to everyone.
+pannkakor:
+  source_url: https://example.com/recept/pannkakor
+  source_domain: example.com
+  title: Pannkakor
+  status: done
+  published_at: <%= 1.day.ago %>
 
-two:
-  source_url: MyString
-  status: 1
-  title: MyString
-  steps: 
+# A scraped recipe still mid-parse: no owner, has a source_url, not yet published.
+pending_recipe:
+  source_url: https://example.com/recept/pending
+  source_domain: example.com
+  status: pending
+
+# A scraped recipe that finished parsing but hasn't been saved to a
+# collection yet — the one window where #show requires a login.
+parsed_unpublished_recipe:
+  source_url: https://example.com/recept/parsed-unpublished
+  source_domain: example.com
+  title: Lasagne
+  status: done
+
+# A scraped recipe whose parse job failed.
+failed_recipe:
+  source_url: https://example.com/recept/failed
+  source_domain: example.com
+  status: failed
+
+# A manual recipe: owned by a user, no source_url.
+kottbullar:
+  owner: one
+  title: Mormors köttbullar
+  status: done
+  published_at: <%= 1.day.ago %>
