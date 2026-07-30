@@ -1,0 +1,24 @@
+one_in_private:
+  user: one
+  group: private 
+  admin: true
+
+two_in_private:
+  user: two
+  group: private 
+  admin: false
+
+non_owner_admin:
+  user: three
+  group: private
+  admin: true
+
+one_in_public:
+  user: one
+  group: public 
+  admin: true
+
+two_in_public:
+  user: two
+  group: public
+  admin: false

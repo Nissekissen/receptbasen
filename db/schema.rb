@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_26_162126) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_29_192622) do
   create_table "collections", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.boolean "locked", default: false, null: false
@@ -20,12 +20,32 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_26_162126) do
     t.index ["user_id"], name: "index_collections_on_user_id"
   end
 
+  create_table "groups", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.integer "owner_id", null: false
+    t.boolean "public", default: false, null: false
+    t.datetime "updated_at", null: false
+    t.index ["owner_id"], name: "index_groups_on_owner_id"
+  end
+
   create_table "ingredients", force: :cascade do |t|
     t.string "content"
     t.datetime "created_at", null: false
     t.integer "recipe_id", null: false
     t.datetime "updated_at", null: false
     t.index ["recipe_id"], name: "index_ingredients_on_recipe_id"
+  end
+
+  create_table "memberships", force: :cascade do |t|
+    t.boolean "admin", default: false, null: false
+    t.datetime "created_at", null: false
+    t.integer "group_id", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["group_id", "user_id"], name: "index_memberships_on_group_id_and_user_id", unique: true
+    t.index ["group_id"], name: "index_memberships_on_group_id"
+    t.index ["user_id"], name: "index_memberships_on_user_id"
   end
 
   create_table "recipes", force: :cascade do |t|
@@ -109,7 +129,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_26_162126) do
   end
 
   add_foreign_key "collections", "users", on_delete: :cascade
+  add_foreign_key "groups", "users", column: "owner_id", on_delete: :cascade
   add_foreign_key "ingredients", "recipes", on_delete: :cascade
+  add_foreign_key "memberships", "groups", on_delete: :cascade
+  add_foreign_key "memberships", "users", on_delete: :cascade
   add_foreign_key "recipes", "users", column: "owner_id", on_delete: :cascade
   add_foreign_key "saved_recipes", "collections", on_delete: :cascade
   add_foreign_key "saved_recipes", "recipes", on_delete: :cascade

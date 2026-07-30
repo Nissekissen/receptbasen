@@ -1,0 +1,10 @@
+private:
+  name: private group
+  public: false
+  owner: one
+
+public:
+  name: public group
+  public: true
+  owner: one
+   
