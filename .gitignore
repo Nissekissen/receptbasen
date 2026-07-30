@@ -34,3 +34,4 @@
 /config/*.key
 
 CLAUDE.md
+*.log
