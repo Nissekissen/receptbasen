@@ -1,0 +1,44 @@
+<section class="group-flow">
+  <div class="group-flow--card">
+    <p class="group-flow--title">Skapa grupp</p>
+    <p class="group-flow--subtitle">Dela samlingar med andra.</p>
+
+    <% if @group.errors.any? %>
+      <div class="group-flow--error">
+        <p><%= @group.errors.full_messages.to_sentence %></p>
+      </div>
+    <% end %>
+
+    <%= form_with model: @group, url: groups_path do |form| %>
+      <div class="group-flow--field-group">
+        <%= form.label :name, "Gruppnamn" %>
+        <%= form.text_field :name, required: true, autofocus: true, placeholder: "t.ex. Familjen Andersson", class: "group-flow--field" %>
+      </div>
+
+      <div class="group-flow--field-group">
+        <%= form.label :public, "Synlighet" %>
+        <div class="group-flow--visibility">
+          <label class="group-flow--visibility-option">
+            <%= form.radio_button :public, "false", checked: !@group.public? %>
+            <span>
+              <span class="group-flow--visibility-option-label">Privat</span>
+              <span class="group-flow--visibility-option-hint">Endast de du bjuder in kan se och gå med i gruppen.</span>
+            </span>
+          </label>
+
+          <label class="group-flow--visibility-option">
+            <%= form.radio_button :public, "true", checked: @group.public? %>
+            <span>
+              <span class="group-flow--visibility-option-label">Publik</span>
+              <span class="group-flow--visibility-option-hint">Vem som helst med länken kan se gruppen och gå med.</span>
+            </span>
+          </label>
+        </div>
+      </div>
+
+      <div class="group-flow--actions">
+        <%= form.submit "Skapa grupp", class: "btn btn--primary" %>
+      </div>
+    <% end %>
+  </div>
+</section>

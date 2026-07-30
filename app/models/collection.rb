@@ -1,5 +1,6 @@
 class Collection < ApplicationRecord
   belongs_to :user
+  belongs_to :group, optional: true
 
   has_many :saved_recipes
   has_many :recipes, through: :saved_recipes

@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   resources :saved_recipes, only: [:create, :destroy]
   resources :users, only: %i[new create]
   resources :collections, only: %i[index create update destroy]
+  resources :groups, only: %i[new create show]
   resource :profile, only: [:show]
   resource :manual_recipe, only: [:new, :create]
   get "home/index"

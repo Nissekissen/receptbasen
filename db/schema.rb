@@ -10,13 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_29_192622) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_30_194816) do
   create_table "collections", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.integer "group_id"
     t.boolean "locked", default: false, null: false
     t.string "name", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
+    t.index ["group_id"], name: "index_collections_on_group_id"
     t.index ["user_id"], name: "index_collections_on_user_id"
   end
 
@@ -128,6 +130,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_29_192622) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
+  add_foreign_key "collections", "groups", on_delete: :cascade
   add_foreign_key "collections", "users", on_delete: :cascade
   add_foreign_key "groups", "users", column: "owner_id", on_delete: :cascade
   add_foreign_key "ingredients", "recipes", on_delete: :cascade
