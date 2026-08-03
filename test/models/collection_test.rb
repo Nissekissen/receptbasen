@@ -47,4 +47,24 @@ class CollectionTest < ActiveSupport::TestCase
 
     assert_equal 999, collection.recipes_count
   end
+
+  test "accessible_to? is true for the collection's own user" do
+    assert collections(:vardagsmat).accessible_to?(users(:one))
+  end
+
+  test "accessible_to? is false for a personal collection's non-owner" do
+    assert_not collections(:vardagsmat).accessible_to?(users(:two))
+  end
+
+  test "accessible_to? is false for a nil user" do
+    assert_not collections(:vardagsmat).accessible_to?(nil)
+  end
+
+  test "accessible_to? is true for a fellow group member on a group collection" do
+    assert collections(:private_group_favoriter).accessible_to?(users(:three))
+  end
+
+  test "accessible_to? is false for a user outside the collection's group" do
+    assert_not collections(:public_group_favoriter).accessible_to?(users(:three))
+  end
 end

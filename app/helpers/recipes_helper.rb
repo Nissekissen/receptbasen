@@ -10,7 +10,8 @@ module RecipesHelper
   end
 
   def saved_recipe_lookup(recipe)
-    Current.user.saved_recipes.where(recipe: recipe).index_by(&:collection_id)
+    collections = Current.user.collections.where(group_id: nil).or(Collection.where(group_id: Current.user.groups.select(:id)))
+    SavedRecipe.where(recipe: recipe, collection: collections).index_by(&:collection_id)
   end
 
   def recipe_total_time(recipe)

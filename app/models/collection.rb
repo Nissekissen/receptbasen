@@ -16,6 +16,13 @@ class Collection < ApplicationRecord
     attributes.fetch("recipes_count") { saved_recipes.count }
   end
 
+  def accessible_to?(user)
+    return false unless user
+    return true if self.user == user
+
+    group.present? && group.member?(user)
+  end
+
   private
 
   def prevent_locked_deletion
