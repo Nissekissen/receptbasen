@@ -33,8 +33,31 @@
       </div>
     </header>
 
-    <div class="group-show--placeholder">
-      <p>Inga samlingar än i den här gruppen.</p>
-    </div>
+    <%= render "recipes/filter_bar", url: group_path(@group), manage_path: nil %>
+
+    <% if @recipes.any? %>
+      <div class="recipes-index--grid">
+        <% @recipes.each do |recipe| %>
+          <% saved = saved_recipe_lookup(recipe) %>
+          <div class="recipes-index--card-wrap">
+            <%= link_to recipe, class: "recipes-index--card" do %>
+              <%= render "recipes/preview_card", recipe: recipe, index_card: true, attribution: @attributions[recipe.id] %>
+            <% end %>
+
+            <div class="recipe-preview--save-wrap" data-controller="dropdown save-menu">
+              <button type="button" class="recipe-preview--save" data-action="click->dropdown#toggle" data-save-menu-target="trigger" aria-label="Spara">
+                <%= render "icons/bookmark", filled: saved.any? %>
+              </button>
+
+              <%= render "recipes/save_menu", recipe: recipe, saved: saved %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% elsif active_recipe_filters(collections: @collections).any? %>
+      <p class="recipes-index--empty">Inga recept matchar filtren.</p>
+    <% else %>
+      <p class="group-show--placeholder">Inga recept sparade än i den här gruppen.</p>
+    <% end %>
   </div>
 </section>

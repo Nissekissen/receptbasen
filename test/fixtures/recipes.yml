@@ -34,3 +34,11 @@ kottbullar:
   title: Mormors köttbullar
   status: done
   published_at: <%= 1.day.ago %>
+
+# A manual recipe owned by a group member (not the group's owner), saved into
+# a group's collection — exercises Recipe#visible_to?'s group-membership branch.
+manual_recipe_in_group:
+  owner: two
+  title: Farmors kanelbullar
+  status: done
+  published_at: <%= 1.day.ago %>

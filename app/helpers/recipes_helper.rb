@@ -30,9 +30,9 @@ module RecipesHelper
     { "lätt" => "easy", "medel" => "medium", "avancerad" => "hard" }[difficulty&.downcase]
   end
 
-  def active_recipe_filters
+  def active_recipe_filters(collections: Current.user.collections)
     filters = []
-    filters << { param: :collection_id, label: Current.user.collections.find_by(id: params[:collection_id])&.name } if params[:collection_id].present?
+    filters << { param: :collection_id, label: collections.find_by(id: params[:collection_id])&.name } if params[:collection_id].present?
     filters << { param: :maltidstyp_tag_id, label: Tag.find_by(id: params[:maltidstyp_tag_id])&.name&.capitalize } if params[:maltidstyp_tag_id].present?
     filters << { param: :kok_tag_id, label: Tag.find_by(id: params[:kok_tag_id])&.name&.capitalize } if params[:kok_tag_id].present?
     filters << { param: :kost_tag_id, label: Tag.find_by(id: params[:kost_tag_id])&.name&.capitalize } if params[:kost_tag_id].present?

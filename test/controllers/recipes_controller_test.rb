@@ -40,6 +40,22 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
+  test "shows a manual recipe to a fellow group member once it's saved in a group collection" do
+    sign_in_as(users(:one))
+
+    get recipe_url(recipes(:manual_recipe_in_group))
+
+    assert_response :success
+  end
+
+  test "404s a manual recipe saved in a group collection for a user outside that group" do
+    sign_in_as(users(:three))
+
+    get recipe_url(recipes(:manual_recipe_in_group))
+
+    assert_response :not_found
+  end
+
   test "redirects to the existing recipe instead of creating a duplicate" do
     assert_no_difference "Recipe.count" do
       post recipes_url, params: { url: recipes(:pannkakor).source_url }

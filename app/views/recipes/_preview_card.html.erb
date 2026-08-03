@@ -16,6 +16,11 @@
   <div class="recipe-preview--body">
     <p class="recipe-preview--title"><%= recipe.title %></p>
 
+    <% if local_assigns[:attribution] %>
+      <p class="recipe-preview--attribution" >
+        Sparad av <%= attribution.user.name %> i <%= attribution.collection.name %>
+      </p>
+    <% end %>
     <div class="recipe-preview--meta">
       <% if (total_time = recipe_total_time(recipe)) %>
         <span class="recipe-preview--badge">

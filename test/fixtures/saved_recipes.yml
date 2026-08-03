@@ -2,3 +2,13 @@ pannkakor_in_vardagsmat:
   user: one
   collection: vardagsmat
   recipe: pannkakor
+
+pannkakor_in_private_group:
+  user: two
+  collection: private_group_favoriter
+  recipe: pannkakor
+
+kanelbullar_in_public_group:
+  user: two
+  collection: public_group_favoriter
+  recipe: manual_recipe_in_group
