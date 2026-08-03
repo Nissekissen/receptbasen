@@ -8,6 +8,7 @@ class GroupsController < ApplicationController
 
     if @group.save
       @group.memberships.create!(user: Current.user, admin: true)
+      @group.collections.create!(user: Current.user, locked: true, name: "Favoriter")
       redirect_to @group
     else
       render :new, status: :unprocessable_entity
