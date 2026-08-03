@@ -1,6 +1,31 @@
 require "test_helper"
 
 class GroupsControllerTest < ActionDispatch::IntegrationTest
+  test "requires authentication to list groups" do
+    get groups_url
+    assert_redirected_to new_session_path
+  end
+
+  test "lists only the current user's groups" do
+    sign_in_as(users(:one))
+
+    get groups_url
+
+    assert_response :success
+    assert_select ".groups-index--card-name", text: "private group"
+    assert_select ".groups-index--card-name", text: "public group"
+  end
+
+  test "does not list a group the user isn't a member of" do
+    sign_in_as(users(:three))
+
+    get groups_url
+
+    assert_response :success
+    assert_select ".groups-index--card-name", text: "private group"
+    assert_select ".groups-index--card-name", text: "public group", count: 0
+  end
+
   test "requires authentication to view the new group form" do
     get new_group_url
     assert_redirected_to new_session_path

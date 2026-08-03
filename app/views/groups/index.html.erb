@@ -1,0 +1,54 @@
+<section class="groups-index">
+  <div class="groups-index--inner">
+    <div class="groups-index--header">
+      <div>
+        <h1 class="groups-index--title">Dina grupper</h1>
+        <p class="groups-index--subtitle">Grupper du är med i eller äger</p>
+      </div>
+
+      <%= link_to new_group_path, class: "btn btn--primary" do %>
+        <%= render "icons/plus" %>
+        Ny grupp
+      <% end %>
+    </div>
+
+    <% if @groups.any? %>
+      <div class="groups-index--grid">
+        <% @groups.each do |group| %>
+          <%= link_to group, class: "groups-index--card" do %>
+            <div class="groups-index--card-top">
+              <p class="groups-index--card-name"><%= group.name %></p>
+              <span class="group-show--badge">
+                <% unless group.public? %>
+                  <%= render "icons/lock" %>
+                <% end %>
+                <%= group.public? ? "PUBLIK" : "PRIVAT" %>
+              </span>
+            </div>
+
+            <div class="groups-index--card-meta">
+              <div class="group-show--avatars">
+                <% group.members.first(4).each do |member| %>
+                  <span class="group-show--avatar"><%= member_initials(member) %></span>
+                <% end %>
+              </div>
+              <span class="group-show--member-count"><%= pluralize(group.members.count, "medlem", plural: "medlemmar") %></span>
+            </div>
+
+            <div class="groups-index--card-footer">
+              <span><%= pluralize(group.collections.count, "samling", plural: "samlingar") %></span>
+              <span><strong><%= group_recipe_count(group) %></strong> recept</span>
+            </div>
+          <% end %>
+        <% end %>
+
+        <%= link_to new_group_path, class: "groups-index--new" do %>
+          <span class="groups-index--new-icon"><%= render "icons/plus" %></span>
+          Skapa en ny grupp
+        <% end %>
+      </div>
+    <% else %>
+      <p class="groups-index--empty">Du är inte med i några grupper än.</p>
+    <% end %>
+  </div>
+</section>
