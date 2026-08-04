@@ -54,4 +54,12 @@ class Recipe < ApplicationRecord
   def manual?
     owner_id.present?
   end
+
+  def visible_to?(user)
+    return true unless manual?
+    return false unless user
+    return true if user == owner
+
+    Membership.exists?(user: user, group_id: collections.where.not(group_id: nil).select(:group_id))
+  end
 end

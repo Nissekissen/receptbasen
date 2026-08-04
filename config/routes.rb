@@ -1,16 +1,24 @@
 Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
-  resources :recipes, only: [:index, :new, :create, :show, :destroy] do
+  resources :recipes, only: [ :index, :new, :create, :show, :destroy ] do
     member do
       post :extract_tags
     end
   end
-  resources :saved_recipes, only: [:create, :destroy]
+  resources :saved_recipes, only: [ :create, :destroy ]
   resources :users, only: %i[new create]
   resources :collections, only: %i[index create update destroy]
-  resource :profile, only: [:show]
-  resource :manual_recipe, only: [:new, :create]
+  resources :groups, only: %i[index new create show edit update destroy] do
+    member do
+      post :join
+    end
+    resources :collections, only: %i[index create update destroy], controller: "group_collections"
+    resources :memberships, only: %i[index update destroy], controller: "group_memberships"
+    resources :invites, only: %i[index new create destroy], controller: "group_invites"
+  end
+  resource :profile, only: [ :show ]
+  resource :manual_recipe, only: [ :new, :create ]
   get "home/index"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -29,6 +37,8 @@ Rails.application.routes.draw do
   get "login", to: "sessions#new", as: :login
 
   get "signup", to: "users#new", as: :signup
+
+  get "/invite/:token", to: "invites#show", as: :invite
 
   post "saved_recipes/toggle", to: "saved_recipes#toggle", as: :toggle_saved_recipe
 end

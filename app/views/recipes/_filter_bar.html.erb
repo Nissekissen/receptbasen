@@ -1,4 +1,6 @@
-<%= form_with url: recipes_path, method: :get, data: { controller: "auto-submit" }, class: "filter-bar" do %>
+<% manage_path = local_assigns.fetch(:manage_path, collections_path) %>
+
+<%= form_with url: url, method: :get, data: { controller: "auto-submit" }, class: "filter-bar" do %>
   <div class="filter-bar--row">
     <div class="filter-pill">
       <%= select_tag :collection_id, options_for_select([["Samling", ""]] + @collections.map { |collection| [collection.name, collection.id] }, params[:collection_id]), data: { action: "change->auto-submit#submit" } %>
@@ -13,18 +15,20 @@
       <%= select_tag :kost_tag_id, options_for_select([["Kost", ""]] + @kost_tags.map { |tag| [tag.name.capitalize, tag.id] }, params[:kost_tag_id]), data: { action: "change->auto-submit#submit" } %>
     </div>
 
-    <%= link_to "Hantera samlingar", collections_path, class: "filter-bar--manage" %>
+    <% if manage_path %>
+      <%= link_to "Hantera samlingar", manage_path, class: "filter-bar--manage" %>
+    <% end %>
   </div>
 <% end %>
 
-<% if active_recipe_filters.any? %>
+<% if active_recipe_filters(collections: @collections).any? %>
   <div class="filter-bar--active">
-    <% active_recipe_filters.each do |filter| %>
-      <%= link_to recipes_path(request.query_parameters.except(filter[:param].to_s)), class: "filter-tag" do %>
+    <% active_recipe_filters(collections: @collections).each do |filter| %>
+      <%= link_to url_for(request.query_parameters.except(filter[:param].to_s)), class: "filter-tag" do %>
         <%= filter[:label] %>
         <span aria-hidden="true">&times;</span>
       <% end %>
     <% end %>
-    <%= link_to "Rensa alla", recipes_path, class: "filter-bar--clear" %>
+    <%= link_to "Rensa alla", url, class: "filter-bar--clear" %>
   </div>
 <% end %>

@@ -1,0 +1,15 @@
+<%= link_to group_path(group), class: "settings-header--back" do %>
+  <%= render "icons/chevron_left" %>
+  <%= group.name %>
+<% end %>
+
+<h1 class="settings-header--title">Inställningar</h1>
+
+<nav class="settings-header--tabs">
+  <%= link_to "Allmänt", edit_group_path(group), class: class_names("settings-header--tab", "is-active" => active_tab == :general) %>
+  <%= link_to "Samlingar", group_collections_path(group), class: class_names("settings-header--tab", "is-active" => active_tab == :collections) %>
+  <%= link_to "Medlemmar", group_memberships_path(group), class: class_names("settings-header--tab", "is-active" => active_tab == :members) %>
+  <% if group.manager?(Current.user) %>
+    <%= link_to "Inbjudningar", group_invites_path(group), class: class_names("settings-header--tab", "is-active" => active_tab == :invites) %>
+  <% end %>
+</nav>

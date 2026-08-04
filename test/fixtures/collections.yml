@@ -16,3 +16,25 @@ two_favoriter:
   user: two
   name: Favoriter
   locked: true
+
+# The private group's auto-created default collection.
+private_group_favoriter:
+  user: one
+  group: private
+  name: Favoriter
+  locked: true
+
+# The public group's auto-created default collection.
+public_group_favoriter:
+  user: one
+  group: public
+  name: Favoriter
+  locked: true
+
+# An unlocked, non-default collection for the private group, so tests can
+# check real rename/delete behavior distinct from the locked default.
+private_group_grillrecept:
+  user: one
+  group: private
+  name: Grillrecept
+  locked: false

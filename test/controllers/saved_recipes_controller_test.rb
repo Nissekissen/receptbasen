@@ -119,4 +119,44 @@ class SavedRecipesControllerTest < ActionDispatch::IntegrationTest
     assert_response :no_content
     assert_predicate recipes(:parsed_unpublished_recipe).reload, :published?
   end
+
+  test "toggle allows a non-creator group member to save into a group collection" do
+    sign_in_as(users(:three))
+
+    assert_difference "SavedRecipe.count", 1 do
+      post toggle_saved_recipe_url, params: {
+        recipe_id: recipes(:parsed_unpublished_recipe).id,
+        collection_id: collections(:private_group_favoriter).id
+      }
+    end
+
+    assert_response :no_content
+    assert_predicate recipes(:parsed_unpublished_recipe).reload, :published?
+  end
+
+  test "toggle removes a group collection's save regardless of who originally added it" do
+    sign_in_as(users(:three))
+
+    assert_difference "SavedRecipe.count", -1 do
+      post toggle_saved_recipe_url, params: {
+        recipe_id: recipes(:pannkakor).id,
+        collection_id: collections(:private_group_favoriter).id
+      }
+    end
+
+    assert_response :no_content
+  end
+
+  test "toggle 404s for a user outside the collection's group" do
+    sign_in_as(users(:three))
+
+    assert_no_difference "SavedRecipe.count" do
+      post toggle_saved_recipe_url, params: {
+        recipe_id: recipes(:pannkakor).id,
+        collection_id: collections(:public_group_favoriter).id
+      }
+    end
+
+    assert_response :not_found
+  end
 end

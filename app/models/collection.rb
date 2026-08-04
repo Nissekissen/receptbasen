@@ -1,5 +1,6 @@
 class Collection < ApplicationRecord
   belongs_to :user
+  belongs_to :group, optional: true
 
   has_many :saved_recipes
   has_many :recipes, through: :saved_recipes
@@ -13,6 +14,13 @@ class Collection < ApplicationRecord
   # keeps the value correct for a Collection loaded any other way.
   def recipes_count
     attributes.fetch("recipes_count") { saved_recipes.count }
+  end
+
+  def accessible_to?(user)
+    return false unless user
+    return true if self.user == user
+
+    group.present? && group.member?(user)
   end
 
   private

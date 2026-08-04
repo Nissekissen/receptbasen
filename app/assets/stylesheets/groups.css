@@ -1,0 +1,115 @@
+.group-flow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 1.5rem;
+}
+
+.group-flow--card {
+    width: 100%;
+    max-width: 420px;
+    background: white;
+    border-radius: 12px;
+    padding: 1.75rem;
+}
+
+.group-flow--title {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 1.3rem;
+    color: var(--accent-color-dark);
+    margin: 0 0 0.35rem;
+}
+
+.group-flow--subtitle {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: #8a8a86;
+    margin: 0 0 1.5rem;
+}
+
+.group-flow--field-group {
+    margin-bottom: 1.25rem;
+}
+
+.group-flow--field-group label {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 6px;
+}
+
+.group-flow--field {
+    display: block;
+    width: 100%;
+    font-size: 0.95rem;
+    padding: 13px 15px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+    outline: none;
+    color: var(--ink);
+    background: var(--background-color);
+    font-family: var(--font-sans);
+    box-sizing: border-box;
+}
+
+.group-flow--field:focus {
+    border-color: var(--accent-color);
+}
+
+.group-flow--visibility {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.group-flow--visibility-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.group-flow--visibility-option input {
+    margin-top: 3px;
+}
+
+.group-flow--visibility-option-label {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--ink);
+}
+
+.group-flow--visibility-option-hint {
+    margin-top: 2px;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    color: #8a8a86;
+}
+
+.group-flow--actions {
+    margin-top: 1.5rem;
+}
+
+.group-flow--actions .btn {
+    width: 100%;
+    text-align: center;
+}
+
+.group-flow--error {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: #a94442;
+    background: #fbe9e7;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin: 0 0 1.25rem;
+}

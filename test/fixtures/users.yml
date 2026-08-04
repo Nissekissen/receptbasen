@@ -9,3 +9,15 @@ two:
   name: Bea Bengtsson
   email_address: two@example.com
   password_digest: <%= password_digest %>
+
+three:
+  name: Otto Hansson
+  email_address: three@example.com
+  password_digest: <%= password_digest %>
+
+# A true stranger — not a member of any fixture group, so tests can check
+# access control for a signed-in user with zero relationship to a group.
+four:
+  name: Disa Dahlberg
+  email_address: four@example.com
+  password_digest: <%= password_digest %>

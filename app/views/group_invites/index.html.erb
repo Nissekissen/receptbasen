@@ -1,0 +1,30 @@
+<section class="group-settings">
+  <div class="group-settings--inner">
+    <%= render "groups/settings_header", group: @group, active_tab: :invites %>
+
+    <% if flash[:alert] %>
+      <div class="settings-alert"><%= flash[:alert] %></div>
+    <% end %>
+
+    <% if flash[:notice] %>
+      <div class="settings-notice"><%= flash[:notice] %></div>
+    <% end %>
+
+    <div class="collections--card">
+      <% if @invites.any? %>
+        <% @invites.each do |invite| %>
+          <%= render "invite", invite: invite, group: @group %>
+        <% end %>
+      <% else %>
+        <p class="invite-empty">Inga aktiva inbjudningslänkar.</p>
+      <% end %>
+    </div>
+
+    <div class="collections--new">
+      <%= link_to new_group_invite_path(@group), class: "btn btn--primary" do %>
+        <%= render "icons/plus" %>
+        Skapa ny länk
+      <% end %>
+    </div>
+  </div>
+</section>

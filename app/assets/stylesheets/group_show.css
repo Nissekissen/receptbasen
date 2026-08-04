@@ -1,0 +1,128 @@
+.group-show {
+    padding: 7rem 2.5rem 4rem;
+    min-height: 100vh;
+    background: var(--background-color);
+}
+
+.group-show--inner {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.group-show--header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.group-show--info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.group-show--heading {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.group-show--title {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: clamp(1.5rem, 3vw + 1rem, 2rem);
+    color: var(--accent-color-dark);
+    margin: 0;
+}
+
+.group-show--badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--accent-color-dark);
+    border: 1px solid var(--accent-color);
+    padding: 5px 12px;
+    border-radius: 20px;
+}
+
+.group-show--meta {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.group-show--avatars {
+    display: flex;
+}
+
+.group-show--avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--accent-color-light);
+    color: var(--accent-color-dark);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    border: 2px solid var(--background-color);
+    margin-left: -10px;
+}
+
+.group-show--avatar:first-child {
+    margin-left: 0;
+}
+
+.group-show--member-count {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: #8a8a86;
+}
+
+.group-show--actions {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.group-show--settings {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--accent-color);
+    background: white;
+    color: var(--accent-color);
+    cursor: pointer;
+}
+
+.group-show--settings:hover {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.group-show--placeholder {
+    font-family: var(--font-sans);
+    color: #8a8a86;
+    background: white;
+    border-radius: 12px;
+    padding: 3rem 1.5rem;
+    text-align: center;
+}
+
+@media (max-width: 480px) {
+    .group-show {
+        padding: 6rem 1.25rem 3rem;
+    }
+}

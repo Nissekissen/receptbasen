@@ -24,8 +24,10 @@ class SavedRecipesController < ApplicationController
 
   def toggle
     recipe = Recipe.find(params[:recipe_id])
-    collection = Current.user.collections.find(params[:collection_id])
-    saved_recipe = Current.user.saved_recipes.find_by(recipe: recipe, collection: collection)
+    collection = Collection.find(params[:collection_id])
+    raise ActiveRecord::RecordNotFound unless collection.accessible_to?(Current.user)
+
+    saved_recipe = SavedRecipe.find_by(recipe: recipe, collection: collection)
 
     if saved_recipe
       saved_recipe.destroy

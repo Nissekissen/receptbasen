@@ -34,3 +34,7 @@
 /config/*.key
 
 CLAUDE.md
+*.log
+
+*/.DS_Store
+.DS_Store

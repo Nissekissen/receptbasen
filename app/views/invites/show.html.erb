@@ -1,0 +1,16 @@
+<div class="auth-flow">
+  <div class="auth-flow--card">
+    <% if @group %>
+      <p class="auth-flow--subtitle">Inbjudan</p>
+      <h1 class="auth-flow--title">Gå med i <%= @group.name %></h1>
+      <p class="invite-landing--hint">Du har blivit inbjuden att gå med i den här gruppen och se dess sparade recept.</p>
+
+      <div class="auth-flow--actions">
+        <%= button_to "Gå med", join_group_path(@group, token: @invite.token), method: :post, class: "btn btn--primary" %>
+      </div>
+    <% else %>
+      <h1 class="auth-flow--title">Länken är inte giltig</h1>
+      <p class="invite-landing--hint">Den här inbjudningslänken har återkallats eller finns inte längre.</p>
+    <% end %>
+  </div>
+</div>

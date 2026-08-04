@@ -2,7 +2,7 @@
   <div class="recipes-index--inner">
     <h1 class="recipes-index--title">Dina recept</h1>
 
-    <%= render "recipes/filter_bar" %>
+    <%= render "recipes/filter_bar", url: recipes_path %>
 
     <% if @recipes.any? %>
       <div class="recipes-index--grid">

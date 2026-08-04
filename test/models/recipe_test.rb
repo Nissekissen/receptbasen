@@ -110,4 +110,29 @@ class RecipeTest < ActiveSupport::TestCase
 
     assert_empty recipe.errors[:source_url]
   end
+
+  test "visible_to? is true for anyone on a scraped recipe" do
+    assert recipes(:pannkakor).visible_to?(users(:two))
+    assert recipes(:pannkakor).visible_to?(nil)
+  end
+
+  test "visible_to? is true for a manual recipe's owner" do
+    assert recipes(:kottbullar).visible_to?(users(:one))
+  end
+
+  test "visible_to? is false for a non-owner with no relationship to the recipe" do
+    assert_not recipes(:kottbullar).visible_to?(users(:two))
+  end
+
+  test "visible_to? is false for an anonymous visitor on a manual recipe" do
+    assert_not recipes(:kottbullar).visible_to?(nil)
+  end
+
+  test "visible_to? is true for a fellow group member once the recipe is saved in a group collection" do
+    assert recipes(:manual_recipe_in_group).visible_to?(users(:one))
+  end
+
+  test "visible_to? is false for a user outside the group the recipe was saved into" do
+    assert_not recipes(:manual_recipe_in_group).visible_to?(users(:three))
+  end
 end
