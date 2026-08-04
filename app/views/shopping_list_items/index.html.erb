@@ -1,0 +1,28 @@
+<section class="shopping-list">
+  <div class="shopping-list--inner">
+    <p class="shopping-list--title">Inköpslista</p>
+
+    <% if flash[:alert] %>
+      <div class="shopping-list--alert"><%= flash[:alert] %></div>
+    <% end %>
+
+    <% if flash[:notice] %>
+      <div class="shopping-list--notice"><%= flash[:notice] %></div>
+    <% end %>
+
+    <%= form_with url: shopping_list_items_path, method: :post, class: "shopping-list--add-form" do %>
+      <%= text_field_tag :content, nil, placeholder: "Lägg till en vara", class: "shopping-list--add-field", required: true %>
+      <%= submit_tag "Lägg till", class: "shopping-list--add-submit" %>
+    <% end %>
+
+    <div class="shopping-list--card">
+      <% if @items.any? %>
+        <% @items.each do |item| %>
+          <%= render "item", item: item %>
+        <% end %>
+      <% else %>
+        <p class="shopping-list--empty">Inköpslistan är tom.</p>
+      <% end %>
+    </div>
+  </div>
+</section>

@@ -168,4 +168,56 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :not_found
   end
+
+  test "requires authentication to add to the shopping list" do
+    post add_to_shopping_list_recipe_url(recipes(:pannkakor))
+
+    assert_redirected_to new_session_path
+  end
+
+  test "adds all of a recipe's ingredients to the shopping list" do
+    sign_in_as(users(:one))
+    recipe = recipes(:pannkakor)
+    recipe.ingredients.create!(content: "2 dl mjölk")
+    recipe.ingredients.create!(content: "3 ägg")
+
+    assert_difference "ShoppingListItem.count", 2 do
+      post add_to_shopping_list_recipe_url(recipe)
+    end
+
+    assert_equal [ "2 dl mjölk", "3 ägg" ], users(:one).shopping_list_items.where(recipe: recipe).pluck(:content)
+    assert_redirected_to recipe
+  end
+
+  test "responds with a turbo stream when adding to the shopping list" do
+    sign_in_as(users(:one))
+    recipe = recipes(:pannkakor)
+    recipe.ingredients.create!(content: "Mjöl")
+
+    post add_to_shopping_list_recipe_url(recipe), as: :turbo_stream
+
+    assert_response :success
+  end
+
+  test "owner can add their manual recipe's ingredients to the shopping list" do
+    sign_in_as(users(:one))
+    recipe = recipes(:kottbullar)
+    recipe.ingredients.create!(content: "500 g köttfärs")
+
+    assert_difference "ShoppingListItem.count", 1 do
+      post add_to_shopping_list_recipe_url(recipe)
+    end
+  end
+
+  test "404s adding a private manual recipe's ingredients for a non-owner" do
+    sign_in_as(users(:two))
+    recipe = recipes(:kottbullar)
+    recipe.ingredients.create!(content: "500 g köttfärs")
+
+    assert_no_difference "ShoppingListItem.count" do
+      post add_to_shopping_list_recipe_url(recipe)
+    end
+
+    assert_response :not_found
+  end
 end

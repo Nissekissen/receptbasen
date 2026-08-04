@@ -1,0 +1,5 @@
+<%= turbo_stream.replace "shopping_list_cta" do %>
+  <div id="shopping_list_cta" class="recipe-detail--shopping-list-confirmed">
+    Tillagt i <%= link_to "inköpslistan", shopping_list_items_path, class: "recipe-detail--shopping-list-link" %> ✓
+  </div>
+<% end %>

@@ -117,6 +117,47 @@
     margin: 0 0 0.9rem;
 }
 
+.recipe-detail--ingredients-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 0.9rem;
+}
+
+.recipe-detail--ingredients-header .recipe-detail--heading {
+    margin-bottom: 0;
+}
+
+.recipe-detail--shopping-list-btn {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.02em;
+    color: var(--accent-color);
+    background: none;
+    border: 1px solid var(--accent-color);
+    border-radius: 3px;
+    padding: 6px 10px;
+    cursor: pointer;
+}
+
+.recipe-detail--shopping-list-btn:hover {
+    background: var(--accent-color);
+    color: white;
+}
+
+.recipe-detail--shopping-list-confirmed {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.02em;
+    color: var(--accent-color-dark);
+}
+
+.recipe-detail--shopping-list-link {
+    color: var(--accent-color);
+    text-decoration: underline;
+}
+
 .recipe-detail--ingredients {
     background: white;
     border-radius: 10px;

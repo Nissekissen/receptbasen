@@ -1,0 +1,18 @@
+<div class="shopping-list--row <%= "is-checked" if item.checked? %>">
+  <%= form_with url: shopping_list_item_path(item), method: :patch, class: "shopping-list--check-form", data: { controller: "auto-submit" } do %>
+    <label class="shopping-list--check-label">
+      <%= hidden_field_tag "checked", "false" %>
+      <%= check_box_tag "checked", "true", item.checked?, class: "shopping-list--checkbox", data: { action: "change->auto-submit#submit" } %>
+      <span class="shopping-list--content"><%= item.content %></span>
+    </label>
+  <% end %>
+
+  <div class="shopping-list--row-meta">
+    <% if item.recipe %>
+      <%= link_to item.recipe.title, item.recipe, class: "shopping-list--source-link" %>
+    <% end %>
+
+    <%= button_to "Ta bort", shopping_list_item_path(item), method: :delete,
+          class: "shopping-list--remove", form: { class: "shopping-list--remove-form" } %>
+  </div>
+</div>

@@ -60,4 +60,15 @@ class RecipesController < ApplicationController
       format.html { redirect_to @recipe }
     end
   end
+
+  def add_to_shopping_list
+    @recipe = Recipe.find(params[:id])
+    raise ActiveRecord::RecordNotFound if @recipe.manual? && !@recipe.visible_to?(Current.user)
+
+    @recipe.ingredients.each do |ingredient|
+      Current.user.shopping_list_items.create!(content: ingredient.content, recipe: @recipe)
+    end
+
+    respond_to { |f| f.turbo_stream; f.html { redirect_to @recipe, notice: "Ingredienserna lades till i inköpslistan." } }
+  end
 end

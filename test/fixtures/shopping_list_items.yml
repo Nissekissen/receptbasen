@@ -1,0 +1,9 @@
+one_milk:
+  user: one
+  content: Mjölk
+  checked: false
+
+two_bread:
+  user: two
+  content: Bröd
+  checked: false

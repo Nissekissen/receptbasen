@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   resources :recipes, only: [ :index, :new, :create, :show, :destroy ] do
     member do
       post :extract_tags
+      post :add_to_shopping_list
     end
   end
   resources :saved_recipes, only: [ :create, :destroy ]
@@ -17,6 +18,7 @@ Rails.application.routes.draw do
     resources :memberships, only: %i[index update destroy], controller: "group_memberships"
     resources :invites, only: %i[index new create destroy], controller: "group_invites"
   end
+  resources :shopping_list_items, only: %i[index create update destroy], path: "shopping-list"
   resource :profile, only: [ :show ]
   resource :manual_recipe, only: [ :new, :create ]
   get "home/index"

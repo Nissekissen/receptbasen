@@ -31,6 +31,7 @@
 
             <div class="navbar--dropdown" data-dropdown-target="menu" hidden>
             <%= link_to "Samlingar", collections_path, class: "navbar--dropdown-item" %>
+            <%= link_to "Inköpslista", shopping_list_items_path, class: "navbar--dropdown-item" %>
             <%= link_to "Profil", profile_path, class: "navbar--dropdown-item" %>
             <%= button_to "Logga ut", session_path, method: :delete, class: "navbar--dropdown-item" %>
             </div>
@@ -61,6 +62,7 @@
           <div class="navbar--drawer-divider"></div>
 
           <%= link_to "Samlingar", collections_path, class: "navbar--drawer-sublink" %>
+          <%= link_to "Inköpslista", shopping_list_items_path, class: "navbar--drawer-sublink" %>
           <%= link_to "Profil", profile_path, class: "navbar--drawer-sublink" %>
           <%= button_to "Logga ut", session_path, method: :delete, class: "navbar--drawer-sublink" %>
         </div>

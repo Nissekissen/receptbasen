@@ -59,7 +59,16 @@
 
     <div class="recipe-detail--content">
       <div class="recipe-detail--ingredients">
-        <p class="recipe-detail--heading">Ingredienser</p>
+        <div class="recipe-detail--ingredients-header">
+          <p class="recipe-detail--heading">Ingredienser</p>
+
+          <% if authenticated? %>
+            <div id="shopping_list_cta">
+              <%= button_to "Lägg till i inköpslista", add_to_shopping_list_recipe_path(recipe), method: :post, class: "recipe-detail--shopping-list-btn" %>
+            </div>
+          <% end %>
+        </div>
+
         <ul class="recipe-detail--ingredients-list">
           <% recipe.ingredients.each do |ingredient| %>
             <li><%= ingredient.content %></li>
