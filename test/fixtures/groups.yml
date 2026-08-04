@@ -7,4 +7,10 @@ public:
   name: public group
   public: true
   owner: one
-   
+
+# A second private group, unrelated to `private` — needed to test that an
+# invite token minted for one private group can't be used to join another.
+other_private:
+  name: other private group
+  public: false
+  owner: two

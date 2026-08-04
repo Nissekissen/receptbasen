@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_30_194816) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_04_093014) do
   create_table "collections", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "group_id"
@@ -37,6 +37,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_30_194816) do
     t.integer "recipe_id", null: false
     t.datetime "updated_at", null: false
     t.index ["recipe_id"], name: "index_ingredients_on_recipe_id"
+  end
+
+  create_table "invites", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "created_by_id", null: false
+    t.datetime "expires_at"
+    t.integer "group_id", null: false
+    t.datetime "revoked_at"
+    t.string "token", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_by_id"], name: "index_invites_on_created_by_id"
+    t.index ["group_id"], name: "index_invites_on_group_id"
+    t.index ["token"], name: "index_invites_on_token", unique: true
   end
 
   create_table "memberships", force: :cascade do |t|
@@ -134,6 +147,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_30_194816) do
   add_foreign_key "collections", "users", on_delete: :cascade
   add_foreign_key "groups", "users", column: "owner_id", on_delete: :cascade
   add_foreign_key "ingredients", "recipes", on_delete: :cascade
+  add_foreign_key "invites", "groups"
+  add_foreign_key "invites", "users", column: "created_by_id", on_delete: :cascade
   add_foreign_key "memberships", "groups", on_delete: :cascade
   add_foreign_key "memberships", "users", on_delete: :cascade
   add_foreign_key "recipes", "users", column: "owner_id", on_delete: :cascade

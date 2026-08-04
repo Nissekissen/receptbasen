@@ -1,4 +1,6 @@
 class GroupsController < ApplicationController
+  allow_unauthenticated_access only: %i[show join]
+
   def index
     @groups = Current.user.groups
   end
@@ -21,6 +23,8 @@ class GroupsController < ApplicationController
 
   def show
     @group = Group.find(params[:id])
+    logged_in = authenticated?
+    raise ActiveRecord::RecordNotFound if !@group.public? && (!logged_in || !@group.member?(Current.user))
 
     @recipes = Recipe.where(id: SavedRecipe.where(collection_id: @group.collections.select(:id)).select(:recipe_id))
     @recipes = @recipes.where(id: SavedRecipe.where(collection_id: params[:collection_id]).select(:recipe_id)) if params[:collection_id].present?
@@ -40,10 +44,54 @@ class GroupsController < ApplicationController
                                .transform_values(&:first)
   end
 
+  def edit
+    @group = Group.find(params[:id])
+    raise ActiveRecord::RecordNotFound unless @group.member?(Current.user)
+  end
+
+  def update
+    @group = Group.find(params[:id])
+    raise ActiveRecord::RecordNotFound unless @group.manager?(Current.user)
+
+    if @group.update(group_update_params)
+      redirect_to edit_group_path(@group), notice: "Namnet ändrades."
+    else
+      redirect_to edit_group_path(@group), alert: "Det gick inte att byta namn på gruppen."
+    end
+  end
+
+  def destroy
+    group = Group.find(params[:id])
+    raise ActiveRecord::RecordNotFound unless Current.user == group.owner
+
+    group.destroy
+    redirect_to groups_path, notice: "Gruppen togs bort."
+  end
+
+  def join
+    @group = Group.find(params[:id])
+    invite = @group.invites.find_by(token: params[:token])
+    raise ActiveRecord::RecordNotFound unless @group.public? || invite&.active?
+
+    unless authenticated?
+      session[:return_to_after_authenticating] = group_path(@group)
+      session[:pending_group_join_id] = @group.id
+      session[:pending_group_join_token] = params[:token]
+      return redirect_to login_path
+    end
+
+    @group.memberships.find_or_create_by!(user: Current.user)
+    redirect_to @group
+  end
+
   private
 
   def group_params
     params.expect(group: [ :name, :public ] )
+  end
+
+  def group_update_params
+    params.expect(group: [ :name ])
   end
 
 end

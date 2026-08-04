@@ -1,5 +1,5 @@
-<% scopes = [ [ "personal", "Mina samlingar", Current.user.collections.where(group_id: nil) ] ] +
-            Current.user.groups.map { |group| [ "group-#{group.id}", group.name, group.collections ] } %>
+<% scopes = [ [ "personal", "Mina samlingar", Current.user.collections.where(group_id: nil), nil ] ] +
+            Current.user.groups.map { |group| [ "group-#{group.id}", group.name, group.collections, group ] } %>
 
 <div class="recipe-preview--save-menu" data-dropdown-target="menu" data-save-menu-target="menu" hidden>
   <div class="recipe-preview--scope-list" data-save-menu-target="scopeList">
@@ -11,7 +11,7 @@
     <% end %>
   </div>
 
-  <% scopes.each do |scope_id, label, collections| %>
+  <% scopes.each do |scope_id, label, collections, group| %>
     <div class="recipe-preview--collection-panel" data-save-menu-target="collectionPanel" data-scope="<%= scope_id %>" hidden>
       <button type="button" class="recipe-preview--back-row" data-action="click->save-menu#showScopes">
         <span aria-hidden="true">&lsaquo;</span> <%= label %>
@@ -31,10 +31,10 @@
         <% end %>
       <% end %>
 
-      <% if scope_id == "personal" %>
-        <%= link_to "Hantera samlingar", collections_path, class: "recipe-preview--manage-link" %>
+      <% if group %>
+        <%= link_to "Hantera samlingar", group_collections_path(group), class: "recipe-preview--manage-link" %>
       <% else %>
-        <button type="button" class="recipe-preview--manage-link" disabled>Hantera samlingar</button>
+        <%= link_to "Hantera samlingar", collections_path, class: "recipe-preview--manage-link" %>
       <% end %>
     </div>
   <% end %>

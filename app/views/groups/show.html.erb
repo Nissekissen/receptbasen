@@ -23,13 +23,19 @@
       </div>
 
       <div class="group-show--actions">
-        <button type="button" class="btn btn--secondary" disabled>
-          <%= render "icons/link" %>
-          Dela inbjudan
-        </button>
-        <button type="button" class="group-show--settings" aria-label="Inställningar" disabled>
-          <%= render "icons/sliders" %>
-        </button>
+        <% if @group.member?(Current.user) %>
+          <% if !@group.public? && @group.manager?(Current.user) %>
+            <%= link_to group_invites_path(@group), class: "btn btn--secondary" do %>
+              <%= render "icons/link" %>
+              Dela inbjudan
+            <% end %>
+          <% end %>
+          <%= link_to group_collections_path(@group), class: "group-show--settings", aria: { label: "Inställningar" } do %>
+            <%= render "icons/sliders" %>
+          <% end %>
+        <% else %>
+          <%= button_to "Gå med", join_group_path(@group), method: :post, class: "btn btn--primary" %>
+        <% end %>
       </div>
     </header>
 
@@ -38,19 +44,21 @@
     <% if @recipes.any? %>
       <div class="recipes-index--grid">
         <% @recipes.each do |recipe| %>
-          <% saved = saved_recipe_lookup(recipe) %>
           <div class="recipes-index--card-wrap">
             <%= link_to recipe, class: "recipes-index--card" do %>
               <%= render "recipes/preview_card", recipe: recipe, index_card: true, attribution: @attributions[recipe.id] %>
             <% end %>
 
-            <div class="recipe-preview--save-wrap" data-controller="dropdown save-menu">
-              <button type="button" class="recipe-preview--save" data-action="click->dropdown#toggle" data-save-menu-target="trigger" aria-label="Spara">
-                <%= render "icons/bookmark", filled: saved.any? %>
-              </button>
+            <% if authenticated? %>
+              <% saved = saved_recipe_lookup(recipe) %>
+              <div class="recipe-preview--save-wrap" data-controller="dropdown save-menu">
+                <button type="button" class="recipe-preview--save" data-action="click->dropdown#toggle" data-save-menu-target="trigger" aria-label="Spara">
+                  <%= render "icons/bookmark", filled: saved.any? %>
+                </button>
 
-              <%= render "recipes/save_menu", recipe: recipe, saved: saved %>
-            </div>
+                <%= render "recipes/save_menu", recipe: recipe, saved: saved %>
+              </div>
+            <% end %>
           </div>
         <% end %>
       </div>

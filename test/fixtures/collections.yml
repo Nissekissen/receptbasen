@@ -30,3 +30,11 @@ public_group_favoriter:
   group: public
   name: Favoriter
   locked: true
+
+# An unlocked, non-default collection for the private group, so tests can
+# check real rename/delete behavior distinct from the locked default.
+private_group_grillrecept:
+  user: one
+  group: private
+  name: Grillrecept
+  locked: false

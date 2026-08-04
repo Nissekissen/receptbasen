@@ -1,0 +1,12 @@
+<section class="group-settings">
+  <div class="group-settings--inner">
+    <%= render "groups/settings_header", group: @group, active_tab: :invites %>
+
+    <div class="settings-card settings-card--padded">
+      <p class="settings-readonly-name">Ny inbjudningslänk</p>
+      <p class="invite-hint">Länken kan delas med vem som helst — alla som öppnar den kan gå med i gruppen. Du kan återkalla den när som helst från listan.</p>
+
+      <%= button_to "Skapa länk", group_invites_path(@group), class: "btn btn--primary" %>
+    </div>
+  </div>
+</section>

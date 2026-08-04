@@ -287,12 +287,6 @@
     cursor: pointer;
 }
 
-.recipe-preview--manage-link:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    text-decoration: none;
-    pointer-events: none;
-}
 
 
 .recipe-preview--save svg path {
