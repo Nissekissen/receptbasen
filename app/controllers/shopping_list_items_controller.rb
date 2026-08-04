@@ -28,6 +28,12 @@ class ShoppingListItemsController < ApplicationController
     redirect_to shopping_list_items_path, notice: "Togs bort."
   end
 
+  def destroy_all
+    Current.user.shopping_list_items.destroy_all
+
+    redirect_to shopping_list_items_path, notice: "Inköpslistan tömdes."
+  end
+
   private
 
   def set_item

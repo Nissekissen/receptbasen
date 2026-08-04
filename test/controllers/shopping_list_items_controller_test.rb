@@ -80,4 +80,18 @@ class ShoppingListItemsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :not_found
   end
+
+  test "clears only the current user's items" do
+    sign_in_as(users(:one))
+    milk_id = shopping_list_items(:one_milk).id
+    bread_id = shopping_list_items(:two_bread).id
+
+    assert_difference "ShoppingListItem.count", -1 do
+      delete destroy_all_shopping_list_items_url
+    end
+
+    assert_not ShoppingListItem.exists?(milk_id)
+    assert ShoppingListItem.exists?(bread_id)
+    assert_redirected_to shopping_list_items_path
+  end
 end

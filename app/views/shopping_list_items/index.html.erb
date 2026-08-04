@@ -1,6 +1,14 @@
 <section class="shopping-list">
   <div class="shopping-list--inner">
-    <p class="shopping-list--title">Inköpslista</p>
+    <div class="shopping-list--header">
+      <p class="shopping-list--title">Inköpslista</p>
+
+      <% if @items.any? %>
+        <%= button_to "Ta bort alla", destroy_all_shopping_list_items_path, method: :delete,
+              class: "shopping-list--clear-all",
+              form: { data: { turbo_confirm: "Ta bort alla #{pluralize(@items.count, "vara", plural: "varor")} från inköpslistan? Kan inte ångras." } } %>
+      <% end %>
+    </div>
 
     <% if flash[:alert] %>
       <div class="shopping-list--alert"><%= flash[:alert] %></div>

@@ -18,7 +18,11 @@ Rails.application.routes.draw do
     resources :memberships, only: %i[index update destroy], controller: "group_memberships"
     resources :invites, only: %i[index new create destroy], controller: "group_invites"
   end
-  resources :shopping_list_items, only: %i[index create update destroy], path: "shopping-list"
+  resources :shopping_list_items, only: %i[index create update destroy], path: "shopping-list" do
+    collection do
+      delete :destroy_all
+    end
+  end
   resource :profile, only: [ :show ]
   resource :manual_recipe, only: [ :new, :create ]
   get "home/index"
