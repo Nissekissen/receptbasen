@@ -127,6 +127,24 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
     assert_select ".recipe-preview--title", text: "Mormors köttbullar", count: 0
   end
 
+  test "the collection filter does not include group collections, even ones the user created" do
+    sign_in_as(users(:one))
+
+    get recipes_url
+
+    assert_response :success
+    assert_select "option", text: "Grillrecept", count: 0
+  end
+
+  test "the post-parse collection picker does not include group collections" do
+    sign_in_as(users(:one))
+
+    get recipe_url(recipes(:parsed_unpublished_recipe))
+
+    assert_response :success
+    assert_select "option", text: "Grillrecept", count: 0
+  end
+
   test "requires authentication to extract tags" do
     post extract_tags_recipe_url(recipes(:pannkakor))
     assert_redirected_to new_session_path

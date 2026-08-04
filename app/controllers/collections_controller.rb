@@ -3,6 +3,7 @@ class CollectionsController < ApplicationController
 
   def index
     @collections = Current.user.collections
+                                .where(group_id: nil)
                                 .left_joins(:saved_recipes)
                                 .select("collections.*, COUNT(saved_recipes.id) AS recipes_count")
                                 .group(:id)
@@ -43,9 +44,17 @@ class CollectionsController < ApplicationController
 
   private
 
-  # Scoped through Current.user so one user can't touch another user's collections.
+  # Scoped through Current.user and group_id: nil so one user can't touch another
+  # user's collections — and, just as importantly, so a group collection can't be
+  # renamed/destroyed here at all, even by the member who happened to create it.
+  # Collection#user_id records who created the row for accountability, not
+  # personal ownership; a group's collections must always go through
+  # GroupCollectionsController, which re-checks *current* manager status on every
+  # request, rather than this controller's "did I create it" check, which would
+  # otherwise still let someone who's since been demoted or removed from the
+  # group keep managing its collections forever.
   def set_collection
-    @collection = Current.user.collections.find(params[:id])
+    @collection = Current.user.collections.where(group_id: nil).find(params[:id])
   end
 
   def collection_params

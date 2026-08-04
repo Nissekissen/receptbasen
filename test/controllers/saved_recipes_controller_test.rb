@@ -147,6 +147,17 @@ class SavedRecipesControllerTest < ActionDispatch::IntegrationTest
     assert_response :no_content
   end
 
+  test "create cannot save into a group collection, even one the user created" do
+    sign_in_as(users(:one))
+
+    assert_no_difference "SavedRecipe.count" do
+      post saved_recipes_url, params: {
+        recipe_id: recipes(:parsed_unpublished_recipe).id,
+        collection_id: collections(:private_group_favoriter).id
+      }
+    end
+  end
+
   test "toggle 404s for a user outside the collection's group" do
     sign_in_as(users(:three))
 

@@ -9,7 +9,7 @@ class RecipesController < ApplicationController
     raise ActiveRecord::RecordNotFound if @recipe.manual? && !@recipe.visible_to?(authenticated? ? Current.user : nil)
     return request_authentication if @recipe.done? && !@recipe.published? && !authenticated?
 
-    @collections = Current.user.collections if authenticated?
+    @collections = Current.user.collections.where(group_id: nil) if authenticated?
   end
 
   def create
@@ -28,7 +28,7 @@ class RecipesController < ApplicationController
     @recipes = @recipes.where(id: Tagging.where(tag_id: params[:kok_tag_id]).select(:recipe_id)) if params[:kok_tag_id].present?
     @recipes = @recipes.where(id: Tagging.where(tag_id: params[:kost_tag_id]).select(:recipe_id)) if params[:kost_tag_id].present?
 
-    @collections = Current.user.collections
+    @collections = Current.user.collections.where(group_id: nil)
     @maltidstyp_tags = Tag.maltidstyp.order(:name)
     @kok_tags = Tag.kok.order(:name)
     @kost_tags = Tag.kost.order(:name)
