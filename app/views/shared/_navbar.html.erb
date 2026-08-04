@@ -4,12 +4,14 @@
         <%= render "icons/logo" %>
         Receptbasen
       <% end %>
+    </div>
 
-      <% if authenticated? %>
+    <% if authenticated? %>
+      <nav class="navbar--links">
         <%= link_to "Mina recept", recipes_path, class: "navbar--nav-link" %>
         <%= link_to "Grupper", groups_path, class: "navbar--nav-link" %>
-      <% end %>
-    </div>
+      </nav>
+    <% end %>
 
     <% if authenticated? %>
       <div class="navbar--group">
@@ -39,7 +41,7 @@
         </button>
       </div>
     <% else %>
-      <%= link_to "Logga in", login_path, class: "btn btn--secondary inverted" %>
+      <%= link_to "Logga in", login_path, class: "btn btn--secondary inverted navbar--guest" %>
     <% end %>
 
     <% if authenticated? %>
