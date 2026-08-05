@@ -193,6 +193,12 @@
     background: var(--accent-color);
 }
 
+.recipe-detail--ingredient-amount {
+    font-family: var(--font-mono);
+    color: var(--accent-color);
+    margin-right: 6px;
+}
+
 .recipe-detail--step {
     display: flex;
     gap: 14px;

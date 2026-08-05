@@ -71,7 +71,12 @@
 
         <ul class="recipe-detail--ingredients-list">
           <% recipe.ingredients.each do |ingredient| %>
-            <li><%= ingredient.content %></li>
+            <li>
+              <% if (amount = ingredient.formatted_amount) %>
+                <span class="recipe-detail--ingredient-amount"><%= amount %></span>
+              <% end %>
+              <span class="recipe-detail--ingredient-name"><%= ingredient.display_name %></span>
+            </li>
           <% end %>
         </ul>
       </div>

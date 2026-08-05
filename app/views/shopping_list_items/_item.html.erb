@@ -3,7 +3,12 @@
     <label class="shopping-list--check-label">
       <%= hidden_field_tag "checked", "false" %>
       <%= check_box_tag "checked", "true", item.checked?, class: "shopping-list--checkbox", data: { action: "change->auto-submit#submit" } %>
-      <span class="shopping-list--content"><%= item.content %></span>
+      <span class="shopping-list--content">
+        <% if (amount = item.formatted_amount) %>
+          <span class="shopping-list--amount"><%= amount %></span>
+        <% end %>
+        <%= item.display_name %>
+      </span>
     </label>
   <% end %>
 

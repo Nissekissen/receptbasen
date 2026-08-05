@@ -196,14 +196,18 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
   test "adds all of a recipe's ingredients to the shopping list" do
     sign_in_as(users(:one))
     recipe = recipes(:pannkakor)
-    recipe.ingredients.create!(content: "2 dl mjölk")
+    recipe.ingredients.create!(content: "2 dl mjölk", quantity: "2", unit: "dl", name: "mjölk")
     recipe.ingredients.create!(content: "3 ägg")
 
     assert_difference "ShoppingListItem.count", 2 do
       post add_to_shopping_list_recipe_url(recipe)
     end
 
-    assert_equal [ "2 dl mjölk", "3 ägg" ], users(:one).shopping_list_items.where(recipe: recipe).pluck(:content)
+    items = users(:one).shopping_list_items.where(recipe: recipe).order(:id)
+    assert_equal [ "2 dl mjölk", "3 ägg" ], items.pluck(:content)
+    assert_equal [ "2", nil ], items.pluck(:quantity)
+    assert_equal [ "dl", nil ], items.pluck(:unit)
+    assert_equal [ "mjölk", nil ], items.pluck(:name)
     assert_redirected_to recipe
   end
 
