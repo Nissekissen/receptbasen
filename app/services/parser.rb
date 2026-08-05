@@ -8,6 +8,6 @@ class Parser
   private
 
   def normalize(result)
-    result.symbolize_keys.slice(*FIELDS)
+    result.symbolize_keys.slice(*FIELDS).transform_values { |value| value.is_a?(String) ? value.presence : value }
   end
 end

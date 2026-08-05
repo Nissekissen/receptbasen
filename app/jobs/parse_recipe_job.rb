@@ -65,9 +65,14 @@ class ParseRecipeJob < ApplicationJob
 
     sleep 0.5
     broadcast_ready(recipe)
-  rescue Faraday::Error, FetchError
+  rescue Faraday::Error, FetchError => e
+    Rails.logger.error "ParseRecipeJob fetch error for recipe #{recipe.id}: #{e.class} - #{e.message}"
     broadcast_step(recipe, :fetch, :failed)
     broadcast_failed(recipe, "Det gick inte att hämta sidan. Kontrollera länken och försök igen.")
+  rescue StandardError => e
+    Rails.logger.error "ParseRecipeJob error for recipe #{recipe_id}: #{e.class} - #{e.message}"
+    Rails.logger.error e.backtrace.first(10).join("\n") if e.backtrace
+    broadcast_failed(recipe, "Något gick fel. Försök igen senare.") if recipe
   end
 
   private
