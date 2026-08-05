@@ -70,7 +70,9 @@ class LlmParser < Parser
     <<~PROMPT
     Extract the recipe from this page if one exists. If this page does not contain an actual recipe with ingredients and steps, set is_recipe to false and don't fabricate content.
 
-    Provide the ingredients and steps exactly as they appear in the HTML.
+    Provide the ingredients and steps exactly as they appear in the HTML, except strip any
+    leading step numbering (e.g. "1.", "2)", "Steg 3:") from each step — the app numbers
+    steps itself, so a leading number would end up shown twice.
     Provide prep time and cook time in the ISO 8601 format. If the page only gives a single
     total time instead of separate prep/cook times, put it in total_time and leave prep_time
     and cook_time blank.

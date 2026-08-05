@@ -9,12 +9,13 @@ class StructuredParser < Parser
 
   def call
     node = find_recipe_node
-    return nil unless node
+    return bail(:no_recipe_node) unless node
 
     @ingredients = extract_ingredients(node["recipeIngredient"])
     @steps = extract_instructions(node["recipeInstructions"])
 
-    return nil if @ingredients.blank? || @steps.blank?
+    return bail(:missing_content) if @ingredients.blank? || @steps.blank?
+    return bail(:ingredients_missing_amounts) if ingredients_missing_amounts?
 
     normalize(
       title: node["name"],
@@ -26,11 +27,24 @@ class StructuredParser < Parser
       servings: extract_servings(node["recipeYield"]),
       source_domain: extract_source_domain(node["url"] || extract_image_url(node["image"]))
     )
-  rescue StandardError
-    nil
+  rescue StandardError => e
+    bail(:exception, e)
   end
 
   private
+
+  # Every early-exit from #call funnels through here so a fallback to LlmParser
+  # always has a logged reason instead of a silent nil — worth grepping for
+  # ("StructuredParser bailed:") when a site keeps ending up on the LLM path.
+  def bail(reason, error = nil)
+    detail = error ? " (#{error.class}: #{error.message})" : ""
+    Rails.logger.info("StructuredParser bailed: #{reason}#{detail}")
+    nil
+  end
+
+  def ingredients_missing_amounts?
+    @ingredients.none? { |ingredient| ingredient.match?(/[\d½⅓⅔¼¾⅕⅙⅛]/) }
+  end
 
   def extract_ingredients(ingredients)
     Array(ingredients).map(&:to_s)
