@@ -30,6 +30,7 @@ class ParseRecipeJob < ApplicationJob
       result = llm_parser.call
 
       if result.nil?
+        Rails.logger.info "ParseRecipeJob: LlmParser failed for recipe #{recipe.id}: #{llm_parser.error}"
         broadcast_step(recipe, :parse_ai, :failed)
         broadcast_failed(recipe, user_facing_error(llm_parser.error))
         return
@@ -65,9 +66,14 @@ class ParseRecipeJob < ApplicationJob
 
     sleep 0.5
     broadcast_ready(recipe)
-  rescue Faraday::Error, FetchError
+  rescue Faraday::Error, FetchError => e
+    Rails.logger.error "ParseRecipeJob fetch error for recipe #{recipe.id}: #{e.class} - #{e.message}"
     broadcast_step(recipe, :fetch, :failed)
     broadcast_failed(recipe, "Det gick inte att hämta sidan. Kontrollera länken och försök igen.")
+  rescue StandardError => e
+    Rails.logger.error "ParseRecipeJob error for recipe #{recipe_id}: #{e.class} - #{e.message}"
+    Rails.logger.error e.backtrace.first(10).join("\n") if e.backtrace
+    broadcast_failed(recipe, "Något gick fel. Försök igen senare.") if recipe
   end
 
   private
@@ -82,7 +88,12 @@ class ParseRecipeJob < ApplicationJob
   end
 
   def user_facing_error(error)
-    "Länken verkar inte leda till ett recept. Prova en annan länk." if error == "Not a recipe"
+    case error
+    when "Not a recipe"
+      "Länken verkar inte leda till ett recept. Prova en annan länk."
+    when "No ingredients or steps"
+      "Vi kunde inte hitta ingredienser eller steg på sidan. Prova en annan länk."
+    end
   end
 
   def broadcast_failed(recipe, error)
@@ -117,5 +128,4 @@ class ParseRecipeJob < ApplicationJob
 
     response.body
   end
-
 end

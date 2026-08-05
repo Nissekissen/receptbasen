@@ -9,10 +9,14 @@ class StructuredParser < Parser
 
   def call
     node = find_recipe_node
-    return nil unless node
+    return bail(:no_recipe_node) unless node
 
     @ingredients = extract_ingredients(node["recipeIngredient"])
     @steps = extract_instructions(node["recipeInstructions"])
+
+    return bail(:missing_content) if @ingredients.blank? || @steps.blank?
+    return bail(:steps_look_unseparated) if steps_look_unseparated?
+    return bail(:ingredients_missing_amounts) if ingredients_missing_amounts?
 
     normalize(
       title: node["name"],
@@ -24,12 +28,38 @@ class StructuredParser < Parser
       servings: extract_servings(node["recipeYield"]),
       source_domain: extract_source_domain(node["url"] || extract_image_url(node["image"]))
     )
+  rescue StandardError => e
+    bail(:exception, e)
   end
 
   private
 
+  # Every early-exit from #call funnels through here so a fallback to LlmParser
+  # always has a logged reason instead of a silent nil — worth grepping for
+  # ("StructuredParser bailed:") when a site keeps ending up on the LLM path.
+  def bail(reason, error = nil)
+    detail = error ? " (#{error.class}: #{error.message})" : ""
+    Rails.logger.info("StructuredParser bailed: #{reason}#{detail}")
+    nil
+  end
+
+  def ingredients_missing_amounts?
+    @ingredients.none? { |ingredient| ingredient.match?(/[\d½⅓⅔¼¾⅕⅙⅛]/) }
+  end
+
+  # Some sites hand back one giant string with no real step boundaries (steps
+  # joined with plain spaces instead of separate array entries) — a single
+  # "step" with several sentence breaks is a sign of that, not a genuinely
+  # short one-step recipe. Bail so LlmParser splits it properly instead.
+  def steps_look_unseparated?
+    return false unless @steps.size == 1
+
+    step = @steps.first.to_s
+    step.scan(/\.\s/).size >= 3 || step.length > 600
+  end
+
   def extract_ingredients(ingredients)
-    Array(ingredients).map(&:to_s)
+    Array(ingredients).map { |ingredient| decode_entities(ingredient.to_s) }
   end
 
   def extract_source_domain(url)
@@ -65,7 +95,7 @@ class StructuredParser < Parser
   def flatten(json)
     case json
     when Array then json.flat_map { |item| flatten(item) }
-    when Hash then json["@graph"] ? flatten(json["@graph"]) : [json]
+    when Hash then json["@graph"] ? flatten(json["@graph"]) : [ json ]
     else []
     end
   end
@@ -81,6 +111,20 @@ class StructuredParser < Parser
   end
 
   def extract_instructions(instructions)
-    Array(instructions).map { |step| step.is_a?(Hash) ? step["text"] : step.to_s }
+    Array(instructions).flat_map { |item| flatten_instruction(item) }.compact_blank
+  end
+
+  # recipeInstructions is sometimes a flat array of strings/HowToSteps, but some
+  # sites group steps under HowToSection objects instead ({ "@type" => "HowToSection",
+  # "itemListElement" => [HowToStep, ...] }) — recurse into those to get a flat list.
+  def flatten_instruction(item)
+    return decode_entities(item.to_s) if item.is_a?(String)
+    return [] unless item.is_a?(Hash)
+
+    if Array(item["@type"]).include?("HowToSection")
+      Array(item["itemListElement"]).flat_map { |sub_item| flatten_instruction(sub_item) }
+    else
+      decode_entities(item["text"])
+    end
   end
 end
