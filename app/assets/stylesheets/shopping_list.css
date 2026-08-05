@@ -147,6 +147,12 @@
     color: var(--ink);
 }
 
+.shopping-list--amount {
+    font-family: var(--font-mono);
+    color: var(--accent-color);
+    margin-right: 6px;
+}
+
 .shopping-list--row.is-checked .shopping-list--content {
     text-decoration: line-through;
     color: #8a8a86;

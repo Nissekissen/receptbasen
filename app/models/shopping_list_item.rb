@@ -1,4 +1,6 @@
 class ShoppingListItem < ApplicationRecord
+  include IngredientDisplay
+
   belongs_to :user
   belongs_to :recipe, optional: true
 

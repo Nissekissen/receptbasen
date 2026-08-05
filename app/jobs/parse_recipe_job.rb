@@ -50,6 +50,8 @@ class ParseRecipeJob < ApplicationJob
     recipe.ingredients.create!(ingredients.map { |content| { content: content } })
     recipe.steps.create!(steps.each_with_index.map { |content, index| { content: content, position: index } })
 
+    split_ingredients(recipe)
+
     broadcast_step(recipe, :tags, :active)
 
     tag_extractor = TagExtractor.new(title: recipe.title, description: recipe.description, ingredients: recipe.ingredients.map(&:content))
@@ -85,6 +87,20 @@ class ParseRecipeJob < ApplicationJob
       partial: "recipes/loading_step",
       locals: { step: step, state: state }
     )
+  end
+
+  # A failure here is non-blocking, unlike TagExtractor below — splitting is a display
+  # enhancement, not core to whether the recipe was saved successfully, so a failed or
+  # mismatched extraction just leaves quantity/unit/name nil rather than failing the recipe.
+  def split_ingredients(recipe)
+    ingredient_extractor = IngredientExtractor.new(ingredients: recipe.ingredients.map(&:content))
+    split = ingredient_extractor.call
+
+    if split
+      recipe.ingredients.order(:id).zip(split).each { |ingredient, fields| ingredient.update!(fields) }
+    else
+      Rails.logger.info "ParseRecipeJob: IngredientExtractor failed for recipe #{recipe.id}: #{ingredient_extractor.error}"
+    end
   end
 
   def user_facing_error(error)
