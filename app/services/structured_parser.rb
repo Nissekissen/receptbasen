@@ -14,6 +14,8 @@ class StructuredParser < Parser
     @ingredients = extract_ingredients(node["recipeIngredient"])
     @steps = extract_instructions(node["recipeInstructions"])
 
+    return nil if @ingredients.blank? || @steps.blank?
+
     normalize(
       title: node["name"],
       description: node["description"],
@@ -24,6 +26,8 @@ class StructuredParser < Parser
       servings: extract_servings(node["recipeYield"]),
       source_domain: extract_source_domain(node["url"] || extract_image_url(node["image"]))
     )
+  rescue StandardError
+    nil
   end
 
   private
@@ -81,6 +85,20 @@ class StructuredParser < Parser
   end
 
   def extract_instructions(instructions)
-    Array(instructions).map { |step| step.is_a?(Hash) ? step["text"] : step.to_s }
+    Array(instructions).flat_map { |item| flatten_instruction(item) }.compact_blank
+  end
+
+  # recipeInstructions is sometimes a flat array of strings/HowToSteps, but some
+  # sites group steps under HowToSection objects instead ({ "@type" => "HowToSection",
+  # "itemListElement" => [HowToStep, ...] }) — recurse into those to get a flat list.
+  def flatten_instruction(item)
+    return item.to_s if item.is_a?(String)
+    return [] unless item.is_a?(Hash)
+
+    if Array(item["@type"]).include?("HowToSection")
+      Array(item["itemListElement"]).flat_map { |sub_item| flatten_instruction(sub_item) }
+    else
+      item["text"]
+    end
   end
 end
