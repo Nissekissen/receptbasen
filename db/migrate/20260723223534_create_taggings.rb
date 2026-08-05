@@ -7,6 +7,6 @@ class CreateTaggings < ActiveRecord::Migration[8.1]
       t.timestamps
     end
 
-    add_index :taggings, [:recipe_id, :tag_id], unique: true
+    add_index :taggings, [ :recipe_id, :tag_id ], unique: true
   end
 end

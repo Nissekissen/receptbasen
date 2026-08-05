@@ -34,7 +34,7 @@ class GroupTest < ActiveSupport::TestCase
 
   test "is member but not manager" do
     group = groups(:private)
-    
+
     assert_not group.manager?(users(:two))
   end
 

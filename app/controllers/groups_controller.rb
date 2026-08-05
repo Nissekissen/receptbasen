@@ -87,11 +87,10 @@ class GroupsController < ApplicationController
   private
 
   def group_params
-    params.expect(group: [ :name, :public ] )
+    params.expect(group: [ :name, :public ])
   end
 
   def group_update_params
     params.expect(group: [ :name ])
   end
-
 end

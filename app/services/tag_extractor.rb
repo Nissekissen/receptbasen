@@ -5,11 +5,11 @@ class TagExtractor
     type: "object",
     properties: {
       maltidstyp: { type: "string", enum: %w[frukost förrätt huvudrätt efterrätt bakverk tillbehör dryck mellanmål] },
-      kok: { anyOf: [{ type: "string", enum: CUISINES }, { type: "null" }] },
+      kok: { anyOf: [ { type: "string", enum: CUISINES }, { type: "null" } ] },
       kost: { type: "array", items: { type: "string", enum: %w[vegetariskt veganskt glutenfritt laktosfritt] } },
       svarighetsgrad: { type: "string", enum: %w[lätt medel avancerad] }
     },
-    required: ["maltidstyp", "kok", "kost", "svarighetsgrad"],
+    required: [ "maltidstyp", "kok", "kost", "svarighetsgrad" ],
     additionalProperties: false
   }
 
@@ -27,12 +27,12 @@ class TagExtractor
       model: :"claude-haiku-4-5",
       max_tokens: 1024,
       output_config: { format: { type: "json_schema", schema: RESPONSE_SCHEMA } },
-      messages: [{ role: "user", content: prompt }]
+      messages: [ { role: "user", content: prompt } ]
     )
 
     result = JSON.parse(response.content.find { |b| b.type == :text }.text)
 
-    tags = [{ name: result["maltidstyp"], category: :maltidstyp }]
+    tags = [ { name: result["maltidstyp"], category: :maltidstyp } ]
     tags << { name: result["kok"], category: :kok } if result["kok"].present?
     result["kost"].each { |name| tags << { name: name, category: :kost } }
     tags << { name: result["svarighetsgrad"], category: :svarighetsgrad }

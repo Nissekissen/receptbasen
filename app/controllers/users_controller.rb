@@ -6,7 +6,7 @@ class UsersController < ApplicationController
   end
 
   def create
-    @user = User.new(params.expect(user: [:name, :email_address, :password, :password_confirmation]))
+    @user = User.new(params.expect(user: [ :name, :email_address, :password, :password_confirmation ]))
 
     if @user.save
       start_new_session_for @user

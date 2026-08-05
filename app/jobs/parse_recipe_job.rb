@@ -122,5 +122,4 @@ class ParseRecipeJob < ApplicationJob
 
     response.body
   end
-
 end

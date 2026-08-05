@@ -38,7 +38,7 @@ class ManualRecipesController < ApplicationController
   private
 
   def recipe_params
-    params.expect(recipe: [:title, :description, :image_url, :servings])
+    params.expect(recipe: [ :title, :description, :image_url, :servings ])
   end
 
   def minutes_to_duration(minutes)

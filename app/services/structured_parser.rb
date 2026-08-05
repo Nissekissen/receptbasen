@@ -69,7 +69,7 @@ class StructuredParser < Parser
   def flatten(json)
     case json
     when Array then json.flat_map { |item| flatten(item) }
-    when Hash then json["@graph"] ? flatten(json["@graph"]) : [json]
+    when Hash then json["@graph"] ? flatten(json["@graph"]) : [ json ]
     else []
     end
   end

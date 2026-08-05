@@ -12,9 +12,9 @@ class LlmParser < Parser
       servings: { type: "string" },
       source_domain: { type: "string" },
       ingredients: { type: "array", items: { type: "string" } },
-      steps: { type: "array", items: { type: "string" } },
+      steps: { type: "array", items: { type: "string" } }
     },
-    required: ["is_recipe"],
+    required: [ "is_recipe" ],
     additionalProperties: false
   }
 
@@ -32,7 +32,7 @@ class LlmParser < Parser
       model: :"claude-haiku-4-5",
       max_tokens: 2048,
       output_config: { format: { type: "json_schema", schema: RESPONSE_SCHEMA } },
-      messages: [{ role: "user", content: prompt }]
+      messages: [ { role: "user", content: prompt } ]
     )
 
     result = JSON.parse(response.content.find { |b| b.type == :text }.text)
