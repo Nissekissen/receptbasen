@@ -30,6 +30,7 @@ class ParseRecipeJob < ApplicationJob
       result = llm_parser.call
 
       if result.nil?
+        Rails.logger.info "ParseRecipeJob: LlmParser failed for recipe #{recipe.id}: #{llm_parser.error}"
         broadcast_step(recipe, :parse_ai, :failed)
         broadcast_failed(recipe, user_facing_error(llm_parser.error))
         return
@@ -87,7 +88,12 @@ class ParseRecipeJob < ApplicationJob
   end
 
   def user_facing_error(error)
-    "Länken verkar inte leda till ett recept. Prova en annan länk." if error == "Not a recipe"
+    case error
+    when "Not a recipe"
+      "Länken verkar inte leda till ett recept. Prova en annan länk."
+    when "No ingredients or steps"
+      "Vi kunde inte hitta ingredienser eller steg på sidan. Prova en annan länk."
+    end
   end
 
   def broadcast_failed(recipe, error)

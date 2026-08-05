@@ -60,8 +60,11 @@ class LlmParser < Parser
   end
 
   def shrink_html
-    # Remove all script and style tags
-    @html = @html.gsub(/<script[^>]*>.*?<\/script>/m, "")
+    # Remove script tags, but keep application/ld+json ones — that's often the
+    # cleanest source of the actual recipe data (title/ingredients/steps), and
+    # stripping it blindly along with real JS left the LLM working from just
+    # the visible page markup, which some sites render.
+    @html = @html.gsub(%r{<script(?![^>]*application/ld\+json)[^>]*>.*?</script>}mi, "")
     @html = @html.gsub(/<style[^>]*>.*?<\/style>/m, "")
     @html
   end

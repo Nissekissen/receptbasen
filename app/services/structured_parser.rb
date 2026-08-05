@@ -15,6 +15,7 @@ class StructuredParser < Parser
     @steps = extract_instructions(node["recipeInstructions"])
 
     return bail(:missing_content) if @ingredients.blank? || @steps.blank?
+    return bail(:steps_look_unseparated) if steps_look_unseparated?
     return bail(:ingredients_missing_amounts) if ingredients_missing_amounts?
 
     normalize(
@@ -46,8 +47,19 @@ class StructuredParser < Parser
     @ingredients.none? { |ingredient| ingredient.match?(/[\d½⅓⅔¼¾⅕⅙⅛]/) }
   end
 
+  # Some sites hand back one giant string with no real step boundaries (steps
+  # joined with plain spaces instead of separate array entries) — a single
+  # "step" with several sentence breaks is a sign of that, not a genuinely
+  # short one-step recipe. Bail so LlmParser splits it properly instead.
+  def steps_look_unseparated?
+    return false unless @steps.size == 1
+
+    step = @steps.first.to_s
+    step.scan(/\.\s/).size >= 3 || step.length > 600
+  end
+
   def extract_ingredients(ingredients)
-    Array(ingredients).map(&:to_s)
+    Array(ingredients).map { |ingredient| decode_entities(ingredient.to_s) }
   end
 
   def extract_source_domain(url)
@@ -106,13 +118,13 @@ class StructuredParser < Parser
   # sites group steps under HowToSection objects instead ({ "@type" => "HowToSection",
   # "itemListElement" => [HowToStep, ...] }) — recurse into those to get a flat list.
   def flatten_instruction(item)
-    return item.to_s if item.is_a?(String)
+    return decode_entities(item.to_s) if item.is_a?(String)
     return [] unless item.is_a?(Hash)
 
     if Array(item["@type"]).include?("HowToSection")
       Array(item["itemListElement"]).flat_map { |sub_item| flatten_instruction(sub_item) }
     else
-      item["text"]
+      decode_entities(item["text"])
     end
   end
 end
