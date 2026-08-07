@@ -2,14 +2,21 @@
     background: var(--background-color);
 }
 
+/* Fixed to the viewport rather than min-height so the page itself never
+   scrolls — the ingredients panel scrolls internally instead (see below).
+   overflow-y: auto stays as a fallback so content is never silently
+   clipped if something unexpected ever overflows here; position: sticky
+   on .cook-mode--nav then resolves correctly against this element's own
+   scrollport instead of the viewport in that fallback case. */
 .cook-mode {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
-    min-height: 100dvh;
+    height: 100vh;
+    height: 100dvh;
     max-width: 640px;
     margin: 0 auto;
     padding: 1.25rem 1.25rem calc(1.25rem + env(safe-area-inset-bottom));
+    overflow-y: auto;
 }
 
 .cook-mode--header {
@@ -18,6 +25,7 @@
     align-items: center;
     gap: 12px;
     margin-bottom: 1.5rem;
+    flex-shrink: 0;
 }
 
 .cook-mode--exit {
@@ -67,6 +75,7 @@
 
 .cook-mode--progress {
     margin-bottom: 1.75rem;
+    flex-shrink: 0;
 }
 
 .cook-mode--progress-track {
@@ -93,16 +102,22 @@
     color: #8a8a86;
 }
 
-.cook-mode--steps {
+.cook-mode--stage {
     flex: 1;
     display: flex;
-    align-items: center;
-    min-height: 28vh;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.25rem;
+    min-height: 0;
+}
+
+.cook-mode--steps {
+    width: 100%;
 }
 
 .cook-mode--step {
     width: 100%;
-    text-align: center;
+    text-align: left;
 }
 
 .cook-mode--step-text {
@@ -138,15 +153,11 @@
     color: white;
 }
 
-.cook-mode--preview {
-    margin-bottom: 1rem;
-}
-
 .cook-mode--preview summary {
     list-style: none;
     cursor: pointer;
     font-family: var(--font-sans);
-    font-size: 13px;
+    font-size: 1rem;
     color: #8a8a86;
 }
 
@@ -161,7 +172,7 @@
     flex-direction: column;
     gap: 4px;
     font-family: var(--font-sans);
-    font-size: 13px;
+    font-size: 1rem;
     color: #8a8a86;
 }
 
@@ -170,25 +181,51 @@
     border-radius: 10px;
     padding: 0.9rem 1.1rem;
     margin-bottom: 1.5rem;
+    flex-shrink: 0;
 }
 
-.cook-mode--ingredients summary {
+.cook-mode--ingredients-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    border: none;
+    background: none;
+    padding: 0;
     cursor: pointer;
-    list-style: none;
     font-family: var(--font-serif);
     font-weight: 500;
     font-size: 1rem;
     color: var(--accent-color-dark);
 }
 
-.cook-mode--ingredients summary::-webkit-details-marker {
-    display: none;
+.cook-mode--ingredients-chevron {
+    display: inline-flex;
+    transition: transform 0.2s ease-in-out;
+}
+
+.cook-mode--ingredients.is-open .cook-mode--ingredients-chevron {
+    transform: rotate(180deg);
+}
+
+/* Fixed target height (rather than the content's natural scrollHeight) so
+   this animates with a plain CSS transition — no JS measurement needed.
+   Ingredient lists longer than this scroll within the panel instead of
+   growing it, which is also what keeps the page itself from scrolling. */
+.cook-mode--ingredients-content {
+    max-height: 0;
+    overflow-y: auto;
+    transition: max-height 0.25s ease-in-out;
+}
+
+.cook-mode--ingredients.is-open .cook-mode--ingredients-content {
+    max-height: min(35vh, 320px);
 }
 
 .cook-mode--ingredients-list {
     list-style: none;
-    margin: 0.9rem 0 0;
-    padding: 0;
+    margin: 0;
+    padding: 0.9rem 0 0;
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -213,6 +250,7 @@
     bottom: 0;
     padding-top: 0.5rem;
     background: var(--background-color);
+    flex-shrink: 0;
 }
 
 .cook-mode--prev {

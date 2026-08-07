@@ -21,36 +21,44 @@
     <p class="cook-mode--progress-label" data-cook-mode-target="counter">Steg 1 av <%= total_steps %></p>
   </div>
 
-  <div class="cook-mode--steps">
-    <% @recipe.steps.each.with_index do |step, index| %>
-      <div class="cook-mode--step" data-cook-mode-target="step" <%= "hidden" if index != 0 %>>
-        <p class="cook-mode--step-text"><%= step.content %></p>
+  <div class="cook-mode--stage">
+    <div class="cook-mode--steps">
+      <% @recipe.steps.each.with_index do |step, index| %>
+        <div class="cook-mode--step" data-cook-mode-target="step" <%= "hidden" if index != 0 %>>
+          <p class="cook-mode--step-text"><%= step.content %></p>
 
-        <% if (duration = step_duration_seconds(step)) %>
-          <%= render "recipes/cook_timer_chip", duration: duration %>
-        <% end %>
-      </div>
-    <% end %>
+          <% if (duration = step_duration_seconds(step)) %>
+            <%= render "recipes/cook_timer_chip", duration: duration %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <details class="cook-mode--preview" data-cook-mode-target="preview" <%= "hidden" if single_step %>>
+      <summary>Nästa: <span data-cook-mode-target="previewLabel"><%= @recipe.steps[1]&.content %></span></summary>
+      <ul class="cook-mode--preview-list" data-cook-mode-target="previewList"></ul>
+    </details>
   </div>
 
-  <details class="cook-mode--preview" data-cook-mode-target="preview" <%= "hidden" if single_step %>>
-    <summary>Nästa: <span data-cook-mode-target="previewLabel"><%= @recipe.steps[1]&.content %></span></summary>
-    <ul class="cook-mode--preview-list" data-cook-mode-target="previewList"></ul>
-  </details>
+  <div class="cook-mode--ingredients" data-controller="disclosure">
+    <button type="button" class="cook-mode--ingredients-toggle" data-disclosure-target="trigger" data-action="click->disclosure#toggle" aria-expanded="false" aria-controls="cook_mode_ingredients">
+      <span>Ingredienser</span>
+      <span class="cook-mode--ingredients-chevron"><%= render "icons/chevron_down" %></span>
+    </button>
 
-  <details class="cook-mode--ingredients">
-    <summary>Ingredienser</summary>
-    <ul class="cook-mode--ingredients-list">
-      <% @recipe.ingredients.each do |ingredient| %>
-        <li>
-          <% if (amount = ingredient.formatted_amount) %>
-            <span class="cook-mode--ingredient-amount"><%= amount %></span>
-          <% end %>
-          <span><%= ingredient.display_name %></span>
-        </li>
-      <% end %>
-    </ul>
-  </details>
+    <div class="cook-mode--ingredients-content" id="cook_mode_ingredients">
+      <ul class="cook-mode--ingredients-list">
+        <% @recipe.ingredients.each do |ingredient| %>
+          <li>
+            <% if (amount = ingredient.formatted_amount) %>
+              <span class="cook-mode--ingredient-amount"><%= amount %></span>
+            <% end %>
+            <span><%= ingredient.display_name %></span>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
 
   <div class="cook-mode--nav">
     <button type="button" class="btn btn--secondary cook-mode--prev" data-cook-mode-target="prevButton" data-action="cook-mode#previous" disabled>Föregående</button>
