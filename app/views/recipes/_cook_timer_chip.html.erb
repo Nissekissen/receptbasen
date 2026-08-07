@@ -1,0 +1,4 @@
+<button type="button" class="cook-mode--timer-chip" data-controller="cook-timer" data-cook-timer-duration-value="<%= duration %>" data-action="click->cook-timer#toggle">
+  <%= render "icons/clock" %>
+  <span data-cook-timer-target="display"><%= format("%d:%02d", duration / 60, duration % 60) %></span>
+</button>

@@ -242,4 +242,90 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :not_found
   end
+
+  test "requires authentication for cook mode" do
+    get cook_recipe_url(recipes(:pannkakor))
+
+    assert_redirected_to new_session_path
+  end
+
+  test "renders cook mode for a visible recipe" do
+    sign_in_as(users(:one))
+    recipe = recipes(:pannkakor)
+    recipe.steps.create!(content: "Vispa ihop mjöl och mjölk.", position: 0)
+    recipe.steps.create!(content: "Stek i 5 minuter per sida.", position: 1)
+    recipe.ingredients.create!(content: "2 dl mjöl", quantity: "2", unit: "dl", name: "mjöl")
+
+    get cook_recipe_url(recipe)
+
+    assert_response :success
+  end
+
+  test "renders cook mode for a recipe with a single step" do
+    sign_in_as(users(:one))
+    recipe = recipes(:pannkakor)
+    recipe.steps.create!(content: "Stek pannkakorna.", position: 0)
+
+    get cook_recipe_url(recipe)
+
+    assert_response :success
+  end
+
+  test "owner can enter cook mode for their manual recipe" do
+    sign_in_as(users(:one))
+    recipe = recipes(:kottbullar)
+    recipe.steps.create!(content: "Blanda köttfärsen.", position: 0)
+
+    get cook_recipe_url(recipe)
+
+    assert_response :success
+  end
+
+  test "404s cook mode for a private manual recipe the signed-in user can't see" do
+    sign_in_as(users(:two))
+    recipe = recipes(:kottbullar)
+    recipe.steps.create!(content: "Blanda köttfärsen.", position: 0)
+
+    get cook_recipe_url(recipe)
+
+    assert_response :not_found
+  end
+
+  test "requires authentication to log a cook" do
+    post log_cook_recipe_url(recipes(:pannkakor))
+
+    assert_redirected_to new_session_path
+  end
+
+  test "logs a cook and redirects back to the recipe" do
+    sign_in_as(users(:one))
+    recipe = recipes(:pannkakor)
+
+    assert_difference "recipe.cook_logs.count", 1 do
+      post log_cook_recipe_url(recipe)
+    end
+
+    assert_equal users(:one), recipe.cook_logs.last.user
+    assert_redirected_to recipe
+  end
+
+  test "logging the same recipe twice creates two cook_logs rows" do
+    sign_in_as(users(:one))
+    recipe = recipes(:pannkakor)
+
+    assert_difference "recipe.cook_logs.count", 2 do
+      post log_cook_recipe_url(recipe)
+      post log_cook_recipe_url(recipe)
+    end
+  end
+
+  test "404s logging a cook for a private manual recipe the signed-in user can't see" do
+    sign_in_as(users(:two))
+
+    assert_no_difference "CookLog.count" do
+      post log_cook_recipe_url(recipes(:kottbullar))
+    end
+
+    assert_response :not_found
+  end
 end

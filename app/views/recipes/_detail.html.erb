@@ -22,6 +22,8 @@
 
                 <%= render "recipes/save_menu", recipe: recipe, saved: saved %>
             </div>
+
+            <%= link_to "Tillagningsläge", cook_recipe_path(recipe), class: "btn btn--secondary" %>
         <% end %>
 
         <% if recipe.source_domain.present? %>
@@ -55,6 +57,10 @@
 
     <% if recipe.description.present? %>
       <p class="recipe-detail--description"><%= recipe.description %></p>
+    <% end %>
+
+    <% if authenticated? %>
+      <%= render "recipes/note", recipe: recipe %>
     <% end %>
 
     <div class="recipe-detail--content">

@@ -5,7 +5,10 @@ Rails.application.routes.draw do
     member do
       post :extract_tags
       post :add_to_shopping_list
+      get :cook
+      post :log_cook
     end
+    resource :note, only: [ :create ], controller: "recipe_notes"
   end
   resources :saved_recipes, only: [ :create, :destroy ]
   resources :users, only: %i[new create]
