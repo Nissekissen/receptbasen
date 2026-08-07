@@ -15,7 +15,7 @@ class CookModeTest < ApplicationSystemTestCase
     assert_text users(:one).name
 
     visit recipe_path(recipe)
-    click_on "Tillagningsläge"
+    click_on "Laga nu"
 
     assert_text(/steg 1 av 3/i)
     assert_text "Vispa ihop mjöl, mjölk och ägg till en smet."

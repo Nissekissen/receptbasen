@@ -5,8 +5,21 @@
 }
 
 .recipe-detail--inner {
-    max-width: 900px;
+    max-width: 1100px;
     margin: 0 auto;
+}
+
+/* Desktop default: the image forms a narrow left column, with title/actions/
+   meta/tags/description/note in a wider column next to it. Ingredients and
+   steps stay below, full width, as their own separate row (.recipe-detail--content).
+   Collapses back to a single stacked column (image on top, full width) below
+   900px — see the media query near the bottom of this file. */
+.recipe-detail--layout {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 3rem;
+    align-items: start;
+    margin-bottom: 3rem;
 }
 
 .recipe-detail--back {
@@ -72,11 +85,12 @@
 }
 
 .recipe-detail--source {
-    margin-left: auto;
+    display: inline-block;
     font-family: var(--font-sans);
     font-size: 12px;
     color: #8a8a86;
     text-decoration: none;
+    margin-bottom: 1.25rem;
 }
 
 .recipe-detail--tags {
@@ -261,17 +275,6 @@
     fill: currentColor;
 }
 
-.recipe-detail--save.is-saved {
-    background-color: transparent;
-    color: var(--accent-color);
-    border: 1px solid var(--accent-color);
-}
-
-.recipe-detail--save.is-saved:hover {
-    background-color: var(--accent-color);
-    color: white;
-}
-
 .recipe-detail--save-wrap {
     position: relative;
     display: inline-block;
@@ -281,6 +284,12 @@
     top: calc(100% + 8px);
     right: auto;
     left: 0;
+}
+
+@media (max-width: 900px) {
+    .recipe-detail--layout {
+        display: block;
+    }
 }
 
 @media (max-width: 720px) {
@@ -294,7 +303,28 @@
         padding: 6rem 1.25rem 3rem;
     }
 
-    .recipe-detail--source {
-        margin-left: 0;
+    /* Nested .btn (the Spara button, inside .recipe-detail--save-wrap) fills
+       whatever width its own direct-child wrapper below ends up with. */
+    .recipe-detail--action-wrapper .btn {
+        width: 100%;
+        justify-content: center;
+        padding-top: 14px;
+        padding-bottom: 14px;
+    }
+
+    /* The two direct children ("Laga nu" and .recipe-detail--save-wrap) split
+       the row evenly via an explicit calc() width rather than flex-grow
+       distribution — flex-basis: 0 with equal flex-grow should split evenly
+       in theory, but "Laga nu" itself also carries the .btn class matched by
+       the rule above, and that rule's higher specificity (two classes vs.
+       one) was winning and stretching it to the full row instead of half.
+       Naming both direct children explicitly here matches that specificity,
+       and coming later in the file wins the tie for "Laga nu" specifically,
+       while the .recipe-detail--save-wrap case was never actually in
+       conflict (it doesn't carry a .btn class itself). */
+    .recipe-detail--action-wrapper > .btn,
+    .recipe-detail--action-wrapper > .recipe-detail--save-wrap {
+        flex: 0 0 auto;
+        width: calc(50% - 0.5rem);
     }
 }
