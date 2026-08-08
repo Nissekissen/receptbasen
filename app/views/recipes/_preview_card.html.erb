@@ -7,9 +7,15 @@
     <% end %>
 
     <% if local_assigns[:index_card] %>
-      <span class="recipe-preview--save" aria-hidden="true">
-        <%= render "icons/bookmark" %>
-      </span>
+      <% average, count = recipe_rating(recipe) %>
+      <% if count > 0 %>
+        <span class="recipe-preview--rating" aria-hidden="true">
+          <%= render "icons/star", filled: true %>
+          <%= number_with_precision(average, precision: 1) %> (<%= count %>)
+        </span>
+      <% else %>
+        <span class="recipe-preview--rating-prompt" aria-hidden="true">Bli först att betygsätta</span>
+      <% end %>
     <% end %>
   </div>
 
@@ -21,20 +27,6 @@
         Sparad av <%= attribution.user.name %> i <%= attribution.collection.name %>
       </p>
     <% end %>
-    <div class="recipe-preview--meta">
-      <% if (total_time = recipe_total_time(recipe)) %>
-        <span class="recipe-preview--badge">
-          <%= render "icons/clock" %>
-          <%= total_time %>
-        </span>
-      <% end %>
-      <% if (difficulty = recipe_difficulty(recipe)) %>
-        <span class="recipe-preview--badge">
-          <%= render "icons/#{recipe_difficulty_icon(difficulty)}" %>
-          <%= difficulty %>
-        </span>
-      <% end %>
-    </div>
 
     <% if local_assigns[:index_card] && recipe.source_domain.present? %>
       <p class="recipe-preview--source"><%= recipe.source_domain %></p>

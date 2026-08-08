@@ -237,7 +237,7 @@
     font-size: 14px;
     color: var(--ink);
     line-height: 1.6;
-    margin: 0 0 2rem;
+    margin: 0;
 }
 
 .recipe-detail--note {
