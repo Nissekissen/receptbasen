@@ -16,6 +16,10 @@
           <%= link_to "Från #{recipe.source_domain} ↗", recipe.source_url, class: "recipe-detail--source", target: "_blank", rel: "noopener" %>
         <% end %>
 
+        <% if authenticated? %>
+          <%= render "recipes/rating", recipe: recipe %>
+        <% end %>
+
         <div class="recipe-detail--action-wrapper">
             <% if authenticated? %>
                 <%= link_to cook_recipe_path(recipe), class: "btn btn--primary" do %>

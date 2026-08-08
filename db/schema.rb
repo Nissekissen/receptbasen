@@ -77,7 +77,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_08_214919) do
   end
 
   create_table "personal_recipe_notes", force: :cascade do |t|
-    t.text "content", null: false
+    t.text "content"
     t.datetime "created_at", null: false
     t.integer "rating"
     t.integer "recipe_id", null: false

@@ -33,7 +33,7 @@
 
 .recipe-detail--image {
     width: 100%;
-    height: 320px;
+    height: 100%;
     object-fit: cover;
     border-radius: 12px;
     margin: 0 0 1.5rem;
@@ -109,6 +109,102 @@
    .cook-mode--finish-form). */
 .recipe-detail--cook-count-form {
     display: contents;
+}
+
+.recipe-detail--rating {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+/* The whole average display doubles as the trigger for "rate this yourself"
+   — clicking anywhere on it opens .recipe-detail--rating-menu, which is
+   unambiguously labeled as being about your own rating (see below), rather
+   than needing separate text here explaining that. */
+.recipe-detail--rating-trigger {
+    display: block;
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+    text-align: left;
+}
+
+.recipe-detail--rating-stars {
+    display: flex;
+    gap: 2px;
+    color: var(--accent-color);
+    margin-bottom: 4px;
+}
+
+.recipe-detail--rating-stars svg {
+    width: 20px;
+    height: 20px;
+}
+
+.recipe-detail--rating-summary {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: #8a8a86;
+}
+
+/* Anchored to .recipe-detail--rating (position: relative) the same way
+   .recipe-preview--save-menu anchors to its own trigger — a floating panel,
+   not something that pushes the action buttons below it around. */
+.recipe-detail--rating-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    padding: 10px 12px;
+    z-index: 3;
+}
+
+/* display: flex above ties in specificity with the browser's own [hidden]
+   rule, so without this override toggling `hidden` would do nothing —
+   same gotcha as the mobile nav drawer and .cook-mode--next[hidden]. */
+.recipe-detail--rating-menu[hidden] {
+    display: none;
+}
+
+.recipe-detail--rating-menu-label {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    color: #8a8a86;
+}
+
+.recipe-detail--rating-menu-stars {
+    display: flex;
+    gap: 4px;
+}
+
+/* Same display: contents trick as .recipe-detail--cook-count-form — each
+   star is its own <form>, and this keeps them participating directly in
+   the menu-stars row instead of each form becoming its own block. */
+.recipe-detail--rating-star-form {
+    display: contents;
+}
+
+.recipe-detail--rating-star {
+    border: none;
+    background: none;
+    padding: 2px;
+    cursor: pointer;
+    color: #ccc;
+}
+
+.recipe-detail--rating-star.is-selected {
+    color: var(--accent-color);
+}
+
+.recipe-detail--rating-star:hover {
+    color: var(--accent-color);
 }
 
 .recipe-detail--source {

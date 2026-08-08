@@ -1,3 +1,7 @@
 <%= turbo_stream.replace "recipe_note" do %>
   <%= render "recipes/note", recipe: @recipe %>
 <% end %>
+
+<%= turbo_stream.replace "recipe_rating" do %>
+  <%= render "recipes/rating", recipe: @recipe %>
+<% end %>

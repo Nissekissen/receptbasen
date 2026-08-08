@@ -67,6 +67,43 @@ class RecipesHelperTest < ActionView::TestCase
     assert_nil recipe_difficulty(recipes(:pannkakor))
   end
 
+  test "recipe_rating averages and counts the recipe's ratings" do
+    PersonalRecipeNote.create!(user: users(:one), recipe: recipes(:kottbullar), rating: 4)
+    PersonalRecipeNote.create!(user: users(:two), recipe: recipes(:kottbullar), rating: 2)
+
+    average, count = recipe_rating(recipes(:kottbullar))
+
+    assert_equal 3.0, average.to_f
+    assert_equal 2, count
+  end
+
+  test "recipe_rating ignores notes with no rating" do
+    PersonalRecipeNote.create!(user: users(:one), recipe: recipes(:kottbullar), rating: 5)
+    PersonalRecipeNote.create!(user: users(:two), recipe: recipes(:kottbullar), content: "Bra recept, inget betyg än.")
+
+    average, count = recipe_rating(recipes(:kottbullar))
+
+    assert_equal 5.0, average.to_f
+    assert_equal 1, count
+  end
+
+  test "recipe_rating only considers ratings for the given recipe" do
+    PersonalRecipeNote.create!(user: users(:one), recipe: recipes(:kottbullar), rating: 1)
+    PersonalRecipeNote.create!(user: users(:three), recipe: recipes(:pannkakor), rating: 5)
+
+    average, count = recipe_rating(recipes(:kottbullar))
+
+    assert_equal 1.0, average.to_f
+    assert_equal 1, count
+  end
+
+  test "recipe_rating returns no average and a zero count when the recipe has no ratings" do
+    average, count = recipe_rating(recipes(:kottbullar))
+
+    assert_nil average
+    assert_equal 0, count
+  end
+
   test "step_duration_seconds parses minutes" do
     step = Step.new(content: "Koka i ca 5 minuter under lock.")
     assert_equal 300, step_duration_seconds(step)
