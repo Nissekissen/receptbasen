@@ -84,6 +84,33 @@
     border-radius: 6px;
 }
 
+/* A <button> (not <span>, like the other badges) so it needs its own reset
+   on top of .recipe-detail--badge — border/font aren't inherited by buttons
+   by default the way they are for inline elements. */
+.recipe-detail--cook-count {
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-size: 12px;
+}
+
+.recipe-detail--cook-count:hover {
+    background: var(--accent-color);
+    color: white;
+}
+
+.recipe-detail--cook-count-plus {
+    font-family: var(--font-mono);
+}
+
+/* button_to wraps the button in its own <form> — display: contents lets the
+   badge participate directly in .recipe-detail--meta's flex row instead of
+   the form itself becoming an extra block-level flex item (same trick as
+   .cook-mode--finish-form). */
+.recipe-detail--cook-count-form {
+    display: contents;
+}
+
 .recipe-detail--source {
     display: inline-block;
     font-family: var(--font-sans);

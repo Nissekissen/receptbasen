@@ -1,0 +1,5 @@
+<%= button_to log_cook_recipe_path(recipe), method: :post,
+      class: "recipe-detail--badge recipe-detail--cook-count",
+      form: { id: "recipe_cook_count", class: "recipe-detail--cook-count-form" } do %>
+  Lagad <%= current_user_cook_count_for(recipe) %> ggr <span class="recipe-detail--cook-count-plus">+</span>
+<% end %>

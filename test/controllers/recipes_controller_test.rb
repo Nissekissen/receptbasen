@@ -319,6 +319,16 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "logs a cook and updates the count badge via turbo_stream" do
+    sign_in_as(users(:one))
+    recipe = recipes(:pannkakor)
+
+    post log_cook_recipe_url(recipe), as: :turbo_stream
+
+    assert_response :success
+    assert_match "Lagad 3 ggr", @response.body
+  end
+
   test "404s logging a cook for a private manual recipe the signed-in user can't see" do
     sign_in_as(users(:two))
 

@@ -89,6 +89,9 @@ class RecipesController < ApplicationController
     raise ActiveRecord::RecordNotFound unless @recipe.visible_to?(Current.user)
     @recipe.cook_logs.create!(user: Current.user)
 
-    redirect_to recipe_path(@recipe), notice: "Receptet har loggats" # TODO: replace this with a better notice message
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to recipe_path(@recipe), notice: "Receptet har loggats" }
+    end
   end
 end

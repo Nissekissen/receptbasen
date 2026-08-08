@@ -56,6 +56,9 @@
             </span>
           <% end %>
 
+          <% if authenticated? %>
+            <%= render "recipes/cook_count", recipe: recipe %>
+          <% end %>
         </div>
 
         <%= render "recipes/tags", recipe: recipe %>

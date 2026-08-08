@@ -19,6 +19,11 @@ module RecipesHelper
     PersonalRecipeNote.find_by(user: Current.user, recipe: recipe)
   end
 
+  def current_user_cook_count_for(recipe)
+    return 0 unless authenticated?
+    recipe.cook_logs.where(user: Current.user).count
+  end
+
   def recipe_total_time(recipe)
     return "#{(ActiveSupport::Duration.parse(recipe.total_time) / 60).round} min" if recipe.total_time.present?
 

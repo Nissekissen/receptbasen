@@ -63,7 +63,7 @@
   <div class="cook-mode--nav">
     <button type="button" class="btn btn--secondary cook-mode--prev" data-cook-mode-target="prevButton" data-action="cook-mode#previous">Stäng</button>
     <button type="button" class="btn btn--primary cook-mode--next" data-cook-mode-target="nextButton" data-action="cook-mode#next" <%= "hidden" if single_step %>>Nästa steg</button>
-    <%= button_to "Markera som lagad", log_cook_recipe_path(@recipe), method: :post,
+    <%= button_to "Markera som lagad", log_cook_recipe_path(@recipe, format: :html), method: :post,
           class: "btn btn--primary cook-mode--finish",
           form: { class: "cook-mode--finish-form", data: { cook_mode_target: "finishForm" }, hidden: !single_step } %>
   </div>
