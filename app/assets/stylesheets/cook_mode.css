@@ -3,7 +3,8 @@
 }
 
 /* Fixed to the viewport rather than min-height so the page itself never
-   scrolls — the ingredients panel scrolls internally instead (see below).
+   scrolls — the stage (current step) and the ingredients panel each scroll
+   internally instead when their own content is too tall (see below).
    overflow-y: auto stays as a fallback so content is never silently
    clipped if something unexpected ever overflows here; position: sticky
    on .cook-mode--nav then resolves correctly against this element's own
@@ -102,6 +103,10 @@
     color: #8a8a86;
 }
 
+/* min-height: 0 lets this flex item shrink below its content's natural size
+   (the flex default is content-based auto, which would otherwise refuse to
+   shrink and blow out .cook-mode's fixed height) so a long step's text
+   scrolls within its own bounded area instead of overflowing the page. */
 .cook-mode--stage {
     flex: 1;
     display: flex;
@@ -109,6 +114,7 @@
     justify-content: center;
     gap: 1.25rem;
     min-height: 0;
+    overflow-y: auto;
 }
 
 .cook-mode--steps {
@@ -185,6 +191,7 @@
 }
 
 .cook-mode--ingredients {
+    position: relative;
     background: white;
     border-radius: 10px;
     padding: 0.9rem 1.1rem;
@@ -216,24 +223,39 @@
     transform: rotate(180deg);
 }
 
-/* Fixed target height (rather than the content's natural scrollHeight) so
+/* Positioned absolutely (anchored to .cook-mode--ingredients, its nearest
+   positioned ancestor) and opening upward via `bottom: 100%`, rather than
+   sitting inline below the toggle — so expanding it never changes the
+   height of .cook-mode--ingredients itself, which would otherwise shrink
+   .cook-mode--stage (its flex:1 sibling) and shift the step text/nav
+   around every time it opens or closes.
+   Fixed target height (rather than the content's natural scrollHeight) so
    this animates with a plain CSS transition — no JS measurement needed.
    Ingredient lists longer than this scroll within the panel instead of
-   growing it, which is also what keeps the page itself from scrolling. */
+   growing it. */
 .cook-mode--ingredients-content {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 100%;
+    margin-bottom: 8px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
     max-height: 0;
     overflow-y: auto;
     transition: max-height 0.25s ease-in-out;
+    z-index: 5;
 }
 
 .cook-mode--ingredients.is-open .cook-mode--ingredients-content {
-    max-height: min(35vh, 320px);
+    max-height: min(45vh, 360px);
 }
 
 .cook-mode--ingredients-list {
     list-style: none;
     margin: 0;
-    padding: 0.9rem 0 0;
+    padding: 0.9rem 1.1rem;
     display: flex;
     flex-direction: column;
     gap: 8px;
