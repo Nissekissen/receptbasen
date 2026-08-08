@@ -14,6 +14,16 @@ module RecipesHelper
     SavedRecipe.where(recipe: recipe, collection: collections).index_by(&:collection_id)
   end
 
+  def current_user_note_for(recipe)
+    return nil unless authenticated?
+    PersonalRecipeNote.find_by(user: Current.user, recipe: recipe)
+  end
+
+  def current_user_cook_count_for(recipe)
+    return 0 unless authenticated?
+    recipe.cook_logs.where(user: Current.user).count
+  end
+
   def recipe_total_time(recipe)
     return "#{(ActiveSupport::Duration.parse(recipe.total_time) / 60).round} min" if recipe.total_time.present?
 
@@ -33,6 +43,16 @@ module RecipesHelper
 
   def recipe_difficulty_icon(difficulty)
     { "lätt" => "easy", "medel" => "medium", "avancerad" => "hard" }[difficulty&.downcase]
+  end
+
+  # Matches "5 minuter"/"45 min"/"1 timme"/"2 timmar" — deliberately just the
+  # first digit+unit pair found, so a range like "5-10 minuter" reads as 5.
+  def step_duration_seconds(step)
+    match = step.content.to_s.match(/(\d+)(?:-\d+)?\s*(timme|timmar|min(?:ut(?:er)?)?)\b/i)
+    return nil unless match
+
+    amount = match[1].to_i
+    match[2].downcase.start_with?("tim") ? amount * 3600 : amount * 60
   end
 
   def active_recipe_filters(collections: Current.user.collections)

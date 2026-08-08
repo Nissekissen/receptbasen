@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_05_213058) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_07_212111) do
   create_table "collections", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "group_id"
@@ -20,6 +20,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_05_213058) do
     t.integer "user_id", null: false
     t.index ["group_id"], name: "index_collections_on_group_id"
     t.index ["user_id"], name: "index_collections_on_user_id"
+  end
+
+  create_table "cook_logs", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "recipe_id", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["recipe_id"], name: "index_cook_logs_on_recipe_id"
+    t.index ["user_id", "created_at"], name: "index_cook_logs_on_user_id_and_created_at"
+    t.index ["user_id"], name: "index_cook_logs_on_user_id"
   end
 
   create_table "groups", force: :cascade do |t|
@@ -64,6 +74,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_05_213058) do
     t.index ["group_id", "user_id"], name: "index_memberships_on_group_id_and_user_id", unique: true
     t.index ["group_id"], name: "index_memberships_on_group_id"
     t.index ["user_id"], name: "index_memberships_on_user_id"
+  end
+
+  create_table "personal_recipe_notes", force: :cascade do |t|
+    t.text "content", null: false
+    t.datetime "created_at", null: false
+    t.integer "recipe_id", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["recipe_id"], name: "index_personal_recipe_notes_on_recipe_id"
+    t.index ["user_id", "recipe_id"], name: "index_personal_recipe_notes_on_user_id_and_recipe_id", unique: true
+    t.index ["user_id"], name: "index_personal_recipe_notes_on_user_id"
   end
 
   create_table "recipes", force: :cascade do |t|
@@ -162,12 +183,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_05_213058) do
 
   add_foreign_key "collections", "groups", on_delete: :cascade
   add_foreign_key "collections", "users", on_delete: :cascade
+  add_foreign_key "cook_logs", "recipes", on_delete: :cascade
+  add_foreign_key "cook_logs", "users", on_delete: :cascade
   add_foreign_key "groups", "users", column: "owner_id", on_delete: :cascade
   add_foreign_key "ingredients", "recipes", on_delete: :cascade
   add_foreign_key "invites", "groups"
   add_foreign_key "invites", "users", column: "created_by_id", on_delete: :cascade
   add_foreign_key "memberships", "groups", on_delete: :cascade
   add_foreign_key "memberships", "users", on_delete: :cascade
+  add_foreign_key "personal_recipe_notes", "recipes", on_delete: :cascade
+  add_foreign_key "personal_recipe_notes", "users", on_delete: :cascade
   add_foreign_key "recipes", "users", column: "owner_id", on_delete: :cascade
   add_foreign_key "saved_recipes", "collections", on_delete: :cascade
   add_foreign_key "saved_recipes", "recipes", on_delete: :cascade

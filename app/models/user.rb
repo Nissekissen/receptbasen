@@ -8,6 +8,8 @@ class User < ApplicationRecord
   has_many :groups, through: :memberships
   has_many :owned_groups, class_name: "Group", foreign_key: :owner_id, inverse_of: :owner
   has_many :shopping_list_items
+  has_many :personal_recipe_notes
+  has_many :cook_logs
 
   normalizes :email_address, with: ->(e) { e.strip.downcase }
 

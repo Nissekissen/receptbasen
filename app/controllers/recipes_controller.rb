@@ -77,4 +77,21 @@ class RecipesController < ApplicationController
 
     respond_to { |f| f.turbo_stream; f.html { redirect_to @recipe, notice: "Ingredienserna lades till i inköpslistan." } }
   end
+
+  def cook
+    @recipe = Recipe.find(params[:id])
+    raise ActiveRecord::RecordNotFound unless @recipe.visible_to?(Current.user)
+    render layout: "cook_mode"
+  end
+
+  def log_cook
+    @recipe = Recipe.find(params[:id])
+    raise ActiveRecord::RecordNotFound unless @recipe.visible_to?(Current.user)
+    @recipe.cook_logs.create!(user: Current.user)
+
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to recipe_path(@recipe), notice: "Receptet har loggats" }
+    end
+  end
 end

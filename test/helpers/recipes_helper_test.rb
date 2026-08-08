@@ -66,4 +66,39 @@ class RecipesHelperTest < ActionView::TestCase
   test "recipe_difficulty is nil when the recipe has no svarighetsgrad tag" do
     assert_nil recipe_difficulty(recipes(:pannkakor))
   end
+
+  test "step_duration_seconds parses minutes" do
+    step = Step.new(content: "Koka i ca 5 minuter under lock.")
+    assert_equal 300, step_duration_seconds(step)
+  end
+
+  test "step_duration_seconds parses the abbreviated min form" do
+    step = Step.new(content: "Baka i ugn i 45 min.")
+    assert_equal 2700, step_duration_seconds(step)
+  end
+
+  test "step_duration_seconds parses hours" do
+    step = Step.new(content: "Låt degen jäsa i 2 timmar.")
+    assert_equal 7200, step_duration_seconds(step)
+  end
+
+  test "step_duration_seconds parses a single hour" do
+    step = Step.new(content: "Stek i ugn i 1 timme.")
+    assert_equal 3600, step_duration_seconds(step)
+  end
+
+  test "step_duration_seconds takes the first number in a range" do
+    step = Step.new(content: "Sjud i 5-10 minuter.")
+    assert_equal 300, step_duration_seconds(step)
+  end
+
+  test "step_duration_seconds returns nil when there's no parseable duration" do
+    step = Step.new(content: "Skala och skiva potatisarna.")
+    assert_nil step_duration_seconds(step)
+  end
+
+  test "step_duration_seconds returns nil for a bare number with no time unit" do
+    step = Step.new(content: "Tillsätt 5 potatisar.")
+    assert_nil step_duration_seconds(step)
+  end
 end

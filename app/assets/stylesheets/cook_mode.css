@@ -1,0 +1,297 @@
+.cook-mode-body {
+    background: var(--background-color);
+}
+
+/* Fixed to the viewport rather than min-height so the page itself never
+   scrolls — the ingredients panel scrolls internally instead (see below).
+   overflow-y: auto stays as a fallback so content is never silently
+   clipped if something unexpected ever overflows here; position: sticky
+   on .cook-mode--nav then resolves correctly against this element's own
+   scrollport instead of the viewport in that fallback case. */
+.cook-mode {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    height: 100dvh;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 1.25rem 1.25rem calc(1.25rem + env(safe-area-inset-bottom));
+    overflow-y: auto;
+}
+
+.cook-mode--header {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1.5rem;
+    flex-shrink: 0;
+}
+
+.cook-mode--exit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: white;
+    color: var(--accent-color-dark);
+    text-decoration: none;
+}
+
+.cook-mode--exit:hover {
+    background: var(--accent-color-light);
+}
+
+.cook-mode--title {
+    margin: 0;
+    text-align: center;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--accent-color-dark);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cook-mode--wakelock {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    color: #c9c5b8;
+}
+
+.cook-mode--wakelock.is-active {
+    color: var(--accent-color);
+}
+
+.cook-mode--wakelock.is-unsupported {
+    opacity: 0.35;
+}
+
+.cook-mode--progress {
+    margin-bottom: 1.75rem;
+    flex-shrink: 0;
+}
+
+.cook-mode--progress-track {
+    height: 6px;
+    border-radius: 3px;
+    background: var(--accent-color-light);
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.cook-mode--progress-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: var(--accent-color);
+    transition: width 0.25s ease-in-out;
+}
+
+.cook-mode--progress-label {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #8a8a86;
+}
+
+.cook-mode--stage {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.25rem;
+    min-height: 0;
+}
+
+.cook-mode--steps {
+    width: 100%;
+}
+
+.cook-mode--step {
+    width: 100%;
+    text-align: left;
+}
+
+.cook-mode--step-text {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: clamp(1.3rem, 4vw + 1rem, 1.9rem);
+    line-height: 1.45;
+    color: var(--ink);
+    margin: 0 0 1.25rem;
+}
+
+.cook-mode--step-number {
+    font-family: var(--font-mono);
+    color: var(--accent-color);
+}
+
+.cook-mode--timer-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--accent-color-dark);
+    background: var(--accent-color-light);
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+.cook-mode--timer-chip.is-running {
+    background: var(--accent-color);
+    color: white;
+}
+
+.cook-mode--timer-chip.is-done {
+    background: var(--accent-color-dark);
+    color: white;
+}
+
+.cook-mode--preview summary {
+    list-style: none;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    color: #8a8a86;
+}
+
+.cook-mode--preview summary::-webkit-details-marker {
+    display: none;
+}
+
+.cook-mode--preview-list {
+    margin: 8px 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    color: #8a8a86;
+}
+
+.cook-mode--preview-list p {
+    margin: 0;
+}
+
+.cook-mode--ingredients {
+    background: white;
+    border-radius: 10px;
+    padding: 0.9rem 1.1rem;
+    margin-bottom: 1.5rem;
+    flex-shrink: 0;
+}
+
+.cook-mode--ingredients-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 1rem;
+    color: var(--accent-color-dark);
+}
+
+.cook-mode--ingredients-chevron {
+    display: inline-flex;
+    transition: transform 0.2s ease-in-out;
+}
+
+.cook-mode--ingredients.is-open .cook-mode--ingredients-chevron {
+    transform: rotate(180deg);
+}
+
+/* Fixed target height (rather than the content's natural scrollHeight) so
+   this animates with a plain CSS transition — no JS measurement needed.
+   Ingredient lists longer than this scroll within the panel instead of
+   growing it, which is also what keeps the page itself from scrolling. */
+.cook-mode--ingredients-content {
+    max-height: 0;
+    overflow-y: auto;
+    transition: max-height 0.25s ease-in-out;
+}
+
+.cook-mode--ingredients.is-open .cook-mode--ingredients-content {
+    max-height: min(35vh, 320px);
+}
+
+.cook-mode--ingredients-list {
+    list-style: none;
+    margin: 0;
+    padding: 0.9rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.cook-mode--ingredients-list li {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    color: var(--ink);
+}
+
+.cook-mode--ingredient-amount {
+    font-family: var(--font-mono);
+    color: var(--accent-color);
+    margin-right: 6px;
+}
+
+.cook-mode--nav {
+    display: flex;
+    gap: 10px;
+    position: sticky;
+    bottom: 0;
+    padding-top: 0.5rem;
+    background: var(--background-color);
+    flex-shrink: 0;
+}
+
+.cook-mode--prev {
+    flex: 1;
+    justify-content: center;
+    padding: 14px 16px;
+}
+
+.cook-mode--next,
+.cook-mode--finish {
+    flex: 2;
+    justify-content: center;
+    padding: 16px 20px;
+    font-size: 14px;
+}
+
+/* .btn already sets display: inline-flex, which ties in specificity with the
+   browser's own [hidden] rule — without these, toggling `hidden` here would
+   silently do nothing (same gotcha as the mobile nav drawer). */
+.cook-mode--next[hidden] {
+    display: none;
+}
+
+.cook-mode--finish-form {
+    display: contents;
+}
+
+.cook-mode--finish-form[hidden] {
+    display: none;
+}
+
+@media (max-width: 480px) {
+    .cook-mode {
+        padding: 1rem 1rem calc(1rem + env(safe-area-inset-bottom));
+    }
+}

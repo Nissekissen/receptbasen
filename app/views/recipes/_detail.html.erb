@@ -2,59 +2,75 @@
   <div class="recipe-detail--inner">
     <%= link_to "← Dina recept", recipes_path, class: "recipe-detail--back" %>
 
-    <% if recipe.image_url.present? %>
-      <img src="<%= recipe.image_url %>" alt="" class="recipe-detail--image">
-    <% else %>
-      <div class="recipe-detail--image recipe-detail--image-placeholder" aria-hidden="true"></div>
-    <% end %>
+    <div class="recipe-detail--layout">
+      <% if recipe.image_url.present? %>
+        <img src="<%= recipe.image_url %>" alt="" class="recipe-detail--image">
+      <% else %>
+        <div class="recipe-detail--image recipe-detail--image-placeholder" aria-hidden="true"></div>
+      <% end %>
 
-    <p class="recipe-detail--title"><%= recipe.title %></p>
-
-    <div class="recipe-detail--action-wrapper">
-        <% if authenticated? %>
-            <% saved = saved_recipe_lookup(recipe) %>
-
-            <div class="recipe-detail--save-wrap" data-controller="dropdown save-menu">
-                <button type="button" class="btn btn--primary recipe-detail--save" data-action="click->dropdown#toggle" data-save-menu-target="trigger" aria-label="Spara">
-                <%= render "icons/bookmark", filled: saved.any? %>
-                <span data-save-menu-target="label"><%= saved.any? ? "Sparat" : "Spara" %></span>
-                </button>
-
-                <%= render "recipes/save_menu", recipe: recipe, saved: saved %>
-            </div>
-        <% end %>
+      <div class="recipe-detail--info">
+        <p class="recipe-detail--title"><%= recipe.title %></p>
 
         <% if recipe.source_domain.present? %>
-            <%= link_to "#{recipe.source_domain} ↗", recipe.source_url, class: "btn btn--secondary", target: "_blank", rel: "noopener" %>
+          <%= link_to "Från #{recipe.source_domain} ↗", recipe.source_url, class: "recipe-detail--source", target: "_blank", rel: "noopener" %>
         <% end %>
+
+        <div class="recipe-detail--action-wrapper">
+            <% if authenticated? %>
+                <%= link_to cook_recipe_path(recipe), class: "btn btn--primary" do %>
+                  <%= render "icons/chef_hat" %>
+                  Laga nu
+                <% end %>
+
+                <% saved = saved_recipe_lookup(recipe) %>
+
+                <div class="recipe-detail--save-wrap" data-controller="dropdown save-menu">
+                    <button type="button" class="btn btn--secondary recipe-detail--save" data-action="click->dropdown#toggle" data-save-menu-target="trigger" aria-label="Spara">
+                    <%= render "icons/bookmark", filled: saved.any? %>
+                    <span data-save-menu-target="label"><%= saved.any? ? "Sparat" : "Spara" %></span>
+                    </button>
+
+                    <%= render "recipes/save_menu", recipe: recipe, saved: saved %>
+                </div>
+            <% end %>
+        </div>
+
+        <div class="recipe-detail--meta">
+          <% if (total_time = recipe_total_time(recipe)) %>
+            <span class="recipe-detail--badge">
+              <%= render "icons/clock" %>
+              <%= total_time %>
+            </span>
+          <% end %>
+          <% if (difficulty = recipe_difficulty(recipe)) %>
+            <span class="recipe-detail--badge">
+              <%= render "icons/#{recipe_difficulty_icon(difficulty)}" %>
+              <%= difficulty %>
+            </span>
+          <% end %>
+          <% if recipe.servings.present? %>
+            <span class="recipe-detail--badge">
+              <%= render "icons/servings" %>
+              <%= recipe.servings %>
+            </span>
+          <% end %>
+
+          <% if authenticated? %>
+            <%= render "recipes/cook_count", recipe: recipe %>
+          <% end %>
+        </div>
+
+        <%= render "recipes/tags", recipe: recipe %>
+
+        <% if recipe.description.present? %>
+          <p class="recipe-detail--description"><%= recipe.description %></p>
+        <% end %>
+      </div>
     </div>
 
-    <div class="recipe-detail--meta">
-      <% if (total_time = recipe_total_time(recipe)) %>
-        <span class="recipe-detail--badge">
-          <%= render "icons/clock" %>
-          <%= total_time %>
-        </span>
-      <% end %>
-      <% if (difficulty = recipe_difficulty(recipe)) %>
-        <span class="recipe-detail--badge">
-          <%= render "icons/#{recipe_difficulty_icon(difficulty)}" %>
-          <%= difficulty %>
-        </span>
-      <% end %>
-      <% if recipe.servings.present? %>
-        <span class="recipe-detail--badge">
-          <%= render "icons/servings" %>
-          <%= recipe.servings %>
-        </span>
-      <% end %>
-
-    </div>
-
-    <%= render "recipes/tags", recipe: recipe %>
-
-    <% if recipe.description.present? %>
-      <p class="recipe-detail--description"><%= recipe.description %></p>
+    <% if authenticated? %>
+      <%= render "recipes/note", recipe: recipe %>
     <% end %>
 
     <div class="recipe-detail--content">

@@ -1,0 +1,9 @@
+one:
+  user: one
+  recipe: pannkakor
+  created_at: <%= 2.days.ago %>
+
+two:
+  user: one
+  recipe: pannkakor
+  created_at: <%= 1.day.ago %>
