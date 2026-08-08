@@ -63,12 +63,12 @@
         <% if recipe.description.present? %>
           <p class="recipe-detail--description"><%= recipe.description %></p>
         <% end %>
-
-        <% if authenticated? %>
-          <%= render "recipes/note", recipe: recipe %>
-        <% end %>
       </div>
     </div>
+
+    <% if authenticated? %>
+      <%= render "recipes/note", recipe: recipe %>
+    <% end %>
 
     <div class="recipe-detail--content">
       <div class="recipe-detail--ingredients">
