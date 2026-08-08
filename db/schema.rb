@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_07_212111) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_08_214919) do
   create_table "collections", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "group_id"
@@ -79,6 +79,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_07_212111) do
   create_table "personal_recipe_notes", force: :cascade do |t|
     t.text "content", null: false
     t.datetime "created_at", null: false
+    t.integer "rating"
     t.integer "recipe_id", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
@@ -91,6 +92,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_07_212111) do
     t.string "cook_time"
     t.datetime "created_at", null: false
     t.string "description"
+    t.float "external_rating"
+    t.integer "external_rating_count"
     t.string "image_url"
     t.integer "owner_id"
     t.string "prep_time"
@@ -110,7 +113,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_07_212111) do
     t.integer "collection_id", null: false
     t.datetime "created_at", null: false
     t.text "note"
-    t.integer "rating"
     t.integer "recipe_id", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false

@@ -96,6 +96,68 @@ class StructuredParserTest < ActiveSupport::TestCase
     assert_nil StructuredParser.new(html_with(recipe)).call
   end
 
+  test "leaves external_rating and external_rating_count nil when there's no aggregateRating" do
+    result = StructuredParser.new(html_with(BASE_RECIPE)).call
+
+    assert_nil result[:external_rating]
+    assert_nil result[:external_rating_count]
+  end
+
+  test "captures a rating that's already on a 1-5 scale as-is" do
+    recipe = BASE_RECIPE.merge("aggregateRating" => { "ratingValue" => "4.5", "ratingCount" => "128" })
+
+    result = StructuredParser.new(html_with(recipe)).call
+
+    assert_equal 4.5, result[:external_rating]
+    assert_equal 128, result[:external_rating_count]
+  end
+
+  test "normalizes a rating from a different scale onto 1-5" do
+    recipe = BASE_RECIPE.merge(
+      "aggregateRating" => { "ratingValue" => 8, "bestRating" => 10, "worstRating" => 0, "ratingCount" => 40 }
+    )
+
+    result = StructuredParser.new(html_with(recipe)).call
+
+    assert_equal 4.2, result[:external_rating]
+    assert_equal 40, result[:external_rating_count]
+  end
+
+  test "defaults bestRating/worstRating to 5/1 per schema.org when absent" do
+    recipe = BASE_RECIPE.merge("aggregateRating" => { "ratingValue" => 3, "ratingCount" => 5 })
+
+    result = StructuredParser.new(html_with(recipe)).call
+
+    assert_equal 3.0, result[:external_rating]
+  end
+
+  test "falls back to reviewCount when ratingCount is absent" do
+    recipe = BASE_RECIPE.merge("aggregateRating" => { "ratingValue" => 4, "reviewCount" => 12 })
+
+    result = StructuredParser.new(html_with(recipe)).call
+
+    assert_equal 12, result[:external_rating_count]
+  end
+
+  test "leaves the rating nil when bestRating and worstRating are equal" do
+    recipe = BASE_RECIPE.merge(
+      "aggregateRating" => { "ratingValue" => 5, "bestRating" => 5, "worstRating" => 5, "ratingCount" => 3 }
+    )
+
+    result = StructuredParser.new(html_with(recipe)).call
+
+    assert_nil result[:external_rating]
+    assert_nil result[:external_rating_count]
+  end
+
+  test "leaves the rating nil when ratingValue is missing entirely" do
+    recipe = BASE_RECIPE.merge("aggregateRating" => { "ratingCount" => 50 })
+
+    result = StructuredParser.new(html_with(recipe)).call
+
+    assert_nil result[:external_rating]
+  end
+
   private
 
   def html_with(recipe)

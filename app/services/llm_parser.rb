@@ -39,6 +39,7 @@ class LlmParser < Parser
 
     unless result["is_recipe"]
       @error = "Not a recipe"
+      Rails.logger.info("LlmParser said not a recipe. HTML sent to the LLM:\n#{@html}")
       return nil
     end
 
