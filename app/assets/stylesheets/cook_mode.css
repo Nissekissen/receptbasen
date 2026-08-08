@@ -129,6 +129,11 @@
     margin: 0 0 1.25rem;
 }
 
+.cook-mode--step-number {
+    font-family: var(--font-mono);
+    color: var(--accent-color);
+}
+
 .cook-mode--timer-chip {
     display: inline-flex;
     align-items: center;
@@ -167,13 +172,16 @@
 
 .cook-mode--preview-list {
     margin: 8px 0 0;
-    padding-left: 18px;
     display: flex;
     flex-direction: column;
     gap: 4px;
     font-family: var(--font-sans);
     font-size: 1rem;
     color: #8a8a86;
+}
+
+.cook-mode--preview-list p {
+    margin: 0;
 }
 
 .cook-mode--ingredients {

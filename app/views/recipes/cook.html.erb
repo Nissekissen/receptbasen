@@ -3,7 +3,7 @@
 <% total_steps = @recipe.steps.size %>
 <% single_step = total_steps <= 1 %>
 
-<main class="cook-mode" data-controller="cook-mode" data-cook-mode-total-value="<%= total_steps %>">
+<main class="cook-mode" data-controller="cook-mode" data-cook-mode-total-value="<%= total_steps %>" data-cook-mode-exit-url-value="<%= recipe_path(@recipe) %>">
   <header class="cook-mode--header">
     <%= link_to recipe_path(@recipe), class: "cook-mode--exit", "aria-label": "Avsluta tillagningsläge" do %>
       <%= render "icons/close" %>
@@ -25,7 +25,7 @@
     <div class="cook-mode--steps">
       <% @recipe.steps.each.with_index do |step, index| %>
         <div class="cook-mode--step" data-cook-mode-target="step" <%= "hidden" if index != 0 %>>
-          <p class="cook-mode--step-text"><%= step.content %></p>
+          <p class="cook-mode--step-text"><span class="cook-mode--step-number"><%= format("%02d.", index + 1) %></span> <%= step.content %></p>
 
           <% if (duration = step_duration_seconds(step)) %>
             <%= render "recipes/cook_timer_chip", duration: duration %>
@@ -35,8 +35,8 @@
     </div>
 
     <details class="cook-mode--preview" data-cook-mode-target="preview" <%= "hidden" if single_step %>>
-      <summary>Nästa: <span data-cook-mode-target="previewLabel"><%= @recipe.steps[1]&.content %></span></summary>
-      <ul class="cook-mode--preview-list" data-cook-mode-target="previewList"></ul>
+      <summary><span data-cook-mode-target="previewLabel"><%= format("%02d.", 2) %> <%= @recipe.steps[1]&.content %></span></summary>
+      <div class="cook-mode--preview-list" data-cook-mode-target="previewList"></div>
     </details>
   </div>
 
@@ -61,7 +61,7 @@
   </div>
 
   <div class="cook-mode--nav">
-    <button type="button" class="btn btn--secondary cook-mode--prev" data-cook-mode-target="prevButton" data-action="cook-mode#previous" disabled>Föregående</button>
+    <button type="button" class="btn btn--secondary cook-mode--prev" data-cook-mode-target="prevButton" data-action="cook-mode#previous">Stäng</button>
     <button type="button" class="btn btn--primary cook-mode--next" data-cook-mode-target="nextButton" data-action="cook-mode#next" <%= "hidden" if single_step %>>Nästa steg</button>
     <%= button_to "Markera som lagad", log_cook_recipe_path(@recipe), method: :post,
           class: "btn btn--primary cook-mode--finish",

@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { Turbo } from "@hotwired/turbo-rails"
 
 const PREVIEW_STEPS_AHEAD = 3
 
@@ -9,7 +10,7 @@ export default class extends Controller {
     "preview", "previewLabel", "previewList",
     "wakeLock"
   ]
-  static values = { total: Number }
+  static values = { total: Number, exitUrl: String }
 
   connect() {
     this.index = 0
@@ -32,7 +33,10 @@ export default class extends Controller {
   }
 
   previous() {
-    if (this.index <= 0) return
+    if (this.index <= 0) {
+      Turbo.visit(this.exitUrlValue)
+      return
+    }
     this.index -= 1
     this.update()
   }
@@ -43,7 +47,7 @@ export default class extends Controller {
     this.stepTargets.forEach((step, i) => { step.hidden = i !== this.index })
     this.progressFillTarget.style.width = `${((this.index + 1) / this.totalValue) * 100}%`
     this.counterTarget.textContent = `Steg ${this.index + 1} av ${this.totalValue}`
-    this.prevButtonTarget.disabled = this.index === 0
+    this.prevButtonTarget.textContent = this.index === 0 ? "Stäng" : "Föregående"
     this.nextButtonTarget.hidden = isLastStep
     this.finishFormTarget.hidden = !isLastStep
 
@@ -60,9 +64,9 @@ export default class extends Controller {
     this.previewLabelTarget.textContent = this.stepText(immediate)
     this.previewListTarget.innerHTML = ""
     rest.forEach((step) => {
-      const li = document.createElement("li")
-      li.textContent = this.stepText(step)
-      this.previewListTarget.appendChild(li)
+      const row = document.createElement("p")
+      row.textContent = this.stepText(step)
+      this.previewListTarget.appendChild(row)
     })
   }
 
