@@ -45,6 +45,10 @@ module RecipesHelper
     { "lätt" => "easy", "medel" => "medium", "avancerad" => "hard" }[difficulty&.downcase]
   end
 
+  def recipe_rating(recipe)
+    PersonalRecipeNote.where(recipe: recipe).where.not(rating: nil).pick(Arel.sql("AVG(rating), COUNT(rating)"))
+  end
+
   # Matches "5 minuter"/"45 min"/"1 timme"/"2 timmar" — deliberately just the
   # first digit+unit pair found, so a range like "5-10 minuter" reads as 5.
   def step_duration_seconds(step)

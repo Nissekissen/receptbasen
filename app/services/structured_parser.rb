@@ -18,6 +18,8 @@ class StructuredParser < Parser
     return bail(:steps_look_unseparated) if steps_look_unseparated?
     return bail(:ingredients_missing_amounts) if ingredients_missing_amounts?
 
+    ratings = extract_ratings(node["aggregateRating"])
+
     normalize(
       title: node["name"],
       description: node["description"],
@@ -26,7 +28,9 @@ class StructuredParser < Parser
       cook_time: node["cookTime"],
       total_time: node["totalTime"],
       servings: extract_servings(node["recipeYield"]),
-      source_domain: extract_source_domain(node["url"] || extract_image_url(node["image"]))
+      source_domain: extract_source_domain(node["url"] || extract_image_url(node["image"])),
+      external_rating: ratings[0],
+      external_rating_count: ratings[1]
     )
   rescue StandardError => e
     bail(:exception, e)
@@ -43,8 +47,19 @@ class StructuredParser < Parser
     nil
   end
 
-  def ingredients_missing_amounts?
-    @ingredients.none? { |ingredient| ingredient.match?(/[\d½⅓⅔¼¾⅕⅙⅛]/) }
+  def extract_ratings(aggregate_rating)
+    return [ nil, nil ] unless aggregate_rating
+
+    rating_value = aggregate_rating["ratingValue"]
+    rating_count = (aggregate_rating["ratingCount"] || aggregate_rating["reviewCount"])
+    return [ nil, nil ] unless rating_value
+
+    best = (aggregate_rating["bestRating"] || 5).to_f
+    worst = (aggregate_rating["worstRating"] || 1).to_f
+    return [ nil, nil ] if best == worst
+    normalized = 1 + (rating_value.to_f - worst) / (best - worst) * 4
+
+    [ normalized, rating_count.to_i ]
   end
 
   # Some sites hand back one giant string with no real step boundaries (steps
@@ -56,6 +71,10 @@ class StructuredParser < Parser
 
     step = @steps.first.to_s
     step.scan(/\.\s/).size >= 3 || step.length > 600
+  end
+
+  def ingredients_missing_amounts?
+    @ingredients.none? { |ingredient| ingredient.match?(/[\d½⅓⅔¼¾⅕⅙⅛]/) }
   end
 
   def extract_ingredients(ingredients)

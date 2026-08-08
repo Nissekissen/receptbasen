@@ -14,6 +14,8 @@ class ParseRecipeJob < ApplicationJob
     ingredients = nil
     steps = nil
 
+    Rails.logger.info("html: \n#{html}")
+
     structured_parser = StructuredParser.new(html)
     result = structured_parser.call
     if result
@@ -31,6 +33,7 @@ class ParseRecipeJob < ApplicationJob
 
       if result.nil?
         Rails.logger.info "ParseRecipeJob: LlmParser failed for recipe #{recipe.id}: #{llm_parser.error}"
+
         broadcast_step(recipe, :parse_ai, :failed)
         broadcast_failed(recipe, user_facing_error(llm_parser.error))
         return

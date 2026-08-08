@@ -152,30 +152,55 @@
     margin: 0 0 0.5rem;
 }
 
-.recipe-preview--meta {
-    display: flex;
-    gap: 8px;
-    margin: 0 0 1.5rem;
+.recipe-preview--card .recipe-preview--image-wrap {
+    position: relative;
 }
 
-.recipe-preview--badge {
-    display: inline-flex;
+/* Anchored bottom-left on the image, opposite corner from .recipe-preview--save
+   — the two floating controls read as one consistent piece of chrome on the
+   photo rather than unrelated overlays. Only rendered when the recipe has at
+   least one rating; see .recipe-preview--rating-prompt for the empty state. */
+.recipe-preview--rating {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    display: flex;
     align-items: center;
     gap: 5px;
+    background: rgba(251, 247, 238, 0.92);
+    padding: 5px 9px;
+    border-radius: 20px;
     font-family: var(--font-sans);
     font-size: 12px;
     color: var(--accent-color-dark);
-    background: var(--accent-color-light);
-    padding: 4px 9px;
-    border-radius: 6px;
+    font-variant-numeric: tabular-nums;
 }
 
-.recipe-preview--badge svg {
-    flex-shrink: 0;
+.recipe-preview--rating svg path {
+    fill: var(--accent-color);
+    stroke: var(--accent-color);
 }
 
-.recipe-preview--card .recipe-preview--image-wrap {
-    position: relative;
+/* Stays invisible at rest — an unrated recipe's photo is left completely
+   clean rather than showing a hollow "0.0 (0)" — and only appears on hover,
+   as a quiet invitation rather than a permanent prompt on every card. */
+.recipe-preview--rating-prompt {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    padding: 5px 10px;
+    border-radius: 20px;
+    background: rgba(251, 247, 238, 0.85);
+    font-family: var(--font-sans);
+    font-size: 11.5px;
+    font-style: italic;
+    color: #8a8770;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+.recipe-preview--card .recipe-preview--image-wrap:hover .recipe-preview--rating-prompt {
+    opacity: 1;
 }
 
 .recipe-preview--card .recipe-preview--image {
@@ -188,6 +213,8 @@
     padding: 1rem 1.1rem 1.1rem;
 }
 
+/* Same cream-tinted glass as .recipe-preview--rating, opposite corner — one
+   consistent floating-chrome material across both photo overlays. */
 .recipe-preview--save {
     position: absolute;
     top: 10px;
@@ -195,18 +222,18 @@
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.92);
+    background: rgba(251, 247, 238, 0.92);
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--accent-color-dark);
     border: none;
-    box-shadow: 0 0 20px 4px rgba(0, 0, 0, 0.16);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
     cursor: pointer;
 }
 
 .recipe-preview--save:hover {
-    background: #eee;
+    background: var(--background-color);
 }
 
 .recipe-preview--save-menu {

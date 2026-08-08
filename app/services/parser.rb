@@ -1,5 +1,5 @@
 class Parser
-  FIELDS = %i[title description image_url prep_time cook_time total_time servings source_domain].freeze
+  FIELDS = %i[title description image_url prep_time cook_time total_time servings source_domain external_rating external_rating_count].freeze
 
   # A fixed allowlist of accented-letter named entities — deliberately NOT a
   # blanket CGI.unescapeHTML. Decoding HTML-syntax entities (&lt; &gt; &amp;
