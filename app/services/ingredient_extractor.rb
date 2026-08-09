@@ -10,7 +10,7 @@ class IngredientExtractor
             quantity: { anyOf: [ { type: "string" }, { type: "null" } ] },
             unit: { anyOf: [ { type: "string" }, { type: "null" } ] },
             name: { type: "string" },
-            quantity_value: { anyOf: [ { type: "string" }, { type: "null" } ] }
+            quantity_value: { anyOf: [ { type: "number" }, { type: "null" } ] }
           },
           required: [ "quantity", "unit", "name", "quantity_value" ],
           additionalProperties: false
@@ -43,7 +43,7 @@ class IngredientExtractor
       return nil
     end
 
-    parsed.map { |h| { quantity: h["quantity"], unit: h["unit"], name: h["name"] } }
+    parsed.map { |h| { quantity: h["quantity"], unit: h["unit"], name: h["name"], quantity_value: h["quantity_value"] } }
   rescue => e
     @error = e.message
     nil

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_08_214919) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_09_081514) do
   create_table "collections", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "group_id"
@@ -46,6 +46,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_08_214919) do
     t.datetime "created_at", null: false
     t.string "name"
     t.string "quantity"
+    t.float "quantity_value"
     t.integer "recipe_id", null: false
     t.string "unit"
     t.datetime "updated_at", null: false
