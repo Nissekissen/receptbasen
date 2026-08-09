@@ -41,6 +41,12 @@ class ManualRecipesControllerTest < ActionDispatch::IntegrationTest
 
   test "creates a manual recipe using prep and cook time" do
     sign_in_as(users(:one))
+    stub_anthropic_messages({
+      ingredients: [
+        { quantity: "1", unit: nil, name: "Lök", quantity_value: 1 },
+        { quantity: "1", unit: "l", name: "Buljong", quantity_value: 1 }
+      ]
+    }.to_json)
 
     assert_difference "Recipe.count", 1 do
       post manual_recipe_url, params: {
@@ -65,6 +71,7 @@ class ManualRecipesControllerTest < ActionDispatch::IntegrationTest
 
   test "creates a manual recipe using total_time, discarding prep and cook time" do
     sign_in_as(users(:one))
+    stub_anthropic_messages({ ingredients: [ { quantity: nil, unit: nil, name: "Bröd", quantity_value: nil } ] }.to_json)
 
     post manual_recipe_url, params: {
       recipe: { title: "Snabbmacka" },
@@ -79,5 +86,44 @@ class ManualRecipesControllerTest < ActionDispatch::IntegrationTest
     assert_equal "PT5M", recipe.total_time
     assert_nil recipe.prep_time
     assert_nil recipe.cook_time
+  end
+
+  test "splits manual ingredients into quantity, unit, and quantity_value" do
+    sign_in_as(users(:one))
+    stub_anthropic_messages({
+      ingredients: [
+        { quantity: "2", unit: "dl", name: "mjölk", quantity_value: 2 },
+        { quantity: "1/2", unit: "dl", name: "socker", quantity_value: 0.5 }
+      ]
+    }.to_json)
+
+    post manual_recipe_url, params: {
+      recipe: { title: "Pannkakor" },
+      ingredients: [ "2 dl mjölk", "1/2 dl socker" ],
+      steps: [ "Vispa ihop" ]
+    }
+
+    recipe = Recipe.last
+    assert_equal [ "2", "1/2" ], recipe.ingredients.map(&:quantity)
+    assert_equal [ "dl", "dl" ], recipe.ingredients.map(&:unit)
+    assert_equal [ 2.0, 0.5 ], recipe.ingredients.map(&:quantity_value)
+  end
+
+  test "still creates the recipe when ingredient splitting fails" do
+    sign_in_as(users(:one))
+    stub_anthropic_messages({ ingredients: [] }.to_json)
+
+    assert_difference "Recipe.count", 1 do
+      post manual_recipe_url, params: {
+        recipe: { title: "Pannkakor" },
+        ingredients: [ "2 dl mjölk", "1/2 dl socker" ],
+        steps: [ "Vispa ihop" ]
+      }
+    end
+
+    recipe = Recipe.last
+    assert_equal [ "2 dl mjölk", "1/2 dl socker" ], recipe.ingredients.map(&:content)
+    assert recipe.ingredients.all? { |ingredient| ingredient.quantity_value.nil? }
+    assert_redirected_to recipe
   end
 end

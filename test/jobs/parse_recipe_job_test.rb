@@ -52,16 +52,16 @@ class ParseRecipeJobTest < ActiveJob::TestCase
 
   INGREDIENT_SPLIT_RESPONSE = {
     ingredients: [
-      { quantity: "2", unit: "dl", name: "havregryn" },
-      { quantity: "1", unit: "dl", name: "socker" },
-      { quantity: "3", unit: "msk", name: "kakao" }
+      { quantity: "2", unit: "dl", name: "havregryn", quantity_value: 2 },
+      { quantity: "1", unit: "dl", name: "socker", quantity_value: 1 },
+      { quantity: "3", unit: "msk", name: "kakao", quantity_value: 3 }
     ]
   }.to_json
 
   PASTA_INGREDIENT_SPLIT_RESPONSE = {
     ingredients: [
-      { quantity: nil, unit: nil, name: "Pasta" },
-      { quantity: nil, unit: nil, name: "Tomatsås" }
+      { quantity: nil, unit: nil, name: "Pasta", quantity_value: nil },
+      { quantity: nil, unit: nil, name: "Tomatsås", quantity_value: nil }
     ]
   }.to_json
 
@@ -79,6 +79,7 @@ class ParseRecipeJobTest < ActiveJob::TestCase
     assert_equal [ "2", "1", "3" ], recipe.ingredients.map(&:quantity)
     assert_equal [ "dl", "dl", "msk" ], recipe.ingredients.map(&:unit)
     assert_equal [ "havregryn", "socker", "kakao" ], recipe.ingredients.map(&:name)
+    assert_equal [ 2.0, 1.0, 3.0 ], recipe.ingredients.map(&:quantity_value)
     assert_equal [ "Blanda alla ingredienser.", "Rulla till bollar och kyl." ], recipe.steps.order(:position).map(&:content)
     assert_equal [ "efterrätt", "vegetariskt", "lätt" ], recipe.tags.map(&:name)
     assert_requested :post, "https://api.anthropic.com/v1/messages", times: 2
@@ -96,6 +97,7 @@ class ParseRecipeJobTest < ActiveJob::TestCase
     assert_predicate recipe, :done?
     assert_equal [ "2 dl havregryn", "1 dl socker", "3 msk kakao" ], recipe.ingredients.map(&:content)
     assert recipe.ingredients.all? { |ingredient| ingredient.name.nil? }
+    assert recipe.ingredients.all? { |ingredient| ingredient.quantity_value.nil? }
   end
 
   test "falls back to the LLM parser when there's no structured data" do

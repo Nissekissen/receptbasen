@@ -138,4 +138,29 @@ class RecipesHelperTest < ActionView::TestCase
     step = Step.new(content: "Tillsätt 5 potatisar.")
     assert_nil step_duration_seconds(step)
   end
+
+  test "recipe_base_servings parses a plain number" do
+    recipe = Recipe.new(servings: "4")
+    assert_equal 4, recipe_base_servings(recipe)
+  end
+
+  test "recipe_base_servings parses a number with trailing text" do
+    recipe = Recipe.new(servings: "4 portioner")
+    assert_equal 4, recipe_base_servings(recipe)
+  end
+
+  test "recipe_base_servings takes the low end of a range" do
+    recipe = Recipe.new(servings: "4-6")
+    assert_equal 4, recipe_base_servings(recipe)
+  end
+
+  test "recipe_base_servings returns nil when servings is blank" do
+    recipe = Recipe.new(servings: nil)
+    assert_nil recipe_base_servings(recipe)
+  end
+
+  test "recipe_base_servings returns nil when servings has no digits" do
+    recipe = Recipe.new(servings: "Efter smak")
+    assert_nil recipe_base_servings(recipe)
+  end
 end
