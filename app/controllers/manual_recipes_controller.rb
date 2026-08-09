@@ -30,6 +30,16 @@ class ManualRecipesController < ApplicationController
     recipe.save!
 
     recipe.ingredients.create!(ingredients.map { |content| { content: content } })
+    ingredient_extractor = IngredientExtractor.new(ingredients: ingredients)
+    split = ingredient_extractor.call
+
+    if split
+      recipe.ingredients.order(:id).zip(split).each { |ingredient, fields| ingredient.update!(fields) }
+    else
+      Rails.logger.info "ManualRecipeController#create: IngredientExtractor failed for recipe #{recipe.id}: #{ingredient_extractor.error}"
+    end
+
+
     recipe.steps.create!(steps.each_with_index.map { |content, index| { content: content, position: index } })
 
     redirect_to recipe

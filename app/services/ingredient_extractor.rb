@@ -9,9 +9,10 @@ class IngredientExtractor
           properties: {
             quantity: { anyOf: [ { type: "string" }, { type: "null" } ] },
             unit: { anyOf: [ { type: "string" }, { type: "null" } ] },
-            name: { type: "string" }
+            name: { type: "string" },
+            quantity_value: { anyOf: [ { type: "string" }, { type: "null" } ] }
           },
-          required: [ "quantity", "unit", "name" ],
+          required: [ "quantity", "unit", "name", "quantity_value" ],
           additionalProperties: false
         }
       }
@@ -62,6 +63,12 @@ class IngredientExtractor
       If a line has no real amount (e.g. "Salt & Peppar", "Olja till stekning"), set
       quantity and unit to null and put the full descriptive text in name — never invent
       a quantity that isn't there.
+
+      Also return quantity_value: the same amount as a plain number, for scaling the
+      recipe up or down later. Convert fractions and mixed numbers to decimals (e.g.
+      "1/2" → 0.5, "1 1/2" → 1.5). For a range (e.g. "2-3 dl"), use the low end (2).
+      If quantity is null, quantity_value must be null too — never invent a number for
+      a line that has no real amount.
 
       Ingredients:
       #{@ingredients.each_with_index.map { |content, index| "#{index + 1}. #{content}" }.join("\n")}
