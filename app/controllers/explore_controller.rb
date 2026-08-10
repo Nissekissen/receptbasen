@@ -4,5 +4,9 @@ class ExploreController < ApplicationController
   def index
     @query = params[:q]
     @results = Recipe.catalog.search(@query) unless @query.blank?
+    
+    @kok_tags = Tag.kok.order(:name)
+    @kok_tag = Tag.kok.find_by(id: params[:kok_tag_id])
+    @results = Recipe.catalog.where(id: Tagging.where(tag: @kok_tag).select(:recipe_id)) unless @kok_tag.nil?
   end
 end

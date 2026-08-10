@@ -129,6 +129,66 @@
     color: #8a8a86;
 }
 
+.kok-strip {
+    background: white;
+    padding: 2.25rem 0 2.5rem;
+    border-top: 1px solid rgba(35, 48, 33, 0.06);
+    border-bottom: 1px solid rgba(35, 48, 33, 0.06);
+}
+
+.kok-strip--head {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2.5rem;
+    margin-bottom: 1.1rem;
+}
+
+.kok-strip--head h2 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 1.15rem;
+    color: var(--accent-color-dark);
+    margin: 0;
+}
+
+.kok-strip--row {
+    display: flex;
+    gap: 0.9rem;
+    overflow-x: auto;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0.25rem 2.5rem 0.5rem;
+    scrollbar-width: none;
+}
+
+.kok-strip--row::-webkit-scrollbar {
+    display: none;
+}
+
+.kok-strip--card {
+    flex: 0 0 auto;
+    min-width: 128px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem 1.25rem;
+    border-radius: 16px;
+    background: var(--accent-color-light);
+    color: var(--accent-color-dark);
+    text-decoration: none;
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 1.02rem;
+    text-align: center;
+    transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+
+.kok-strip--card:hover {
+    background: var(--accent-color);
+    color: white;
+    transform: translateY(-2px);
+}
+
 @media (max-width: 480px) {
     .explore-hero {
         padding: 3.5rem 1.25rem 2.5rem;
@@ -140,5 +200,14 @@
 
     .explore-results {
         padding: 0 1.25rem 3.5rem;
+    }
+
+    .kok-strip--head {
+        padding: 0 1.25rem;
+    }
+
+    .kok-strip--row {
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
     }
 }

@@ -1,0 +1,13 @@
+<% if kok_tags.any? %>
+  <section class="kok-strip">
+    <div class="kok-strip--head">
+      <h2>Bläddra efter kök</h2>
+    </div>
+
+    <div class="kok-strip--row">
+      <% kok_tags.each do |tag| %>
+        <%= link_to tag.name.capitalize, explore_path(kok_tag_id: tag.id), class: "kok-strip--card" %>
+      <% end %>
+    </div>
+  </section>
+<% end %>

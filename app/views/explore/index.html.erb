@@ -10,9 +10,17 @@
   </div>
 </section>
 
-<% if @query.present? %>
+<%= render "kok_strip", kok_tags: @kok_tags %>
+
+<% if @query.present? || @kok_tag %>
   <section class="explore-results">
-    <h2 class="explore-results--heading">Sökresultat för "<%= @query %>"</h2>
+    <h2 class="explore-results--heading">
+      <% if @kok_tag %>
+        <%= @kok_tag.name.capitalize %>
+      <% else %>
+        Sökresultat för "<%= @query %>"
+      <% end %>
+    </h2>
 
     <% if @results.any? %>
       <div class="explore-results--grid">
@@ -23,7 +31,13 @@
         <% end %>
       </div>
     <% else %>
-      <p class="explore-results--empty">Inga recept matchade "<%= @query %>". Prova ett annat sökord.</p>
+      <p class="explore-results--empty">
+        <% if @kok_tag %>
+          Inga recept hittades för "<%= @kok_tag.name.capitalize %>" än.
+        <% else %>
+          Inga recept matchade "<%= @query %>". Prova ett annat sökord.
+        <% end %>
+      </p>
     <% end %>
   </section>
 <% end %>

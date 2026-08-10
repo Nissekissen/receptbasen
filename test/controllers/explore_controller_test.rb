@@ -44,4 +44,36 @@ class ExploreControllerTest < ActionDispatch::IntegrationTest
     assert_select ".explore-results--empty"
     assert_select ".explore-results--grid", count: 0
   end
+
+  test "shows the kök browse strip when at least one kök tag exists" do
+    Tag.create!(name: "italienskt", category: :kok)
+
+    get explore_url
+    assert_response :success
+    assert_select ".kok-strip--card", text: "Italienskt"
+  end
+
+  test "hides the kök browse strip when there are no kök tags yet" do
+    get explore_url
+    assert_response :success
+    assert_select ".kok-strip", count: 0
+  end
+
+  test "kok_tag_id filters results to recipes tagged with that cuisine" do
+    tag = Tag.create!(name: "italienskt", category: :kok)
+    Tagging.create!(recipe: recipes(:pannkakor), tag: tag)
+
+    get explore_url(kok_tag_id: tag.id)
+    assert_response :success
+    assert_select ".recipe-preview--title", text: recipes(:pannkakor).title
+  end
+
+  test "kok_tag_id excludes recipes not tagged with that cuisine" do
+    tag = Tag.create!(name: "italienskt", category: :kok)
+    Tagging.create!(recipe: recipes(:pannkakor), tag: tag)
+
+    get explore_url(kok_tag_id: tag.id)
+    assert_response :success
+    assert_select ".recipe-preview--title", text: recipes(:kottbullar).title, count: 0
+  end
 end
