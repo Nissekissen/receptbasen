@@ -2,8 +2,8 @@ require "test_helper"
 
 class RecipesControllerTest < ActionDispatch::IntegrationTest
   TAG_RESPONSE = {
-    maltidstyp: "huvudrätt",
-    kok: "svenskt",
+    maltidstyp: [ "huvudrätt" ],
+    kok: [ "svenskt" ],
     kost: [],
     svarighetsgrad: "medel"
   }.to_json

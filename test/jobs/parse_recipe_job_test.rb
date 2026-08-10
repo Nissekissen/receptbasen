@@ -30,7 +30,7 @@ class ParseRecipeJobTest < ActiveJob::TestCase
   PLAIN_HTML = "<html><body><p>Inget strukturerat recept här.</p></body></html>".freeze
 
   TAG_RESPONSE = {
-    maltidstyp: "efterrätt",
+    maltidstyp: [ "efterrätt" ],
     kok: nil,
     kost: [ "vegetariskt" ],
     svarighetsgrad: "lätt"
