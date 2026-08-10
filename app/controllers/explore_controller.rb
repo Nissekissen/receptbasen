@@ -7,6 +7,6 @@ class ExploreController < ApplicationController
     
     @kok_tags = Tag.kok.order(:name)
     @kok_tag = Tag.kok.find_by(id: params[:kok_tag_id])
-    @results = Recipe.catalog.where(id: Tagging.where(tag: @kok_tag).select(:recipe_id)) unless @kok_tag.nil?
+    @results = Recipe.catalog.where(id: Tagging.where(tag: @kok_tag).select(:recipe_id)).order_by_popularity unless @kok_tag.nil?
   end
 end

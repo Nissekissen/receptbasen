@@ -1,10 +1,9 @@
 <section class="explore-hero">
   <div class="explore-hero--inner">
     <h1>Vad ska det bli <em>idag</em>?</h1>
-    <p>Sök på maträtt, ingrediens eller känsla.</p>
 
     <%= form_with url: explore_path, method: :get, class: "explore-search" do %>
-      <%= text_field_tag :q, @query, placeholder: "Sök efter t.ex. “pasta”, “kyckling”, “snabb vardagsmat”…" %>
+      <%= text_field_tag :q, @query, placeholder: "Sök efter t.ex. “pasta”, “kyckling”, “indisk gryta”…" %>
       <%= submit_tag "Sök" %>
     <% end %>
   </div>

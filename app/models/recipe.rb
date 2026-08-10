@@ -46,6 +46,28 @@ class Recipe < ApplicationRecord
   belongs_to :owner, class_name: "User", optional: true
 
   scope :catalog, -> { where(status: :done, owner_id: nil).where.not(published_at: nil) }
+  scope :order_by_popularity, ->(limit = 12) {
+    global_avg = PersonalRecipeNote.where.not(rating: nil).average(:rating) || 3.0
+    c = 5 # How many ratings before we mostly trust the recipe's own average
+
+    # Insane sql query
+    # Takes the score as:
+    # - Total times cooked in last 30 days (weight: 3)
+    # - Total times saved in last 30 days (weight: 1)
+    # - Bayesian average of ratings (weight: 2)
+    select("recipes.*, (
+    (SELECT COUNT(*) FROM cook_logs WHERE cook_logs.recipe_id = recipes.id AND cook_logs.created_at > '#{30.days.ago.to_fs(:db)}') * 3
+    + (SELECT COUNT(*) FROM saved_recipes WHERE saved_recipes.recipe_id = recipes.id AND saved_recipes.created_at > '#{30.days.ago.to_fs(:db)}')
+    + (
+        (COALESCE((SELECT COUNT(*) FROM personal_recipe_notes WHERE personal_recipe_notes.recipe_id = recipes.id AND rating IS NOT NULL), 0)
+          * COALESCE((SELECT AVG(rating) FROM personal_recipe_notes WHERE personal_recipe_notes.recipe_id = recipes.id), #{global_avg})
+        + #{c} * #{global_avg})
+        / (COALESCE((SELECT COUNT(*) FROM personal_recipe_notes WHERE personal_recipe_notes.recipe_id = recipes.id AND rating IS NOT NULL), 0) + #{c})
+      ) * 2
+      ) AS popularity_score")
+      .order("popularity_score DESC")
+      .limit(limit)
+  }
 
   def published?
     published_at.present?
