@@ -1,0 +1,29 @@
+<section class="explore-hero">
+  <div class="explore-hero--inner">
+    <h1>Vad ska det bli <em>idag</em>?</h1>
+    <p>Sök på maträtt, ingrediens eller känsla.</p>
+
+    <%= form_with url: explore_path, method: :get, class: "explore-search" do %>
+      <%= text_field_tag :q, @query, placeholder: "Sök efter t.ex. “pasta”, “kyckling”, “snabb vardagsmat”…" %>
+      <%= submit_tag "Sök" %>
+    <% end %>
+  </div>
+</section>
+
+<% if @query.present? %>
+  <section class="explore-results">
+    <h2 class="explore-results--heading">Sökresultat för "<%= @query %>"</h2>
+
+    <% if @results.any? %>
+      <div class="explore-results--grid">
+        <% @results.each do |recipe| %>
+          <%= link_to recipe, class: "explore-results--card" do %>
+            <%= render "recipes/preview_card", recipe: recipe, index_card: true %>
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="explore-results--empty">Inga recept matchade "<%= @query %>". Prova ett annat sökord.</p>
+    <% end %>
+  </section>
+<% end %>

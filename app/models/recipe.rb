@@ -45,6 +45,8 @@ class Recipe < ApplicationRecord
   has_many :personal_recipe_notes
   belongs_to :owner, class_name: "User", optional: true
 
+  scope :catalog, -> { where(status: :done, owner_id: nil).where.not(published_at: nil) }
+
   def published?
     published_at.present?
   end
@@ -63,5 +65,19 @@ class Recipe < ApplicationRecord
     return true if user == owner
 
     Membership.exists?(user: user, group_id: collections.where.not(group_id: nil).select(:group_id))
+  end
+
+  # Loops through all the words, find all recipes where the query
+  # is found either in the title or in an ingredient and returns
+  # only the recipes where all words match something.
+  def self.search(query)
+    return all if query.blank?
+
+    query.to_s.split(" ").map { |w| "%#{sanitize_sql_like(w)}%" }.reduce(all) do |scope, pattern|
+      title_matches = where("LOWER(title) LIKE LOWER(?)", pattern) # Lower only handles ASCII characters in SQLite, fixed in production.
+      ingredient_matches = Ingredient.where("LOWER(name) LIKE LOWER(?) OR LOWER(content) LIKE LOWER(?)", pattern, pattern).select(:recipe_id)
+
+      scope.where(id: title_matches.or(where(id: ingredient_matches)).select(:id))
+    end
   end
 end

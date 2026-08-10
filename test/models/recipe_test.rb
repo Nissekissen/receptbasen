@@ -135,4 +135,52 @@ class RecipeTest < ActiveSupport::TestCase
   test "visible_to? is false for a user outside the group the recipe was saved into" do
     assert_not recipes(:manual_recipe_in_group).visible_to?(users(:three))
   end
+
+  test "catalog includes done, unowned, published recipes" do
+    assert_includes Recipe.catalog, recipes(:pannkakor)
+  end
+
+  test "catalog excludes recipes that are still pending" do
+    assert_not_includes Recipe.catalog, recipes(:pending_recipe)
+  end
+
+  test "catalog excludes recipes whose parse failed" do
+    assert_not_includes Recipe.catalog, recipes(:failed_recipe)
+  end
+
+  test "catalog excludes done recipes that haven't been published yet" do
+    assert_not_includes Recipe.catalog, recipes(:parsed_unpublished_recipe)
+  end
+
+  test "catalog excludes manual recipes even when published_at is set" do
+    assert_not_includes Recipe.catalog, recipes(:kottbullar)
+  end
+
+  test "search returns everything when the query is blank" do
+    assert_equal Recipe.count, Recipe.search("").count
+    assert_equal Recipe.count, Recipe.search(nil).count
+  end
+
+  test "search matches recipes by title, case-insensitively" do
+    assert_includes Recipe.search("PANNKAKOR"), recipes(:pannkakor)
+  end
+
+  test "search matches recipes by ingredient name or content" do
+    Ingredient.create!(recipe: recipes(:kottbullar), content: "500 g nötfärs", name: "nötfärs")
+
+    assert_includes Recipe.search("nötfärs"), recipes(:kottbullar)
+  end
+
+  test "search does not match recipes with unrelated ingredients" do
+    Ingredient.create!(recipe: recipes(:kottbullar), content: "500 g nötfärs", name: "nötfärs")
+
+    assert_not_includes Recipe.search("lax"), recipes(:kottbullar)
+  end
+
+  test "search ANDs multiple terms together" do
+    Ingredient.create!(recipe: recipes(:pannkakor), content: "3 dl mjölk", name: "mjölk")
+
+    assert_includes Recipe.search("pannkakor mjölk"), recipes(:pannkakor)
+    assert_not_includes Recipe.search("pannkakor lök"), recipes(:pannkakor)
+  end
 end
