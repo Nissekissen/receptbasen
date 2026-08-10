@@ -76,8 +76,9 @@ class Recipe < ApplicationRecord
     query.to_s.split(" ").map { |w| "%#{sanitize_sql_like(w)}%" }.reduce(all) do |scope, pattern|
       title_matches = where("LOWER(title) LIKE LOWER(?)", pattern) # Lower only handles ASCII characters in SQLite, fixed in production.
       ingredient_matches = Ingredient.where("LOWER(name) LIKE LOWER(?) OR LOWER(content) LIKE LOWER(?)", pattern, pattern).select(:recipe_id)
+      tagging_matches = Tagging.joins(:tag).where("LOWER(tags.name) LIKE LOWER(?)", pattern).select(:recipe_id)
 
-      scope.where(id: title_matches.or(where(id: ingredient_matches)).select(:id))
+      scope.where(id: title_matches.or(where(id: ingredient_matches)).select(:id).or(where(id: tagging_matches)))
     end
   end
 end
