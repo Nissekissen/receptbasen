@@ -80,7 +80,7 @@ class ParseRecipeJobTest < ActiveJob::TestCase
     assert_equal [ "dl", "dl", "msk" ], recipe.ingredients.map(&:unit)
     assert_equal [ "havregryn", "socker", "kakao" ], recipe.ingredients.map(&:name)
     assert_equal [ "Blanda alla ingredienser.", "Rulla till bollar och kyl." ], recipe.steps.order(:position).map(&:content)
-    assert_equal [ "efterrätt", "vegetariskt", "lätt" ], recipe.tags.map(&:name)
+    assert_equal [ "efterrätt", "vegetariskt", "lätt", "snabbt" ], recipe.tags.map(&:name)
     assert_requested :post, "https://api.anthropic.com/v1/messages", times: 2
   end
 

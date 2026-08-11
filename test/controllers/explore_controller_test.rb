@@ -76,4 +76,51 @@ class ExploreControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select ".recipe-preview--title", text: recipes(:kottbullar).title, count: 0
   end
+
+  test "shows exactly SHELVES_PER_PAGE shelves on the default page" do
+    tag_pannkakor_for_every_shelf!
+
+    get explore_url
+    assert_response :success
+    assert_select ".shelf", count: ExploreController::SHELVES_PER_PAGE
+  end
+
+  test "the shelf selection is stable across requests on the same day" do
+    tag_pannkakor_for_every_shelf!
+
+    get explore_url
+    first_titles = css_select(".shelf--head h2").map(&:text)
+
+    get explore_url
+    second_titles = css_select(".shelf--head h2").map(&:text)
+
+    assert_equal first_titles, second_titles
+  end
+
+  test "DISABLE_EXPLORE_SHELVES falls back to a flat popularity-ordered grid" do
+    ENV["DISABLE_EXPLORE_SHELVES"] = "1"
+
+    get explore_url
+    assert_response :success
+    assert_select ".shelf", count: 0
+    assert_select ".explore-results--grid"
+    assert_select ".recipe-preview--title", text: recipes(:pannkakor).title
+  ensure
+    ENV.delete("DISABLE_EXPLORE_SHELVES")
+  end
+
+  private
+
+  # Tags pannkakor so every shelf_pool definition has at least one matching
+  # recipe, regardless of which SHELVES_PER_PAGE entries the day's seed picks.
+  def tag_pannkakor_for_every_shelf!
+    recipe = recipes(:pannkakor)
+    recipe.update!(total_time: "PT20M")
+
+    recipe.tags << recipe.time_tag
+    recipe.tags << Tag.find_or_create_by!(name: "middag") { |t| t.category = :maltidstyp }
+    recipe.tags << Tag.find_or_create_by!(name: "bakverk") { |t| t.category = :maltidstyp }
+    recipe.tags << Tag.find_or_create_by!(name: "frukost") { |t| t.category = :maltidstyp }
+    recipe.tags << Tag.find_or_create_by!(name: "vegetariskt") { |t| t.category = :kost }
+  end
 end

@@ -183,4 +183,150 @@ class RecipeTest < ActiveSupport::TestCase
     assert_includes Recipe.search("pannkakor mjölk"), recipes(:pannkakor)
     assert_not_includes Recipe.search("pannkakor lök"), recipes(:pannkakor)
   end
+
+  test "search matches a diacritic term" do
+    recipe = Recipe.create!(source_url: "https://example.com/recept/rakor", status: :done, published_at: 1.day.ago, title: "Räkor med aioli")
+
+    assert_includes Recipe.search("räkor"), recipe
+  end
+
+  test "total_minutes prefers total_time over prep/cook time" do
+    recipe = Recipe.new(total_time: "PT45M", prep_time: "PT10M", cook_time: "PT20M")
+    assert_equal 45, recipe.total_minutes
+  end
+
+  test "total_minutes sums prep and cook time when there's no total_time" do
+    recipe = Recipe.new(prep_time: "PT10M", cook_time: "PT20M")
+    assert_equal 30, recipe.total_minutes
+  end
+
+  test "total_minutes works with only prep_time" do
+    recipe = Recipe.new(prep_time: "PT15M")
+    assert_equal 15, recipe.total_minutes
+  end
+
+  test "total_minutes works with only cook_time" do
+    recipe = Recipe.new(cook_time: "PT15M")
+    assert_equal 15, recipe.total_minutes
+  end
+
+  test "total_minutes returns nil when no time fields are set" do
+    assert_nil Recipe.new.total_minutes
+  end
+
+  test "time_tag returns a snabbt tag for a quick recipe" do
+    recipe = Recipe.new(total_time: "PT20M")
+    tag = recipe.time_tag
+
+    assert_equal "snabbt", tag.name
+    assert_equal "tid", tag.category
+  end
+
+  test "time_tag returns snabbt at the 30 minute boundary" do
+    assert_equal "snabbt", Recipe.new(total_time: "PT30M").time_tag.name
+  end
+
+  test "time_tag returns a långkok tag for a slow-cooked recipe" do
+    tag = Recipe.new(total_time: "PT3H").time_tag
+
+    assert_equal "långkok", tag.name
+    assert_equal "tid", tag.category
+  end
+
+  test "time_tag returns långkok at the 120 minute boundary" do
+    assert_equal "långkok", Recipe.new(total_time: "PT2H").time_tag.name
+  end
+
+  test "time_tag is nil for a recipe that's neither quick nor slow" do
+    assert_nil Recipe.new(total_time: "PT45M").time_tag
+  end
+
+  test "time_tag is nil when there's no time data at all" do
+    assert_nil Recipe.new.time_tag
+  end
+
+  test "time_tag reuses an existing tag instead of creating a duplicate" do
+    existing = Tag.create!(name: "snabbt", category: :tid)
+
+    assert_no_difference "Tag.count" do
+      assert_equal existing, Recipe.new(total_time: "PT10M").time_tag
+    end
+  end
+
+  test "apply_extracted_tags! creates and assigns tags from the extracted data" do
+    recipe = recipes(:pannkakor)
+
+    recipe.apply_extracted_tags!([
+      { name: "efterrätt", category: :maltidstyp },
+      { name: "svenskt", category: :kok }
+    ])
+
+    assert_equal %w[efterrätt svenskt], recipe.tags.pluck(:name).sort
+  end
+
+  test "apply_extracted_tags! also attaches the deterministic time tag when one applies" do
+    recipe = recipes(:pannkakor)
+    recipe.update!(total_time: "PT15M")
+
+    recipe.apply_extracted_tags!([ { name: "frukost", category: :maltidstyp } ])
+
+    assert_includes recipe.tags.pluck(:name), "snabbt"
+  end
+
+  test "apply_extracted_tags! doesn't choke when no time tag applies" do
+    recipe = recipes(:pannkakor)
+    recipe.update!(total_time: "PT45M")
+
+    recipe.apply_extracted_tags!([ { name: "frukost", category: :maltidstyp } ])
+
+    assert_equal %w[frukost], recipe.tags.pluck(:name)
+  end
+
+  test "apply_extracted_tags! replaces the recipe's existing tags rather than adding to them" do
+    recipe = recipes(:pannkakor)
+    recipe.tags << Tag.create!(name: "gammal-tagg", category: :maltidstyp)
+
+    recipe.apply_extracted_tags!([ { name: "ny-tagg", category: :maltidstyp } ])
+
+    assert_not_includes recipe.tags.pluck(:name), "gammal-tagg"
+  end
+
+  test "apply_extracted_tags! does nothing when given nil, as happens after a failed extraction" do
+    recipe = recipes(:pannkakor)
+    recipe.tags << Tag.create!(name: "befintlig", category: :maltidstyp)
+
+    recipe.apply_extracted_tags!(nil)
+
+    assert_equal %w[befintlig], recipe.tags.pluck(:name)
+  end
+
+  test "order_by_popularity ranks a recipe with recent cooks and saves above one with neither" do
+    popular = Recipe.create!(source_url: "https://example.com/popular", status: :done, published_at: 1.day.ago, title: "Populär")
+    quiet = Recipe.create!(source_url: "https://example.com/quiet", status: :done, published_at: 1.day.ago, title: "Tyst")
+
+    CookLog.create!(user: users(:one), recipe: popular)
+    SavedRecipe.create!(user: users(:one), collection: collections(:vardagsmat), recipe: popular)
+
+    ordered = Recipe.catalog.order_by_popularity.to_a
+
+    assert_operator ordered.index(popular), :<, ordered.index(quiet)
+  end
+
+  test "order_by_popularity respects the limit" do
+    3.times { |i| Recipe.create!(source_url: "https://example.com/limit#{i}", status: :done, published_at: 1.day.ago, title: "R#{i}") }
+
+    assert_equal 2, Recipe.catalog.order_by_popularity(2).to_a.size
+  end
+
+  test "order_by_cook_count ranks the most-cooked recipe first" do
+    cooked = Recipe.create!(source_url: "https://example.com/cooked", status: :done, published_at: 1.day.ago, title: "Lagad")
+    uncooked = Recipe.create!(source_url: "https://example.com/uncooked", status: :done, published_at: 1.day.ago, title: "Olagad")
+
+    CookLog.create!(user: users(:one), recipe: cooked)
+    CookLog.create!(user: users(:two), recipe: cooked)
+
+    ordered = Recipe.catalog.order_by_cook_count.to_a
+
+    assert_operator ordered.index(cooked), :<, ordered.index(uncooked)
+  end
 end
