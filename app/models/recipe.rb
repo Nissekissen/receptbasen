@@ -68,6 +68,16 @@ class Recipe < ApplicationRecord
       .order("popularity_score DESC")
       .limit(limit)
   }
+  scope :order_by_cook_count, ->(limit = 12) {
+    select("recipes.*, (SELECT COUNT(*) FROM cook_logs WHERE cook_logs.recipe_id = recipes.id) AS cook_count")
+      .order("cook_count DESC")
+      .limit(limit)
+  }
+
+  scope :order_by_published_at, ->(limit = 12) {
+    order("published_at DESC")
+      .limit(limit)
+  }
 
   def published?
     published_at.present?
@@ -79,6 +89,42 @@ class Recipe < ApplicationRecord
 
   def manual?
     owner_id.present?
+  end
+
+  def total_minutes
+    return (ActiveSupport::Duration.parse(total_time) / 60).round if total_time.present?
+
+    parts = [ prep_time, cook_time ].select(&:present?).filter_map do |value|
+      ActiveSupport::Duration.parse(value)
+    rescue ActiveSupport::Duration::ISO8601Parser::ParsingError
+      nil
+    end
+    return nil if parts.empty?
+
+    (parts.sum(0.seconds) / 60).round
+  end
+
+  def time_tag
+    minutes = total_minutes
+    return nil unless minutes
+
+    name = if minutes <= 30
+      "snabbt"
+    elsif minutes >= 120
+      "långkok"
+    end
+    return nil unless name
+
+    Tag.find_or_create_by!(name: name) { |t| t.category = :tid }
+  end
+
+  def apply_extracted_tags!(tags)
+    return if tags.blank?
+
+    extracted = tags.map { |tag| Tag.find_or_create_by!(name: tag[:name]) { |t| t.category = tag[:category] } }
+    extracted << time_tag if time_tag
+
+    self.tags = extracted
   end
 
   def visible_to?(user)

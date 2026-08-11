@@ -21,15 +21,17 @@
   <%= render "shelf", title: shelf[:title], type: shelf[:type], recipes: shelf[:recipes], groups: shelf[:groups] %>
 <% end %>
 
-<% if @query.present? || @kok_tag %>
+<% if @results %>
   <section class="explore-results">
-    <h2 class="explore-results--heading">
-      <% if @kok_tag %>
-        <%= @kok_tag.name.capitalize %>
-      <% else %>
-        Sökresultat för "<%= @query %>"
-      <% end %>
-    </h2>
+    <% if @kok_tag || @query.present? %>
+      <h2 class="explore-results--heading">
+        <% if @kok_tag %>
+          <%= @kok_tag.name.capitalize %>
+        <% else %>
+          Sökresultat för "<%= @query %>"
+        <% end %>
+      </h2>
+    <% end %>
 
     <% if @results.any? %>
       <div class="explore-results--grid">
@@ -43,8 +45,10 @@
       <p class="explore-results--empty">
         <% if @kok_tag %>
           Inga recept hittades för "<%= @kok_tag.name.capitalize %>" än.
-        <% else %>
+        <% elsif @query.present? %>
           Inga recept matchade "<%= @query %>". Prova ett annat sökord.
+        <% else %>
+          Inga recept i katalogen än.
         <% end %>
       </p>
     <% end %>

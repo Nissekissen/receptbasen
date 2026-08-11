@@ -53,7 +53,7 @@ class RecipesController < ApplicationController
 
     tag_extractor = TagExtractor.new(title: @recipe.title, description: @recipe.description, ingredients: @recipe.ingredients.map(&:content))
     result = tag_extractor.call
-    @recipe.tags = result.map { |tag| Tag.find_or_create_by!(name: tag[:name]) { |t| t.category = tag[:category] } } if result
+    @recipe.apply_extracted_tags!(result)
 
     respond_to do |format|
       format.turbo_stream
