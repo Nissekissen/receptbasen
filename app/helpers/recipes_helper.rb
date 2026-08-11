@@ -1,6 +1,6 @@
 module RecipesHelper
   def loading_step_label(step)
-    { fetch: "Hämtar recept", parse: "Analyserar recept", parse_ai: "Analyserar med AI", tags: "Lägger till taggar" }.fetch(step)
+    { fetch: "Hämtar recept", parse: "Analyserar recept", parse_ai: "Analyserar med AI", ingredients: "Hämtar ingredienser", tags: "Lägger till taggar" }.fetch(step)
   end
 
   def recipe_flow_step(recipe)

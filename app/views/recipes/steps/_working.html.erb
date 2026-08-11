@@ -7,5 +7,6 @@
   <%= render "recipes/loading_step", step: :fetch, state: :active %>
   <%= render "recipes/loading_step", step: :parse, state: :pending %>
   <%= render "recipes/loading_step", step: :parse_ai, state: :hidden %>
+  <%= render "recipes/loading_step", step: :ingredients, state: :hidden %>
   <%= render "recipes/loading_step", step: :tags, state: :hidden %>
 </div>
