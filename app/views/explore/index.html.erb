@@ -1,4 +1,10 @@
 <section class="explore-hero">
+  <div class="steam-wrap">
+    <div class="steam-wrap--curl steam-wrap--curl-1"><%= render "icons/steam" %></div>
+    <div class="steam-wrap--curl steam-wrap--curl-2"><%= render "icons/steam" %></div>
+    <div class="steam-wrap--curl steam-wrap--curl-3"><%= render "icons/steam" %></div>
+  </div>
+
   <div class="explore-hero--inner">
     <h1>Vad ska det bli <em>idag</em>?</h1>
 
@@ -10,6 +16,10 @@
 </section>
 
 <%= render "kok_strip", kok_tags: @kok_tags %>
+
+<% @shelves&.each do |shelf| %>
+  <%= render "shelf", title: shelf[:title], type: shelf[:type], recipes: shelf[:recipes], groups: shelf[:groups] %>
+<% end %>
 
 <% if @query.present? || @kok_tag %>
   <section class="explore-results">

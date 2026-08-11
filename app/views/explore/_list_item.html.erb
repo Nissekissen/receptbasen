@@ -1,0 +1,18 @@
+<%= link_to recipe, class: "shelf--list-item" do %>
+  <% if local_assigns[:rank] %>
+    <span class="shelf--list-item-rank" aria-hidden="true"><%= format("%02d", rank) %></span>
+  <% end %>
+
+  <% if recipe.image_url.present? %>
+    <img src="<%= recipe.image_url %>" alt="" class="shelf--list-item-image">
+  <% else %>
+    <div class="shelf--list-item-image shelf--list-item-image-placeholder" aria-hidden="true"></div>
+  <% end %>
+
+  <div class="shelf--list-item-body">
+    <p class="shelf--list-item-title"><%= truncate(recipe.title, length: local_assigns[:truncate_length] || 60) %></p>
+    <% if recipe.source_domain.present? %>
+      <p class="shelf--list-item-domain"><%= recipe.source_domain %></p>
+    <% end %>
+  </div>
+<% end %>

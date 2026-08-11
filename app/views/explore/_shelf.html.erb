@@ -1,0 +1,64 @@
+<section class="shelf shelf--<%= type %>">
+  <div class="shelf--head">
+    <h2><%= title %></h2>
+  </div>
+
+  <% if type == "split" %>
+    <% featured = recipes.first %>
+    <% related = recipes.drop(1) %>
+
+    <div class="shelf--split-layout">
+      <%= render "explore/big_card", recipe: featured, extra_class: "shelf--split-feature" %>
+
+      <div class="shelf--split-list">
+        <% related.each do |recipe| %>
+          <%= render "explore/list_item", recipe: recipe, truncate_length: 40 %>
+        <% end %>
+      </div>
+    </div>
+  <% elsif type == "list" %>
+    <% half = (recipes.size / 2.0).ceil %>
+    <% left, right = recipes.each_slice(half).to_a %>
+    <% right ||= [] %>
+
+    <div class="shelf--list-columns">
+      <div class="shelf--list-column shelf--divided-list">
+        <% left.each.with_index(1) do |recipe, rank| %>
+          <%= render "explore/list_item", recipe: recipe, rank: rank %>
+        <% end %>
+      </div>
+
+      <div class="shelf--list-column shelf--divided-list">
+        <% right.each.with_index(left.size + 1) do |recipe, rank| %>
+          <%= render "explore/list_item", recipe: recipe, rank: rank %>
+        <% end %>
+      </div>
+    </div>
+  <% elsif type == "duo" %>
+    <div class="shelf--duo">
+      <% groups.each do |group| %>
+        <div class="shelf--duo-group">
+          <h3 class="shelf--duo-group-label"><%= group[:label] %></h3>
+
+          <div class="shelf--duo-group-list shelf--divided-list">
+            <% group[:recipes].each do |recipe| %>
+              <%= render "explore/list_item", recipe: recipe %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="shelf--track">
+      <% recipes.each do |recipe| %>
+        <% if type == "big" %>
+          <%= render "explore/big_card", recipe: recipe %>
+        <% else %>
+          <%= link_to recipe, class: "explore-results--card" do %>
+            <%= render "recipes/preview_card", recipe: recipe, index_card: true, truncate_title: 30 %>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+</section>
