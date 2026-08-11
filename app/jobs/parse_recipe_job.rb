@@ -53,7 +53,9 @@ class ParseRecipeJob < ApplicationJob
     recipe.ingredients.create!(ingredients.map { |content| { content: content } })
     recipe.steps.create!(steps.each_with_index.map { |content, index| { content: content, position: index } })
 
-    split_ingredients(recipe)
+    broadcast_step(recipe, :ingredients, :active)
+    split = split_ingredients(recipe)
+    broadcast_step(recipe, :ingredients, split ? :done : :failed)
 
     broadcast_step(recipe, :tags, :active)
 
@@ -104,6 +106,8 @@ class ParseRecipeJob < ApplicationJob
     else
       Rails.logger.info "ParseRecipeJob: IngredientExtractor failed for recipe #{recipe.id}: #{ingredient_extractor.error}"
     end
+
+    split
   end
 
   def user_facing_error(error)
