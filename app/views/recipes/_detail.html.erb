@@ -1,6 +1,6 @@
 <section class="recipe-detail">
   <div class="recipe-detail--inner">
-    <%= link_to "← Dina recept", recipes_path, class: "recipe-detail--back" %>
+    <%= link_to "← #{local_assigns[:back_label] || "Dina recept"}", local_assigns[:back_path] || recipes_path, class: "recipe-detail--back" %>
 
     <div class="recipe-detail--layout">
       <% if recipe.image_url.present? %>

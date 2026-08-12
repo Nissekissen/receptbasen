@@ -25,16 +25,10 @@ module RecipesHelper
   end
 
   def recipe_total_time(recipe)
-    return "#{(ActiveSupport::Duration.parse(recipe.total_time) / 60).round} min" if recipe.total_time.present?
+    minutes = recipe.total_minutes
+    return nil unless minutes
 
-    durations = [ recipe.prep_time, recipe.cook_time ].select(&:present?).filter_map do |duration|
-      ActiveSupport::Duration.parse(duration)
-    rescue ActiveSupport::Duration::ISO8601Parser::ParsingError
-      nil
-    end
-    return nil if durations.empty?
-
-    "#{(durations.sum(0.seconds) / 60).round} min"
+    "#{minutes} min"
   end
 
   def recipe_difficulty(recipe)

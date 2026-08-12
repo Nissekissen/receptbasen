@@ -67,7 +67,7 @@ class ParseRecipeJob < ApplicationJob
       return
     end
 
-    recipe.tags = result.map { |tag| Tag.find_or_create_by!(name: tag[:name]) { |t| t.category = tag[:category] } }
+    recipe.apply_extracted_tags!(result)
 
     broadcast_step(recipe, :tags, :done)
 

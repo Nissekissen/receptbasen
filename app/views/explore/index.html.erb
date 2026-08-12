@@ -1,0 +1,56 @@
+<section class="explore-hero">
+  <div class="steam-wrap">
+    <div class="steam-wrap--curl steam-wrap--curl-1"><%= render "icons/steam" %></div>
+    <div class="steam-wrap--curl steam-wrap--curl-2"><%= render "icons/steam" %></div>
+    <div class="steam-wrap--curl steam-wrap--curl-3"><%= render "icons/steam" %></div>
+  </div>
+
+  <div class="explore-hero--inner">
+    <h1>Vad ska det bli <em>idag</em>?</h1>
+
+    <%= form_with url: explore_path, method: :get, class: "explore-search" do %>
+      <%= text_field_tag :q, @query, placeholder: "Sök efter t.ex. “pasta”, “kyckling”, “indisk gryta”…" %>
+      <%= submit_tag "Sök" %>
+    <% end %>
+  </div>
+</section>
+
+<%= render "kok_strip", kok_tags: @kok_tags %>
+
+<% @shelves&.each do |shelf| %>
+  <%= render "shelf", title: shelf[:title], type: shelf[:type], recipes: shelf[:recipes], groups: shelf[:groups] %>
+<% end %>
+
+<% if @results %>
+  <section class="explore-results">
+    <% if @kok_tag || @query.present? %>
+      <h2 class="explore-results--heading">
+        <% if @kok_tag %>
+          <%= @kok_tag.name.capitalize %>
+        <% else %>
+          Sökresultat för "<%= @query %>"
+        <% end %>
+      </h2>
+    <% end %>
+
+    <% if @results.any? %>
+      <div class="explore-results--grid">
+        <% @results.each do |recipe| %>
+          <%= link_to recipe_path(recipe, from: "utforska"), class: "explore-results--card" do %>
+            <%= render "recipes/preview_card", recipe: recipe, index_card: true %>
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="explore-results--empty">
+        <% if @kok_tag %>
+          Inga recept hittades för "<%= @kok_tag.name.capitalize %>" än.
+        <% elsif @query.present? %>
+          Inga recept matchade "<%= @query %>". Prova ett annat sökord.
+        <% else %>
+          Inga recept i katalogen än.
+        <% end %>
+      </p>
+    <% end %>
+  </section>
+<% end %>

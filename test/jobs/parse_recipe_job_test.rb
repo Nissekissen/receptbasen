@@ -30,7 +30,7 @@ class ParseRecipeJobTest < ActiveJob::TestCase
   PLAIN_HTML = "<html><body><p>Inget strukturerat recept här.</p></body></html>".freeze
 
   TAG_RESPONSE = {
-    maltidstyp: "efterrätt",
+    maltidstyp: [ "efterrätt" ],
     kok: nil,
     kost: [ "vegetariskt" ],
     svarighetsgrad: "lätt"
@@ -81,7 +81,7 @@ class ParseRecipeJobTest < ActiveJob::TestCase
     assert_equal [ "havregryn", "socker", "kakao" ], recipe.ingredients.map(&:name)
     assert_equal [ 2.0, 1.0, 3.0 ], recipe.ingredients.map(&:quantity_value)
     assert_equal [ "Blanda alla ingredienser.", "Rulla till bollar och kyl." ], recipe.steps.order(:position).map(&:content)
-    assert_equal [ "efterrätt", "vegetariskt", "lätt" ], recipe.tags.map(&:name)
+    assert_equal [ "efterrätt", "vegetariskt", "lätt", "snabbt" ], recipe.tags.map(&:name)
     assert_requested :post, "https://api.anthropic.com/v1/messages", times: 2
   end
 

@@ -20,7 +20,7 @@
   </div>
 
   <div class="recipe-preview--body">
-    <p class="recipe-preview--title"><%= recipe.title %></p>
+    <p class="recipe-preview--title"><%= local_assigns[:truncate_title] ? truncate(recipe.title, length: truncate_title) : recipe.title %></p>
 
     <% if local_assigns[:attribution] %>
       <p class="recipe-preview--attribution" >
