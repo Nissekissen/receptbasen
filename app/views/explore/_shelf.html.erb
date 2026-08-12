@@ -54,7 +54,7 @@
         <% if type == "big" %>
           <%= render "explore/big_card", recipe: recipe %>
         <% else %>
-          <%= link_to recipe, class: "explore-results--card" do %>
+          <%= link_to recipe_path(recipe, from: "utforska"), class: "explore-results--card" do %>
             <%= render "recipes/preview_card", recipe: recipe, index_card: true, truncate_title: 30 %>
           <% end %>
         <% end %>

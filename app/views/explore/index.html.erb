@@ -36,7 +36,7 @@
     <% if @results.any? %>
       <div class="explore-results--grid">
         <% @results.each do |recipe| %>
-          <%= link_to recipe, class: "explore-results--card" do %>
+          <%= link_to recipe_path(recipe, from: "utforska"), class: "explore-results--card" do %>
             <%= render "recipes/preview_card", recipe: recipe, index_card: true %>
           <% end %>
         <% end %>

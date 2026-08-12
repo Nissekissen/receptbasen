@@ -1,4 +1,4 @@
-<%= link_to recipe, class: "shelf--list-item" do %>
+<%= link_to recipe_path(recipe, from: "utforska"), class: "shelf--list-item" do %>
   <% if local_assigns[:rank] %>
     <span class="shelf--list-item-rank" aria-hidden="true"><%= format("%02d", rank) %></span>
   <% end %>

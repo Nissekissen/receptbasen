@@ -45,7 +45,7 @@
       <div class="recipes-index--grid">
         <% @recipes.each do |recipe| %>
           <div class="recipes-index--card-wrap">
-            <%= link_to recipe, class: "recipes-index--card" do %>
+            <%= link_to recipe_path(recipe, from: "group", group_id: @group.id), class: "recipes-index--card" do %>
               <%= render "recipes/preview_card", recipe: recipe, index_card: true, attribution: @attributions[recipe.id] %>
             <% end %>
 

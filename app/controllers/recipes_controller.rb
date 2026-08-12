@@ -10,6 +10,7 @@ class RecipesController < ApplicationController
     return request_authentication if @recipe.done? && !@recipe.published? && !authenticated?
 
     @collections = Current.user.collections.where(group_id: nil) if authenticated?
+    @back_path, @back_label = recipe_back_link
   end
 
   def create
@@ -92,6 +93,20 @@ class RecipesController < ApplicationController
     respond_to do |format|
       format.turbo_stream
       format.html { redirect_to recipe_path(@recipe), notice: "Receptet har loggats" }
+    end
+  end
+
+  private
+
+  def recipe_back_link
+    case params[:from]
+    when "utforska"
+      [ explore_path, "Utforska" ]
+    when "group"
+      group = Group.find_by(id: params[:group_id])
+      group ? [ group_path(group), group.name ] : [ recipes_path, "Dina recept" ]
+    else
+      [ recipes_path, "Dina recept" ]
     end
   end
 end

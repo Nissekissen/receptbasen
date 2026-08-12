@@ -1,4 +1,4 @@
-<%= link_to recipe, class: class_names("shelf--big-card", local_assigns[:extra_class]) do %>
+<%= link_to recipe_path(recipe, from: "utforska"), class: class_names("shelf--big-card", local_assigns[:extra_class]) do %>
   <% if recipe.image_url.present? %>
     <img src="<%= recipe.image_url %>" alt="" class="shelf--big-card-image">
   <% else %>
