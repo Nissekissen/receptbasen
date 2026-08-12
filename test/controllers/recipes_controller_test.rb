@@ -211,6 +211,64 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to recipe
   end
 
+  test "scales ingredient quantities in the shopping list by the scale param" do
+    sign_in_as(users(:one))
+    recipe = recipes(:pannkakor)
+    recipe.ingredients.create!(content: "2 dl mjölk", quantity: "2", unit: "dl", name: "mjölk", quantity_value: 2.0)
+    recipe.ingredients.create!(content: "Salt & peppar")
+
+    post add_to_shopping_list_recipe_url(recipe), params: { scale: 1.5 }
+
+    items = users(:one).shopping_list_items.where(recipe: recipe).order(:id)
+    assert_equal [ "3", nil ], items.pluck(:quantity)
+    assert_equal [ "dl", nil ], items.pluck(:unit)
+    assert_equal "Salt & peppar", items.second.content
+  end
+
+  test "drops trailing zeros when scaling produces a whole number" do
+    sign_in_as(users(:one))
+    recipe = recipes(:pannkakor)
+    recipe.ingredients.create!(content: "4 dl mjöl", quantity: "4", unit: "dl", name: "mjöl", quantity_value: 4.0)
+
+    post add_to_shopping_list_recipe_url(recipe), params: { scale: 0.5 }
+
+    item = users(:one).shopping_list_items.find_by(recipe: recipe)
+    assert_equal "2", item.quantity
+  end
+
+  test "rounds scaled quantities to two decimals" do
+    sign_in_as(users(:one))
+    recipe = recipes(:pannkakor)
+    recipe.ingredients.create!(content: "1 dl socker", quantity: "1", unit: "dl", name: "socker", quantity_value: 1.0)
+
+    post add_to_shopping_list_recipe_url(recipe), params: { scale: (1.0 / 3).to_s }
+
+    item = users(:one).shopping_list_items.find_by(recipe: recipe)
+    assert_equal "0.33", item.quantity
+  end
+
+  test "does not scale ingredients with no quantity_value" do
+    sign_in_as(users(:one))
+    recipe = recipes(:pannkakor)
+    recipe.ingredients.create!(content: "2 dl mjölk", quantity: "2", unit: "dl", name: "mjölk")
+
+    post add_to_shopping_list_recipe_url(recipe), params: { scale: 2 }
+
+    item = users(:one).shopping_list_items.find_by(recipe: recipe)
+    assert_equal "2", item.quantity
+  end
+
+  test "defaults to no scaling when the scale param is absent" do
+    sign_in_as(users(:one))
+    recipe = recipes(:pannkakor)
+    recipe.ingredients.create!(content: "2 dl mjölk", quantity: "2", unit: "dl", name: "mjölk", quantity_value: 2.0)
+
+    post add_to_shopping_list_recipe_url(recipe)
+
+    item = users(:one).shopping_list_items.find_by(recipe: recipe)
+    assert_equal "2", item.quantity
+  end
+
   test "responds with a turbo stream when adding to the shopping list" do
     sign_in_as(users(:one))
     recipe = recipes(:pannkakor)

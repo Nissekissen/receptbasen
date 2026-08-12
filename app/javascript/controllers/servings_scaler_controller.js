@@ -1,11 +1,12 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["servingsDisplay", "ingredientAmount"]
+  static targets = ["servingsDisplay", "ingredientAmount", "scaleInput"]
   static values = { baseServings: Number }
 
   connect() {
     this.currentServings = this.baseServingsValue
+    this.updateScaleInput()
   }
 
   increment() {
@@ -34,7 +35,15 @@ export default class extends Controller {
       quantity = quantity.toFixed(2)
       quantity = parseFloat(quantity) // Drop trailing zeros.
 
-      element.textContent = [ quantity, unit ].filter(Boolean).join(" ") 
+      element.textContent = [ quantity, unit ].filter(Boolean).join(" ")
     })
+
+    this.updateScaleInput(ratio)
+  }
+
+  updateScaleInput(ratio = this.currentServings / this.baseServingsValue) {
+    // baseServingsValue is 0 (unset) whenever the recipe has no scalable
+    // servings count — leave the input at its default (no scaling) then.
+    if (this.hasScaleInputTarget && this.baseServingsValue > 0) this.scaleInputTarget.value = ratio
   }
 }

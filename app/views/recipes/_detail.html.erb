@@ -85,7 +85,10 @@
 
           <% if authenticated? %>
             <div id="shopping_list_cta">
-              <%= button_to "Lägg till i inköpslista", add_to_shopping_list_recipe_path(recipe), method: :post, class: "recipe-detail--shopping-list-btn" %>
+              <%= form_with url: add_to_shopping_list_recipe_path(recipe), method: :post do |f| %>
+                <%= f.hidden_field :scale, value: 1, data: { servings_scaler_target: "scaleInput" } %>
+                <%= f.submit "Lägg till i inköpslista", class: "recipe-detail--shopping-list-btn" %>
+              <% end %>
             </div>
           <% end %>
 
