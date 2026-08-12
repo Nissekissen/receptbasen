@@ -131,6 +131,7 @@
     align-items: center;
     gap: 10px;
     cursor: pointer;
+    min-width: 0;
 }
 
 .shopping-list--checkbox {
@@ -145,6 +146,8 @@
     font-family: var(--font-sans);
     font-size: 0.95rem;
     color: var(--ink);
+    min-width: 0;
+    overflow-wrap: break-word;
 }
 
 .shopping-list--amount {
@@ -162,7 +165,8 @@
     display: flex;
     align-items: center;
     gap: 14px;
-    flex-shrink: 0;
+    min-width: 0;
+    max-width: 40%;
 }
 
 .shopping-list--source-link {
@@ -171,6 +175,8 @@
     letter-spacing: 0.02em;
     color: #8a8a86;
     text-decoration: none;
+    min-width: 0;
+    overflow-wrap: break-word;
 }
 
 .shopping-list--source-link:hover {
@@ -179,6 +185,7 @@
 
 .shopping-list--remove-form {
     display: inline;
+    flex-shrink: 0;
     margin: 0;
 }
 
