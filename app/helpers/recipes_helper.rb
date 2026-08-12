@@ -59,6 +59,13 @@ module RecipesHelper
     match[2].downcase.start_with?("tim") ? amount * 3600 : amount * 60
   end
 
+  def recipe_base_servings(recipe)
+    match = recipe.servings.to_s.match(/(\d+)(?:-\d+)?\b/i)
+    return nil unless match
+
+    match[1].to_i
+  end
+
   def active_recipe_filters(collections: Current.user.collections)
     filters = []
     filters << { param: :collection_id, label: collections.find_by(id: params[:collection_id])&.name } if params[:collection_id].present?

@@ -65,10 +65,20 @@ class RecipesController < ApplicationController
     @recipe = Recipe.find(params[:id])
     raise ActiveRecord::RecordNotFound if @recipe.manual? && !@recipe.visible_to?(Current.user)
 
+    ratio = params[:scale].to_f
+    ratio = 1.0 if ratio <= 0
+
     @recipe.ingredients.each do |ingredient|
+      if ingredient.quantity_value.present?
+        quantity = (ingredient.quantity_value * ratio).round(2)
+        quantity = quantity.to_i if quantity == quantity.to_i
+      else
+        quantity = ingredient.quantity
+      end
+
       Current.user.shopping_list_items.create!(
         content: ingredient.content,
-        quantity: ingredient.quantity,
+        quantity: quantity == 0 ? nil : quantity,
         unit: ingredient.unit,
         name: ingredient.name,
         recipe: @recipe

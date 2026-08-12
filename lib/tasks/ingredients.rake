@@ -1,7 +1,7 @@
 namespace :ingredients do
   desc "Split any unsplit ingredient content into quantity/unit/name"
   task split: :environment do
-    recipe_ids = Ingredient.where(name: nil).distinct.pluck(:recipe_id)
+    recipe_ids = Ingredient.where(quantity_value: nil).distinct.pluck(:recipe_id)
 
     recipe_ids.each do |recipe_id|
       recipe = Recipe.find(recipe_id)
