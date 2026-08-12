@@ -22,6 +22,9 @@ class ExploreController < ApplicationController
 
   private
 
+  # Temporary escape hatch while the catalog is still small — shelves come back
+  # half-empty without enough recipes. Remove this (and the fallback branch in
+  # #index) once the catalog has grown enough that shelves reliably fill out.
   def shelves_enabled?
     ENV["DISABLE_EXPLORE_SHELVES"].blank?
   end
