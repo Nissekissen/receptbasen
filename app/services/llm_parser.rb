@@ -30,7 +30,7 @@ class LlmParser < Parser
   def call
     response = client.messages.create(
       model: :"claude-haiku-4-5",
-      max_tokens: 2048,
+      max_tokens: 4096,
       output_config: { format: { type: "json_schema", schema: RESPONSE_SCHEMA } },
       messages: [ { role: "user", content: prompt } ]
     )
@@ -52,6 +52,9 @@ class LlmParser < Parser
     @steps = result["steps"]
 
     normalize(result)
+  rescue => e
+    @error = e.message
+    nil
   end
 
   private
