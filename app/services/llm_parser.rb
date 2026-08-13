@@ -48,8 +48,8 @@ class LlmParser < Parser
       return nil
     end
 
-    @ingredients = result["ingredients"]
-    @steps = result["steps"]
+    @ingredients = result["ingredients"].map { |ingredient| decode_entities(ingredient) }
+    @steps = result["steps"].map { |step| decode_entities(step) }
 
     normalize(result)
   rescue => e
