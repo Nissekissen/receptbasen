@@ -18,4 +18,55 @@ namespace :ingredients do
       puts "Recipe #{recipe_id}: FAILED (#{e.class}: #{e.message})"
     end
   end
+
+  desc "Re-fetch and re-parse ingredients for scraped recipes whose content never captured an amount (recipes scraped before StructuredParser#ingredients_missing_amounts? started catching this). Set DRY_RUN=true to only list affected recipes."
+  task refetch_missing_amounts: :environment do
+    amount_pattern = /[\d½⅓⅔¼¾⅕⅙⅛]/
+
+    affected = Recipe.done.where(owner_id: nil).where.not(source_url: nil).includes(:ingredients).select do |recipe|
+      recipe.ingredients.any? && recipe.ingredients.none? { |ingredient| ingredient.content.match?(amount_pattern) }
+    end
+
+    puts "Found #{affected.size} recipe(s) with no ingredient amounts:"
+    affected.each { |recipe| puts "  ##{recipe.id} #{recipe.title} (#{recipe.source_domain})" }
+
+    if ENV["DRY_RUN"].present?
+      puts "DRY_RUN set, stopping here."
+      next
+    end
+
+    affected.each do |recipe|
+      connection = Faraday.new do |f|
+        f.use Faraday::FollowRedirects::Middleware
+        f.options.timeout = 10
+        f.headers["User-Agent"] = "Mozilla/5.0 (compatible; ReceptbasenBot/1.0)"
+      end
+
+      response = connection.get(recipe.source_url)
+      raise "Failed to fetch page: #{response.status}" unless response.success?
+
+      llm_parser = LlmParser.new(response.body)
+      result = llm_parser.call
+
+      if result.nil?
+        puts "Recipe #{recipe.id}: FAILED to re-parse (#{llm_parser.error})"
+        next
+      end
+
+      recipe.ingredients.destroy_all
+      recipe.ingredients.create!(llm_parser.ingredients.map { |content| { content: content } })
+
+      extractor = IngredientExtractor.new(ingredients: recipe.ingredients.map(&:content))
+      split = extractor.call
+
+      if split
+        recipe.ingredients.order(:id).zip(split).each { |ingredient, fields| ingredient.update!(fields) }
+        puts "Recipe #{recipe.id}: re-fetched and split #{split.size} ingredients"
+      else
+        puts "Recipe #{recipe.id}: re-fetched ingredients but split FAILED (#{extractor.error})"
+      end
+    rescue => e
+      puts "Recipe #{recipe.id}: FAILED (#{e.class}: #{e.message})"
+    end
+  end
 end
