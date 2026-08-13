@@ -35,7 +35,9 @@ namespace :ingredients do
       next
     end
 
-    affected.each do |recipe|
+    affected.each_with_index do |recipe, index|
+      sleep 3 if index.positive?
+
       connection = Faraday.new do |f|
         f.use Faraday::FollowRedirects::Middleware
         f.options.timeout = 10
@@ -50,6 +52,11 @@ namespace :ingredients do
 
       if result.nil?
         puts "Recipe #{recipe.id}: FAILED to re-parse (#{llm_parser.error})"
+        next
+      end
+
+      if llm_parser.ingredients.none? { |content| content.match?(amount_pattern) }
+        puts "Recipe #{recipe.id}: re-fetched, but got no ingredient amounts back this time either (rate-limiting/bot-blocking or a genuinely amount-less page) — leaving existing data as-is, re-run to retry"
         next
       end
 
