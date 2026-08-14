@@ -264,7 +264,7 @@
 
 .recipe-detail--ticket {
     background: var(--parchment);
-    height: 100%;
+    /* height: 100%; */
     min-width: 0;
     padding: 1.25rem;
     border: 1px dashed var(--accent-half-transparent);
@@ -390,6 +390,7 @@
 
 .recipe-detail--steps {
     grid-area: s;
+    height: 100%;
 }
 
 .recipe-detail--step {
