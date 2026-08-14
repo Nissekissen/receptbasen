@@ -1,36 +1,18 @@
 <% average, count = recipe_rating(recipe) %>
-<% my_rating = current_user_note_for(recipe)&.rating %>
 <% rounded_average = average&.round || 0 %>
 
-<div class="recipe-detail--rating" id="recipe_rating" data-controller="dropdown">
-  <button type="button" class="recipe-detail--rating-trigger" data-action="click->dropdown#toggle" aria-label="Betygsätt receptet">
-    <span class="recipe-detail--rating-stars" aria-hidden="true">
-      <% (1..5).each do |n| %>
-        <%= render "icons/star", filled: n <= rounded_average %>
-      <% end %>
-    </span>
+<div class="recipe-detail--rating" id="recipe_rating">
+  <span class="recipe-detail--rating-stars" aria-hidden="true">
+    <% (1..5).each do |n| %>
+      <%= render "icons/star", filled: n <= rounded_average %>
+    <% end %>
+  </span>
 
-    <span class="recipe-detail--rating-summary">
-      <% if count > 0 %>
-        <%= number_with_precision(average, precision: 1) %> (<%= count %> betyg)
-      <% else %>
-        Inga betyg än
-      <% end %>
-    </span>
-  </button>
-
-  <div class="recipe-detail--rating-menu" data-dropdown-target="menu" hidden>
-    <p class="recipe-detail--rating-menu-label">Ditt betyg</p>
-    <div class="recipe-detail--rating-menu-stars">
-      <% (1..5).each do |n| %>
-        <% selected = my_rating.present? && n <= my_rating %>
-        <%= form_with url: recipe_note_path(recipe), method: :post, class: "recipe-detail--rating-star-form" do |form| %>
-          <%= form.hidden_field :rating, value: n %>
-          <button type="submit" class="<%= class_names("recipe-detail--rating-star", "is-selected" => selected) %>" aria-label="Betygsätt <%= n %> av 5">
-            <%= render "icons/star", filled: selected %>
-          </button>
-        <% end %>
-      <% end %>
-    </div>
-  </div>
+  <span class="recipe-detail--rating-summary">
+    <% if count > 0 %>
+      <%= number_with_precision(average, precision: 1) %> (<%= count %> betyg)
+    <% else %>
+      Inga betyg än
+    <% end %>
+  </span>
 </div>

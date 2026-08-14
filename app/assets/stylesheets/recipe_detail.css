@@ -9,16 +9,18 @@
     margin: 0 auto;
 }
 
-/* Desktop default: the image forms a narrow left column, with title/actions/
-   meta/tags/description/note in a wider column next to it. Ingredients and
-   steps stay below, full width, as their own separate row (.recipe-detail--content).
-   Collapses back to a single stacked column (image on top, full width) below
-   900px — see the media query near the bottom of this file. */
-.recipe-detail--layout {
-    display: grid;
-    grid-template-columns: 380px 1fr;
-    gap: 3rem;
-    align-items: start;
+/* Full-bleed photo with a gradient scrim carrying the source link, title, and
+   average rating directly on top of it. Everything else (actions, meta,
+   tags, description) lives in the plain-block .recipe-detail--info below,
+   not a side column next to the image anymore. */
+.recipe-detail--hero {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 2.5rem;
+}
+
+.recipe-detail--info {
     margin-bottom: 3rem;
 }
 
@@ -31,24 +33,35 @@
     margin-bottom: 1.25rem;
 }
 
-.recipe-detail--image {
+.recipe-detail--hero-image {
+    display: block;
     width: 100%;
-    height: 100%;
+    height: 420px;
     object-fit: cover;
-    border-radius: 12px;
-    margin: 0 0 1.5rem;
 }
 
 .recipe-detail--image-placeholder {
     background: linear-gradient(135deg, var(--accent-color-light) 0%, var(--accent-color) 100%);
 }
 
+.recipe-detail--hero-scrim {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 2rem 2.25rem;
+    background: linear-gradient(to top, rgba(35, 48, 33, 0.92) 0%, rgba(35, 48, 33, 0.25) 55%, transparent 85%);
+}
+
 .recipe-detail--title {
     font-family: var(--font-serif);
     font-weight: 500;
-    font-size: clamp(1.6rem, 3vw + 1rem, 2.1rem);
-    color: var(--accent-color-dark);
-    margin: 0 0 0.9rem;
+    font-size: clamp(2rem, 4vw + 0.5rem, 2.9rem);
+    line-height: 1.1;
+    color: white;
+    text-wrap: balance;
+    margin: 0 0 0.75rem;
 }
 
 .recipe-detail--save {
@@ -112,27 +125,13 @@
 }
 
 .recipe-detail--rating {
-    position: relative;
-    margin-bottom: 1.5rem;
-}
-
-/* The whole average display doubles as the trigger for "rate this yourself"
-   — clicking anywhere on it opens .recipe-detail--rating-menu, which is
-   unambiguously labeled as being about your own rating (see below), rather
-   than needing separate text here explaining that. */
-.recipe-detail--rating-trigger {
-    display: block;
-    border: none;
-    background: none;
-    padding: 0;
-    cursor: pointer;
-    text-align: left;
+    margin: 0;
 }
 
 .recipe-detail--rating-stars {
     display: flex;
     gap: 2px;
-    color: var(--accent-color);
+    color: var(--accent-color-light);
     margin-bottom: 4px;
 }
 
@@ -145,38 +144,7 @@
     display: block;
     font-family: var(--font-sans);
     font-size: 13px;
-    color: #8a8a86;
-}
-
-/* Anchored to .recipe-detail--rating (position: relative) the same way
-   .recipe-preview--save-menu anchors to its own trigger — a floating panel,
-   not something that pushes the action buttons below it around. */
-.recipe-detail--rating-menu {
-    position: absolute;
-    top: calc(100% + 8px);
-    left: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-    padding: 10px 12px;
-    z-index: 3;
-}
-
-/* display: flex above ties in specificity with the browser's own [hidden]
-   rule, so without this override toggling `hidden` would do nothing —
-   same gotcha as the mobile nav drawer and .cook-mode--next[hidden]. */
-.recipe-detail--rating-menu[hidden] {
-    display: none;
-}
-
-.recipe-detail--rating-menu-label {
-    margin: 0;
-    font-family: var(--font-sans);
-    font-size: 12px;
-    color: #8a8a86;
+    color: rgba(255, 255, 255, 0.85);
 }
 
 .recipe-detail--rating-menu-stars {
@@ -209,11 +177,13 @@
 
 .recipe-detail--source {
     display: inline-block;
-    font-family: var(--font-sans);
-    font-size: 12px;
-    color: #8a8a86;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.7);
     text-decoration: none;
-    margin-bottom: 1.25rem;
+    margin-bottom: 0.75rem;
 }
 
 .recipe-detail--tags {
@@ -242,6 +212,10 @@
 
 .recipe-detail--note {
     grid-area: n;
+}
+
+.recipe-detail--rating-label {
+    margin: 0;
 }
 
 .recipe-detail--note-form {
@@ -453,8 +427,8 @@
 }
 
 @media (max-width: 900px) {
-    .recipe-detail--layout {
-        display: block;
+    .recipe-detail--hero-image {
+        height: 340px;
     }
 
     .recipe-detail--tickets {
@@ -474,6 +448,14 @@
 @media (max-width: 480px) {
     .recipe-detail {
         padding: 6rem 1.25rem 3rem;
+    }
+
+    .recipe-detail--hero-image {
+        height: 260px;
+    }
+
+    .recipe-detail--hero-scrim {
+        padding: 1.25rem;
     }
 
     /* Nested .btn (the Spara button, inside .recipe-detail--save-wrap) fills
