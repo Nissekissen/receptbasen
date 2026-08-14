@@ -20,7 +20,7 @@ export default class extends Controller {
   }
 
   refresh() {
-    this.servingsDisplayTarget.textContent = this.currentServings
+    this.servingsDisplayTarget.textContent = `${this.currentServings} PORT`
 
     const ratio = this.currentServings / this.baseServingsValue
 

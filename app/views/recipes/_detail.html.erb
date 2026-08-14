@@ -73,53 +73,58 @@
       </div>
     </div>
 
-    <% if authenticated? %>
-      <%= render "recipes/note", recipe: recipe %>
-    <% end %>
-
     <div class="recipe-detail--content">
-      <% base_servings = recipe_base_servings(recipe) %>
-      <div class="recipe-detail--ingredients" data-controller="servings-scaler" data-servings-scaler-base-servings-value="<%= base_servings %>" >
-        <div class="recipe-detail--ingredients-header">
+      <div class="recipe-detail--tickets">
+        <% base_servings = recipe_base_servings(recipe) %>
+        <div class="recipe-detail--ingredients recipe-detail--ticket" data-controller="servings-scaler" data-servings-scaler-base-servings-value="<%= base_servings %>" >
           <p class="recipe-detail--heading">Ingredienser</p>
 
+          <ul class="recipe-detail--ingredients-list">
+            <% recipe.ingredients.each do |ingredient| %>
+              <li>
+                <span class="recipe-detail--ingredient-name"><%= ingredient.display_name %></span>
+                <% if (amount = ingredient.formatted_amount) %>
+                  <span class="recipe-detail--ingredient-amount" <% if ingredient.quantity_value.present? %> data-servings-scaler-target="ingredientAmount" data-base-quantity="<%= ingredient.quantity_value %>" data-unit="<%= ingredient.unit %>" <% end %>><%= amount %></span>
+                <% else %>
+                  <span class="recipe-detail--ingredient-amount">-</span>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+
+          <% if !base_servings.nil? && (recipe.ingredients.any? { |i| i.quantity_value.present? }) %>
+            <div class="recipe-detail--ticket-divider"></div>
+            <div id="servings_scaling" class="recipe-detail--servings-scaler">
+              <button type="button" class="recipe-scaling--button" data-action="click->servings-scaler#decrement" aria-label="Minska antal portioner">-</button>
+              <span class="recipe-detail--servings-count" data-servings-scaler-target="servingsDisplay"><%= base_servings %> PORT</span>
+              <button type="button" class="recipe-scaling--button" data-action="click->servings-scaler#increment" aria-label="Öka antal portioner">+</button>
+            </div>
+          <% end %>
+
           <% if authenticated? %>
+            <div class="recipe-detail--ticket-divider"></div>
             <div id="shopping_list_cta">
               <%= form_with url: add_to_shopping_list_recipe_path(recipe), method: :post do |f| %>
                 <%= f.hidden_field :scale, value: 1, data: { servings_scaler_target: "scaleInput" } %>
-                <%= f.submit "Lägg till i inköpslista", class: "recipe-detail--shopping-list-btn" %>
+                <%= f.submit "Lägg till i inköpslista", class: "btn btn--primary recipe-detail--shopping-list-btn" %>
               <% end %>
             </div>
           <% end %>
 
-          <% if !base_servings.nil? && (recipe.ingredients.any? { |i| i.quantity_value.present? }) %>
-            <div id="servings_scaling" class="recipe-detail--servings-scaler">
-              <button type="button" class="recipe-scaling--button" data-action="click->servings-scaler#decrement" aria-label="Minska antal portioner">-</button>
-              <span class="recipe-detail--servings-count" data-servings-scaler-target="servingsDisplay"><%= base_servings %></span>
-              <button type="button" class="recipe-scaling--button" data-action="click->servings-scaler#increment" aria-label="Öka antal portioner">+</button>
+        </div>
+
+        <div class="recipe-detail--steps recipe-detail--ticket">
+          <p class="recipe-detail--heading">Gör så här</p>
+          <% recipe.steps.each.with_index(1) do |step, index| %>
+            <div class="recipe-detail--step">
+              <span class="recipe-detail--step-number"><%= format("%02d", index) %></span>
+              <span class="recipe-detail--step-text"><%= step.content %></span>
             </div>
           <% end %>
         </div>
 
-        <ul class="recipe-detail--ingredients-list">
-          <% recipe.ingredients.each do |ingredient| %>
-            <li>
-              <% if (amount = ingredient.formatted_amount) %>
-                <span class="recipe-detail--ingredient-amount" <% if ingredient.quantity_value.present? %> data-servings-scaler-target="ingredientAmount" data-base-quantity="<%= ingredient.quantity_value %>" data-unit="<%= ingredient.unit %>" <% end %>><%= amount %></span>
-              <% end %>
-              <span class="recipe-detail--ingredient-name"><%= ingredient.display_name %></span>
-            </li>
-          <% end %>
-        </ul>
-      </div>
-
-      <div class="recipe-detail--steps">
-        <p class="recipe-detail--heading">Gör så här</p>
-        <% recipe.steps.each.with_index(1) do |step, index| %>
-          <div class="recipe-detail--step">
-            <span class="recipe-detail--step-number"><%= format("%02d", index) %></span>
-            <span class="recipe-detail--step-text"><%= step.content %></span>
-          </div>
+        <% if authenticated? %>
+          <%= render "recipes/note", recipe: recipe %>
         <% end %>
       </div>
     </div>

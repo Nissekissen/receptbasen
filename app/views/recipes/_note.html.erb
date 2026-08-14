@@ -1,15 +1,8 @@
 <% note = current_user_note_for(recipe) %>
 
-<details class="recipe-detail--note" id="recipe_note">
-  <summary class="recipe-detail--note-summary">
-    <% if note&.content.present? %>
-      <%= note.content %>
-    <% else %>
-      + Lägg till anteckning
-    <% end %>
-  </summary>
-
+<div class="recipe-detail--note recipe-detail--ticket" id="recipe_note">
+  <p class="recipe-detail--heading">Din anteckning</p>
   <%= form_with url: recipe_note_path(recipe), method: :post, class: "recipe-detail--note-form", data: { controller: "auto-submit" } do %>
     <%= text_area_tag :content, note&.content, rows: 3, placeholder: "Skriv en anteckning om det här receptet …", class: "recipe-detail--note-textarea", data: { action: "blur->auto-submit#submit" } %>
   <% end %>
-</details>
+</div>
