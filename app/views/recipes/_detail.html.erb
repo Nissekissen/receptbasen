@@ -23,6 +23,7 @@
     </div>
 
     <div class="recipe-detail--info">
+      <div class="recipe-detail--info-panel">
       <div class="recipe-detail--action-wrapper">
           <% if authenticated? %>
               <%= link_to cook_recipe_path(recipe), class: "btn btn--primary" do %>
@@ -64,15 +65,18 @@
         <% end %>
 
         <% if authenticated? %>
-          <%= render "recipes/cook_count", recipe: recipe %>
+          <span class="recipe-detail--badge">
+            <%= render "recipes/cook_count", recipe: recipe %>
+          </span>
         <% end %>
       </div>
-
-      <%= render "recipes/tags", recipe: recipe %>
 
       <% if recipe.description.present? %>
         <p class="recipe-detail--description"><%= recipe.description %></p>
       <% end %>
+
+      <%= render "recipes/tags", recipe: recipe %>
+      </div>
     </div>
 
     <div class="recipe-detail--content">

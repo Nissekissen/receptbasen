@@ -24,6 +24,15 @@
     margin-bottom: 3rem;
 }
 
+.recipe-detail--info-panel {
+    border: 1px solid var(--accent-color-light);
+    border-radius: 10px;
+    padding: 1.6rem 1.85rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.15rem;
+}
+
 .recipe-detail--back {
     display: inline-block;
     font-family: var(--font-sans);
@@ -74,42 +83,46 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    margin-bottom: 2.5rem;
 }
 
 .recipe-detail--meta {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 8px;
-    margin: 0 0 1rem;
+    margin: 0;
 }
 
 .recipe-detail--badge {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    font-family: var(--font-sans);
-    font-size: 12px;
-    color: var(--accent-color-dark);
-    background: var(--accent-color-light);
-    padding: 4px 9px;
-    border-radius: 6px;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: #8a8a86;
+    padding: 0 1rem;
+    border-left: 1px solid var(--accent-color-light);
+}
+
+.recipe-detail--badge:first-child {
+    padding-left: 0;
+    border-left: none;
 }
 
 /* A <button> (not <span>, like the other badges) so it needs its own reset
-   on top of .recipe-detail--badge — border/font aren't inherited by buttons
-   by default the way they are for inline elements. */
+   on top of .recipe-detail--badge — background/cursor aren't inherited by
+   buttons by default the way they are for inline elements. Only resets
+   border-top/-right/-bottom, deliberately leaving border-left alone so it
+   still picks up .recipe-detail--badge's divider rule between facts. */
 .recipe-detail--cook-count {
-    border: none;
+    border-top: none;
+    border-right: none;
+    border-bottom: none;
+    background: none;
     cursor: pointer;
-    font-family: var(--font-sans);
-    font-size: 12px;
 }
 
 .recipe-detail--cook-count:hover {
-    background: var(--accent-color);
-    color: white;
+    color: var(--accent-color);
 }
 
 .recipe-detail--cook-count-plus {
@@ -190,7 +203,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
-    margin: 0 0 1.25rem;
+    margin: 0;
 }
 
 .recipe-detail--tag {
@@ -204,7 +217,7 @@
 
 .recipe-detail--description {
     font-family: var(--font-sans);
-    font-size: 14px;
+    font-size: 1.1rem;
     color: var(--ink);
     line-height: 1.6;
     margin: 0;
@@ -456,6 +469,10 @@
 
     .recipe-detail--hero-scrim {
         padding: 1.25rem;
+    }
+
+    .recipe-detail--description {
+        font-size: 0.9rem;
     }
 
     /* Nested .btn (the Spara button, inside .recipe-detail--save-wrap) fills
