@@ -351,6 +351,7 @@
     font-size: 11px;
     letter-spacing: 0.02em;
     color: var(--accent-color-dark);
+    text-align: center;
 }
 
 .recipe-detail--shopping-list-link {
