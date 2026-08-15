@@ -99,7 +99,7 @@
     gap: 5px;
     font-family: var(--font-mono);
     font-size: 0.82rem;
-    font-weight: bold;
+    font-weight: 700;
     color: var(--accent-color-dark);
     padding: 0.45rem 0.7rem;
     background: var(--accent-color-light);
@@ -108,15 +108,13 @@
 
 .recipe-detail--cook-count {
     border: none;
+    transition: 0.3s ease-in-out;
     cursor: pointer;
 }
 
 .recipe-detail--cook-count:hover {
-    outline: 1px solid var(--accent-color);
-}
-
-.recipe-detail--cook-count-plus {
-    font-family: var(--font-mono);
+    background: var(--accent-color);
+    color: white;
 }
 
 /* button_to wraps the button in its own <form> — display: contents lets the
@@ -221,9 +219,6 @@
     margin: 0;
 }
 
-.recipe-detail--note-form {
-}
-
 .recipe-detail--note-textarea {
     width: 100%;
     font-family: var(--font-sans);
@@ -234,12 +229,6 @@
     border-radius: 6px;
     padding: 10px 12px;
     resize: vertical;
-}
-
-.recipe-detail--content {
-    display: flex;
-    flex-direction: column;
-    gap: 2.5rem;
 }
 
 .recipe-detail--tickets {
@@ -362,6 +351,7 @@
     overflow: hidden;
     flex: 1;
     min-width: 0;
+    white-space: nowrap;
 }
 
 .recipe-detail--ingredient-name::after {
