@@ -21,7 +21,7 @@
 }
 
 .recipe-detail--info {
-    margin-bottom: 3rem;
+    margin-bottom: 2.5rem;
 }
 
 .recipe-detail--info-panel {
@@ -90,6 +90,7 @@
     flex-wrap: wrap;
     align-items: center;
     margin: 0;
+    gap: 0.55rem;
 }
 
 .recipe-detail--badge {
@@ -98,31 +99,20 @@
     gap: 5px;
     font-family: var(--font-mono);
     font-size: 0.82rem;
-    color: #8a8a86;
-    padding: 0 1rem;
-    border-left: 1px solid var(--accent-color-light);
+    font-weight: bold;
+    color: var(--accent-color-dark);
+    padding: 0.45rem 0.7rem;
+    background: var(--accent-color-light);
+    border-radius: 5px;
 }
 
-.recipe-detail--badge:first-child {
-    padding-left: 0;
-    border-left: none;
-}
-
-/* A <button> (not <span>, like the other badges) so it needs its own reset
-   on top of .recipe-detail--badge — background/cursor aren't inherited by
-   buttons by default the way they are for inline elements. Only resets
-   border-top/-right/-bottom, deliberately leaving border-left alone so it
-   still picks up .recipe-detail--badge's divider rule between facts. */
 .recipe-detail--cook-count {
-    border-top: none;
-    border-right: none;
-    border-bottom: none;
-    background: none;
+    border: none;
     cursor: pointer;
 }
 
 .recipe-detail--cook-count:hover {
-    color: var(--accent-color);
+    outline: 1px solid var(--accent-color);
 }
 
 .recipe-detail--cook-count-plus {
@@ -264,7 +254,6 @@
 
 .recipe-detail--ticket {
     background: var(--parchment);
-    /* height: 100%; */
     min-width: 0;
     padding: 1.25rem;
     border: 1px dashed var(--accent-half-transparent);
@@ -390,7 +379,6 @@
 
 .recipe-detail--steps {
     grid-area: s;
-    height: 100%;
 }
 
 .recipe-detail--step {
@@ -470,6 +458,10 @@
 
     .recipe-detail--hero-scrim {
         padding: 1.25rem;
+    }
+
+    .recipe-detail--badge {
+        font-size: 0.7rem;
     }
 
     .recipe-detail--description {

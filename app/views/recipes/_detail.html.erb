@@ -65,9 +65,7 @@
         <% end %>
 
         <% if authenticated? %>
-          <span class="recipe-detail--badge">
-            <%= render "recipes/cook_count", recipe: recipe %>
-          </span>
+          <%= render "recipes/cook_count", recipe: recipe %>
         <% end %>
       </div>
 
