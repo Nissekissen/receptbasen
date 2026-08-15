@@ -2,124 +2,133 @@
   <div class="recipe-detail--inner">
     <%= link_to "← #{local_assigns[:back_label] || "Dina recept"}", local_assigns[:back_path] || recipes_path, class: "recipe-detail--back" %>
 
-    <div class="recipe-detail--layout">
+    <div class="recipe-detail--hero">
       <% if recipe.image_url.present? %>
-        <img src="<%= recipe.image_url %>" alt="" class="recipe-detail--image">
+        <img src="<%= recipe.image_url %>" alt="" class="recipe-detail--hero-image">
       <% else %>
-        <div class="recipe-detail--image recipe-detail--image-placeholder" aria-hidden="true"></div>
+        <div class="recipe-detail--hero-image recipe-detail--image-placeholder" aria-hidden="true"></div>
       <% end %>
 
-      <div class="recipe-detail--info">
-        <p class="recipe-detail--title"><%= recipe.title %></p>
-
+      <div class="recipe-detail--hero-scrim">
         <% if recipe.source_domain.present? %>
           <%= link_to "Från #{recipe.source_domain} ↗", recipe.source_url, class: "recipe-detail--source", target: "_blank", rel: "noopener" %>
         <% end %>
 
+        <p class="recipe-detail--title"><%= recipe.title %></p>
+
         <% if authenticated? %>
           <%= render "recipes/rating", recipe: recipe %>
-        <% end %>
-
-        <div class="recipe-detail--action-wrapper">
-            <% if authenticated? %>
-                <%= link_to cook_recipe_path(recipe), class: "btn btn--primary" do %>
-                  <%= render "icons/chef_hat" %>
-                  Laga nu
-                <% end %>
-
-                <% saved = saved_recipe_lookup(recipe) %>
-
-                <div class="recipe-detail--save-wrap" data-controller="dropdown save-menu">
-                    <button type="button" class="btn btn--secondary recipe-detail--save" data-action="click->dropdown#toggle" data-save-menu-target="trigger" aria-label="Spara">
-                    <%= render "icons/bookmark", filled: saved.any? %>
-                    <span data-save-menu-target="label"><%= saved.any? ? "Sparat" : "Spara" %></span>
-                    </button>
-
-                    <%= render "recipes/save_menu", recipe: recipe, saved: saved %>
-                </div>
-            <% end %>
-        </div>
-
-        <div class="recipe-detail--meta">
-          <% if (total_time = recipe_total_time(recipe)) %>
-            <span class="recipe-detail--badge">
-              <%= render "icons/clock" %>
-              <%= total_time %>
-            </span>
-          <% end %>
-          <% if (difficulty = recipe_difficulty(recipe)) %>
-            <span class="recipe-detail--badge">
-              <%= render "icons/#{recipe_difficulty_icon(difficulty)}" %>
-              <%= difficulty %>
-            </span>
-          <% end %>
-          <% if recipe.servings.present? %>
-            <span class="recipe-detail--badge">
-              <%= render "icons/servings" %>
-              <%= recipe.servings %>
-            </span>
-          <% end %>
-
-          <% if authenticated? %>
-            <%= render "recipes/cook_count", recipe: recipe %>
-          <% end %>
-        </div>
-
-        <%= render "recipes/tags", recipe: recipe %>
-
-        <% if recipe.description.present? %>
-          <p class="recipe-detail--description"><%= recipe.description %></p>
         <% end %>
       </div>
     </div>
 
-    <% if authenticated? %>
-      <%= render "recipes/note", recipe: recipe %>
-    <% end %>
+    <div class="recipe-detail--info">
+      <div class="recipe-detail--info-panel">
+      <div class="recipe-detail--action-wrapper">
+          <% if authenticated? %>
+              <%= link_to cook_recipe_path(recipe), class: "btn btn--primary" do %>
+                <%= render "icons/chef_hat" %>
+                Laga nu
+              <% end %>
+
+              <% saved = saved_recipe_lookup(recipe) %>
+
+              <div class="recipe-detail--save-wrap" data-controller="dropdown save-menu">
+                  <button type="button" class="btn btn--secondary recipe-detail--save" data-action="click->dropdown#toggle" data-save-menu-target="trigger" aria-label="Spara">
+                  <%= render "icons/bookmark", filled: saved.any? %>
+                  <span data-save-menu-target="label"><%= saved.any? ? "Sparat" : "Spara" %></span>
+                  </button>
+
+                  <%= render "recipes/save_menu", recipe: recipe, saved: saved %>
+              </div>
+          <% end %>
+      </div>
+
+      <div class="recipe-detail--meta">
+        <% if (total_time = recipe_total_time(recipe)) %>
+          <span class="recipe-detail--badge">
+            <%= render "icons/clock" %>
+            <%= total_time %>
+          </span>
+        <% end %>
+        <% if (difficulty = recipe_difficulty(recipe)) %>
+          <span class="recipe-detail--badge">
+            <%= render "icons/#{recipe_difficulty_icon(difficulty)}" %>
+            <%= difficulty %>
+          </span>
+        <% end %>
+        <% if recipe.servings.present? %>
+          <span class="recipe-detail--badge">
+            <%= render "icons/servings" %>
+            <%= recipe.servings %>
+          </span>
+        <% end %>
+
+        <% if authenticated? %>
+          <%= render "recipes/cook_count", recipe: recipe %>
+        <% end %>
+      </div>
+
+      <% if recipe.description.present? %>
+        <p class="recipe-detail--description"><%= recipe.description %></p>
+      <% end %>
+
+      <%= render "recipes/tags", recipe: recipe %>
+      </div>
+    </div>
 
     <div class="recipe-detail--content">
-      <% base_servings = recipe_base_servings(recipe) %>
-      <div class="recipe-detail--ingredients" data-controller="servings-scaler" data-servings-scaler-base-servings-value="<%= base_servings %>" >
-        <div class="recipe-detail--ingredients-header">
+      <div class="recipe-detail--tickets">
+        <% base_servings = recipe_base_servings(recipe) %>
+        <div class="recipe-detail--ingredients recipe-detail--ticket" data-controller="servings-scaler" data-servings-scaler-base-servings-value="<%= base_servings %>" >
           <p class="recipe-detail--heading">Ingredienser</p>
 
+          <ul class="recipe-detail--ingredients-list">
+            <% recipe.ingredients.each do |ingredient| %>
+              <li>
+                <span class="recipe-detail--ingredient-name"><%= ingredient.display_name %></span>
+                <% if (amount = ingredient.formatted_amount) %>
+                  <span class="recipe-detail--ingredient-amount" <% if ingredient.quantity_value.present? %> data-servings-scaler-target="ingredientAmount" data-base-quantity="<%= ingredient.quantity_value %>" data-unit="<%= ingredient.unit %>" <% end %>><%= amount %></span>
+                <% else %>
+                  <span class="recipe-detail--ingredient-amount">-</span>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+
+          <% if !base_servings.nil? && (recipe.ingredients.any? { |i| i.quantity_value.present? }) %>
+            <div class="recipe-detail--ticket-divider"></div>
+            <div id="servings_scaling" class="recipe-detail--servings-scaler">
+              <button type="button" class="recipe-scaling--button" data-action="click->servings-scaler#decrement" aria-label="Minska antal portioner">-</button>
+              <span class="recipe-detail--servings-count" data-servings-scaler-target="servingsDisplay"><%= base_servings %> PORT</span>
+              <button type="button" class="recipe-scaling--button" data-action="click->servings-scaler#increment" aria-label="Öka antal portioner">+</button>
+            </div>
+          <% end %>
+
           <% if authenticated? %>
+            <div class="recipe-detail--ticket-divider"></div>
             <div id="shopping_list_cta">
               <%= form_with url: add_to_shopping_list_recipe_path(recipe), method: :post do |f| %>
                 <%= f.hidden_field :scale, value: 1, data: { servings_scaler_target: "scaleInput" } %>
-                <%= f.submit "Lägg till i inköpslista", class: "recipe-detail--shopping-list-btn" %>
+                <%= f.submit "Lägg till i inköpslista", class: "btn btn--primary recipe-detail--shopping-list-btn" %>
               <% end %>
             </div>
           <% end %>
 
-          <% if !base_servings.nil? && (recipe.ingredients.any? { |i| i.quantity_value.present? }) %>
-            <div id="servings_scaling" class="recipe-detail--servings-scaler">
-              <button type="button" class="recipe-scaling--button" data-action="click->servings-scaler#decrement" aria-label="Minska antal portioner">-</button>
-              <span class="recipe-detail--servings-count" data-servings-scaler-target="servingsDisplay"><%= base_servings %></span>
-              <button type="button" class="recipe-scaling--button" data-action="click->servings-scaler#increment" aria-label="Öka antal portioner">+</button>
+        </div>
+
+        <div class="recipe-detail--steps recipe-detail--ticket">
+          <p class="recipe-detail--heading">Gör så här</p>
+          <% recipe.steps.each.with_index(1) do |step, index| %>
+            <div class="recipe-detail--step">
+              <span class="recipe-detail--step-number"><%= format("%02d", index) %></span>
+              <span class="recipe-detail--step-text"><%= step.content %></span>
             </div>
           <% end %>
         </div>
 
-        <ul class="recipe-detail--ingredients-list">
-          <% recipe.ingredients.each do |ingredient| %>
-            <li>
-              <% if (amount = ingredient.formatted_amount) %>
-                <span class="recipe-detail--ingredient-amount" <% if ingredient.quantity_value.present? %> data-servings-scaler-target="ingredientAmount" data-base-quantity="<%= ingredient.quantity_value %>" data-unit="<%= ingredient.unit %>" <% end %>><%= amount %></span>
-              <% end %>
-              <span class="recipe-detail--ingredient-name"><%= ingredient.display_name %></span>
-            </li>
-          <% end %>
-        </ul>
-      </div>
-
-      <div class="recipe-detail--steps">
-        <p class="recipe-detail--heading">Gör så här</p>
-        <% recipe.steps.each.with_index(1) do |step, index| %>
-          <div class="recipe-detail--step">
-            <span class="recipe-detail--step-number"><%= format("%02d", index) %></span>
-            <span class="recipe-detail--step-text"><%= step.content %></span>
-          </div>
+        <% if authenticated? %>
+          <%= render "recipes/note", recipe: recipe %>
         <% end %>
       </div>
     </div>

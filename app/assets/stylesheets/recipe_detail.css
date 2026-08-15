@@ -9,17 +9,28 @@
     margin: 0 auto;
 }
 
-/* Desktop default: the image forms a narrow left column, with title/actions/
-   meta/tags/description/note in a wider column next to it. Ingredients and
-   steps stay below, full width, as their own separate row (.recipe-detail--content).
-   Collapses back to a single stacked column (image on top, full width) below
-   900px — see the media query near the bottom of this file. */
-.recipe-detail--layout {
-    display: grid;
-    grid-template-columns: 380px 1fr;
-    gap: 3rem;
-    align-items: start;
-    margin-bottom: 3rem;
+/* Full-bleed photo with a gradient scrim carrying the source link, title, and
+   average rating directly on top of it. Everything else (actions, meta,
+   tags, description) lives in the plain-block .recipe-detail--info below,
+   not a side column next to the image anymore. */
+.recipe-detail--hero {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 2.5rem;
+}
+
+.recipe-detail--info {
+    margin-bottom: 2.5rem;
+}
+
+.recipe-detail--info-panel {
+    border: 1px solid var(--accent-color-light);
+    border-radius: 10px;
+    padding: 1.6rem 1.85rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.15rem;
 }
 
 .recipe-detail--back {
@@ -31,24 +42,35 @@
     margin-bottom: 1.25rem;
 }
 
-.recipe-detail--image {
+.recipe-detail--hero-image {
+    display: block;
     width: 100%;
-    height: 100%;
+    height: 420px;
     object-fit: cover;
-    border-radius: 12px;
-    margin: 0 0 1.5rem;
 }
 
 .recipe-detail--image-placeholder {
     background: linear-gradient(135deg, var(--accent-color-light) 0%, var(--accent-color) 100%);
 }
 
+.recipe-detail--hero-scrim {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 2rem 2.25rem;
+    background: linear-gradient(to top, rgba(35, 48, 33, 0.92) 0%, rgba(35, 48, 33, 0.25) 55%, transparent 85%);
+}
+
 .recipe-detail--title {
     font-family: var(--font-serif);
     font-weight: 500;
-    font-size: clamp(1.6rem, 3vw + 1rem, 2.1rem);
-    color: var(--accent-color-dark);
-    margin: 0 0 0.9rem;
+    font-size: clamp(2rem, 4vw + 0.5rem, 2.9rem);
+    line-height: 1.1;
+    color: white;
+    text-wrap: balance;
+    margin: 0 0 0.75rem;
 }
 
 .recipe-detail--save {
@@ -61,46 +83,38 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    margin-bottom: 2.5rem;
 }
 
 .recipe-detail--meta {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 8px;
-    margin: 0 0 1rem;
+    margin: 0;
+    gap: 0.55rem;
 }
 
 .recipe-detail--badge {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    font-family: var(--font-sans);
-    font-size: 12px;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    font-weight: 700;
     color: var(--accent-color-dark);
+    padding: 0.45rem 0.7rem;
     background: var(--accent-color-light);
-    padding: 4px 9px;
-    border-radius: 6px;
+    border-radius: 5px;
 }
 
-/* A <button> (not <span>, like the other badges) so it needs its own reset
-   on top of .recipe-detail--badge — border/font aren't inherited by buttons
-   by default the way they are for inline elements. */
 .recipe-detail--cook-count {
     border: none;
+    transition: 0.3s ease-in-out;
     cursor: pointer;
-    font-family: var(--font-sans);
-    font-size: 12px;
 }
 
 .recipe-detail--cook-count:hover {
     background: var(--accent-color);
     color: white;
-}
-
-.recipe-detail--cook-count-plus {
-    font-family: var(--font-mono);
 }
 
 /* button_to wraps the button in its own <form> — display: contents lets the
@@ -112,27 +126,13 @@
 }
 
 .recipe-detail--rating {
-    position: relative;
-    margin-bottom: 1.5rem;
-}
-
-/* The whole average display doubles as the trigger for "rate this yourself"
-   — clicking anywhere on it opens .recipe-detail--rating-menu, which is
-   unambiguously labeled as being about your own rating (see below), rather
-   than needing separate text here explaining that. */
-.recipe-detail--rating-trigger {
-    display: block;
-    border: none;
-    background: none;
-    padding: 0;
-    cursor: pointer;
-    text-align: left;
+    margin: 0;
 }
 
 .recipe-detail--rating-stars {
     display: flex;
     gap: 2px;
-    color: var(--accent-color);
+    color: var(--accent-color-light);
     margin-bottom: 4px;
 }
 
@@ -145,38 +145,7 @@
     display: block;
     font-family: var(--font-sans);
     font-size: 13px;
-    color: #8a8a86;
-}
-
-/* Anchored to .recipe-detail--rating (position: relative) the same way
-   .recipe-preview--save-menu anchors to its own trigger — a floating panel,
-   not something that pushes the action buttons below it around. */
-.recipe-detail--rating-menu {
-    position: absolute;
-    top: calc(100% + 8px);
-    left: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-    padding: 10px 12px;
-    z-index: 3;
-}
-
-/* display: flex above ties in specificity with the browser's own [hidden]
-   rule, so without this override toggling `hidden` would do nothing —
-   same gotcha as the mobile nav drawer and .cook-mode--next[hidden]. */
-.recipe-detail--rating-menu[hidden] {
-    display: none;
-}
-
-.recipe-detail--rating-menu-label {
-    margin: 0;
-    font-family: var(--font-sans);
-    font-size: 12px;
-    color: #8a8a86;
+    color: rgba(255, 255, 255, 0.85);
 }
 
 .recipe-detail--rating-menu-stars {
@@ -209,18 +178,20 @@
 
 .recipe-detail--source {
     display: inline-block;
-    font-family: var(--font-sans);
-    font-size: 12px;
-    color: #8a8a86;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.7);
     text-decoration: none;
-    margin-bottom: 1.25rem;
+    margin-bottom: 0.75rem;
 }
 
 .recipe-detail--tags {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
-    margin: 0 0 1.25rem;
+    margin: 0;
 }
 
 .recipe-detail--tag {
@@ -234,35 +205,22 @@
 
 .recipe-detail--description {
     font-family: var(--font-sans);
-    font-size: 14px;
+    font-size: 1.1rem;
     color: var(--ink);
     line-height: 1.6;
     margin: 0;
 }
 
 .recipe-detail--note {
-    margin: 0 0 2rem;
+    grid-area: n;
 }
 
-.recipe-detail--note-summary {
-    cursor: pointer;
-    list-style: none;
-    font-family: var(--font-sans);
-    font-size: 13px;
-    color: var(--accent-color);
-}
-
-.recipe-detail--note-summary::-webkit-details-marker {
-    display: none;
-}
-
-.recipe-detail--note-form {
-    margin-top: 8px;
+.recipe-detail--rating-label {
+    margin: 0;
 }
 
 .recipe-detail--note-textarea {
     width: 100%;
-    max-width: 480px;
     font-family: var(--font-sans);
     font-size: 14px;
     color: var(--ink);
@@ -273,52 +231,53 @@
     resize: vertical;
 }
 
-.recipe-detail--content {
+.recipe-detail--tickets {
+    width: 100%;
     display: grid;
-    grid-template-columns: 240px 1fr;
+    grid-template-columns: 340px 1fr;
     gap: 2.5rem;
+    align-items: start;
+    grid-template-areas: "i s"
+                         "n n";
+}
+
+.recipe-detail--ticket {
+    background: var(--parchment);
+    min-width: 0;
+    padding: 1.25rem;
+    border: 1px dashed var(--accent-half-transparent);
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-self: start;
+}
+
+.recipe-detail--ticket-divider {
+    border-top: 1px dashed var(--accent-half-transparent);
 }
 
 .recipe-detail--heading {
-    font-family: var(--font-serif);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
     font-weight: 500;
-    font-size: 1.1rem;
-    color: var(--accent-color-dark);
-    margin: 0 0 0.9rem;
-}
-
-.recipe-detail--ingredients-header {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-    margin-bottom: 0.9rem;
-}
-
-.recipe-detail--ingredients-header .recipe-detail--heading {
-    margin-bottom: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 0;
+    margin-top: 0.5rem;
 }
 
 .recipe-detail--shopping-list-btn {
     font-family: var(--font-mono);
-    font-size: 11px;
     letter-spacing: 0.02em;
-    color: var(--accent-color);
-    background: none;
-    border: 1px solid var(--accent-color);
-    border-radius: 3px;
-    padding: 6px 10px;
-    cursor: pointer;
-}
-
-.recipe-detail--shopping-list-btn:hover {
-    background: var(--accent-color);
-    color: white;
+    width: 100%;
+    text-wrap: wrap;
 }
 
 .recipe-detail--servings-scaler {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
 }
 
@@ -357,6 +316,7 @@
     font-size: 11px;
     letter-spacing: 0.02em;
     color: var(--accent-color-dark);
+    text-align: center;
 }
 
 .recipe-detail--shopping-list-link {
@@ -365,10 +325,7 @@
 }
 
 .recipe-detail--ingredients {
-    background: white;
-    border-radius: 10px;
-    padding: 1.25rem 1.4rem;
-    align-self: start;
+    grid-area: i;
 }
 
 .recipe-detail--ingredients-list {
@@ -381,45 +338,61 @@
 }
 
 .recipe-detail--ingredients-list li {
-    font-family: var(--font-sans);
-    font-size: 14px;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
     color: var(--ink);
-    padding-left: 14px;
-    position: relative;
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    align-items: baseline;
 }
 
-.recipe-detail--ingredients-list li::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 8px;
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: var(--accent-color);
+.recipe-detail--ingredient-name {
+    overflow: hidden;
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+}
+
+.recipe-detail--ingredient-name::after {
+    content: "........................................................................................................";
+    white-space: nowrap;
 }
 
 .recipe-detail--ingredient-amount {
     font-family: var(--font-mono);
     color: var(--accent-color);
-    margin-right: 6px;
+    flex-shrink: 0;
+    white-space: nowrap;
+    align-self: end;
+}
+
+.recipe-detail--steps {
+    grid-area: s;
 }
 
 .recipe-detail--step {
     display: flex;
     gap: 14px;
-    margin-bottom: 1.25rem;
+    border-bottom: 1px dashed var(--accent-half-transparent);
+    padding-bottom: 1rem;
+}
+
+.recipe-detail--step:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
 }
 
 .recipe-detail--step-number {
     font-family: var(--font-mono);
+    font-weight: 700;
     font-size: 1.1rem;
     color: var(--accent-color);
     flex-shrink: 0;
 }
 
 .recipe-detail--step-text {
-    font-family: var(--font-sans);
+    font-family: var(--font-mono);
     font-size: 14px;
     color: var(--ink);
     line-height: 1.6;
@@ -446,20 +419,43 @@
 }
 
 @media (max-width: 900px) {
-    .recipe-detail--layout {
-        display: block;
+    .recipe-detail--hero-image {
+        height: 340px;
+    }
+
+    .recipe-detail--tickets {
+        grid-template-columns: 300px 1fr;
     }
 }
 
 @media (max-width: 720px) {
-    .recipe-detail--content {
+    .recipe-detail--tickets {
         grid-template-columns: 1fr;
+        grid-template-areas: "i"
+                             "s"
+                             "n";
     }
 }
 
 @media (max-width: 480px) {
     .recipe-detail {
         padding: 6rem 1.25rem 3rem;
+    }
+
+    .recipe-detail--hero-image {
+        height: 260px;
+    }
+
+    .recipe-detail--hero-scrim {
+        padding: 1.25rem;
+    }
+
+    .recipe-detail--badge {
+        font-size: 0.7rem;
+    }
+
+    .recipe-detail--description {
+        font-size: 0.9rem;
     }
 
     /* Nested .btn (the Spara button, inside .recipe-detail--save-wrap) fills

@@ -9,13 +9,6 @@
  * Consider organizing styles into separate files for maintainability.
  */
 
-@import "buttons.css";
-@import "navbar.css";
-@import "home.css";
-@import "recipes.css";
-@import "auth.css";
-@import "recipe_detail.css";
-
 
 :root {
     --accent-color: #33492F;
@@ -23,6 +16,8 @@
     --accent-color-light: #D9E4C9;
     --accent-transparent: rgba(251, 247, 238, 0.14);
     --ink: #252B22;
+    --parchment: #F5EFDD;
+    --accent-half-transparent: #33492f80;
 
     --background-color: #FBF7EE;
 

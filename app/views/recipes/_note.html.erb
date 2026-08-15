@@ -1,15 +1,27 @@
 <% note = current_user_note_for(recipe) %>
+<% my_rating = note&.rating %>
 
-<details class="recipe-detail--note" id="recipe_note">
-  <summary class="recipe-detail--note-summary">
-    <% if note&.content.present? %>
-      <%= note.content %>
-    <% else %>
-      + Lägg till anteckning
+<div class="recipe-detail--note recipe-detail--ticket" id="recipe_note">
+  <p class="recipe-detail--heading">Din anteckning</p>
+
+  <div class="recipe-detail--ticket-divider"></div>
+
+  <%# <p class="recipe-detail--rating-label">Ditt betyg</p> %>
+  <div class="recipe-detail--rating-menu-stars">
+    <% (1..5).each do |n| %>
+      <% selected = my_rating.present? && n <= my_rating %>
+      <%= form_with url: recipe_note_path(recipe), method: :post, class: "recipe-detail--rating-star-form" do |form| %>
+        <%= form.hidden_field :rating, value: n %>
+        <button type="submit" class="<%= class_names("recipe-detail--rating-star", "is-selected" => selected) %>" aria-label="Betygsätt <%= n %> av 5">
+          <%= render "icons/star", filled: selected %>
+        </button>
+      <% end %>
     <% end %>
-  </summary>
+  </div>
 
   <%= form_with url: recipe_note_path(recipe), method: :post, class: "recipe-detail--note-form", data: { controller: "auto-submit" } do %>
     <%= text_area_tag :content, note&.content, rows: 3, placeholder: "Skriv en anteckning om det här receptet …", class: "recipe-detail--note-textarea", data: { action: "blur->auto-submit#submit" } %>
   <% end %>
-</details>
+
+
+</div>
