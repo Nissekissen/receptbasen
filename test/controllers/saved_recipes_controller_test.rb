@@ -120,13 +120,13 @@ class SavedRecipesControllerTest < ActionDispatch::IntegrationTest
     assert_predicate recipes(:parsed_unpublished_recipe).reload, :published?
   end
 
-  test "toggle allows a non-creator group member to save into a group collection" do
+  test "toggle allows an editor collaborator to save into a shared collection" do
     sign_in_as(users(:three))
 
     assert_difference "SavedRecipe.count", 1 do
       post toggle_saved_recipe_url, params: {
         recipe_id: recipes(:parsed_unpublished_recipe).id,
-        collection_id: collections(:private_group_favoriter).id
+        collection_id: collections(:delad_collection).id
       }
     end
 
@@ -134,40 +134,53 @@ class SavedRecipesControllerTest < ActionDispatch::IntegrationTest
     assert_predicate recipes(:parsed_unpublished_recipe).reload, :published?
   end
 
-  test "toggle removes a group collection's save regardless of who originally added it" do
+  test "toggle removes a shared collection's save regardless of who originally added it" do
     sign_in_as(users(:three))
 
     assert_difference "SavedRecipe.count", -1 do
       post toggle_saved_recipe_url, params: {
-        recipe_id: recipes(:pannkakor).id,
-        collection_id: collections(:private_group_favoriter).id
+        recipe_id: recipes(:manual_recipe_collab_shared).id,
+        collection_id: collections(:delad_collection).id
       }
     end
 
     assert_response :no_content
   end
 
-  test "create cannot save into a group collection, even one the user created" do
-    sign_in_as(users(:one))
-
-    assert_no_difference "SavedRecipe.count" do
-      post saved_recipes_url, params: {
-        recipe_id: recipes(:parsed_unpublished_recipe).id,
-        collection_id: collections(:private_group_favoriter).id
-      }
-    end
-  end
-
-  test "toggle 404s for a user outside the collection's group" do
-    sign_in_as(users(:three))
+  test "toggle 404s for a viewer collaborator, who can see but not edit" do
+    sign_in_as(users(:two))
 
     assert_no_difference "SavedRecipe.count" do
       post toggle_saved_recipe_url, params: {
-        recipe_id: recipes(:pannkakor).id,
-        collection_id: collections(:public_group_favoriter).id
+        recipe_id: recipes(:parsed_unpublished_recipe).id,
+        collection_id: collections(:delad_collection).id
       }
     end
 
     assert_response :not_found
+  end
+
+  test "toggle 404s for a user with no relationship to a private collection" do
+    sign_in_as(users(:four))
+
+    assert_no_difference "SavedRecipe.count" do
+      post toggle_saved_recipe_url, params: {
+        recipe_id: recipes(:parsed_unpublished_recipe).id,
+        collection_id: collections(:delad_collection).id
+      }
+    end
+
+    assert_response :not_found
+  end
+
+  test "create cannot save into a collection the user doesn't own, even as a collaborator" do
+    sign_in_as(users(:two))
+
+    assert_no_difference "SavedRecipe.count" do
+      post saved_recipes_url, params: {
+        recipe_id: recipes(:parsed_unpublished_recipe).id,
+        collection_id: collections(:delad_collection).id
+      }
+    end
   end
 end

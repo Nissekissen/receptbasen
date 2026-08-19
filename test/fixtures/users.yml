@@ -3,21 +3,26 @@
 one:
   name: Alice Andersson
   email_address: one@example.com
+  username: alice
   password_digest: <%= password_digest %>
 
 two:
   name: Bea Bengtsson
   email_address: two@example.com
+  username: bea
   password_digest: <%= password_digest %>
 
 three:
   name: Otto Hansson
   email_address: three@example.com
+  username: otto
   password_digest: <%= password_digest %>
 
-# A true stranger — not a member of any fixture group, so tests can check
-# access control for a signed-in user with zero relationship to a group.
+# A true stranger — not a collaborator on or owner of any fixture collection,
+# so tests can check access control for a signed-in user with zero
+# relationship to a collection.
 four:
   name: Disa Dahlberg
   email_address: four@example.com
+  username: disa
   password_digest: <%= password_digest %>

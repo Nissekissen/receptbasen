@@ -17,24 +17,18 @@ two_favoriter:
   name: Favoriter
   locked: true
 
-# The private group's auto-created default collection.
-private_group_favoriter:
+# A public collection — visible to anyone, including anonymous visitors,
+# regardless of ownership or collaborator status.
+public_collection:
   user: one
-  group: private
-  name: Favoriter
-  locked: true
+  name: Publika favoriter
+  public: true
+  locked: false
 
-# The public group's auto-created default collection.
-public_group_favoriter:
+# A private, unlocked collection with collaborators (see
+# collection_collaborators.yml) — exercises accessible_to?/editable_by? for
+# viewer vs. editor roles, distinct from ownership.
+delad_collection:
   user: one
-  group: public
-  name: Favoriter
-  locked: true
-
-# An unlocked, non-default collection for the private group, so tests can
-# check real rename/delete behavior distinct from the locked default.
-private_group_grillrecept:
-  user: one
-  group: private
-  name: Grillrecept
+  name: Delad med vänner
   locked: false

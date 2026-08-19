@@ -17,29 +17,20 @@ class CollectionsControllerTest < ActionDispatch::IntegrationTest
     assert_operator response.body.index("Favoriter"), :<, response.body.index("Vardagsmat")
   end
 
-  test "does not list group collections, even ones the current user created" do
-    sign_in_as(users(:one))
+  test "404s when a collaborator who isn't the owner tries to rename a collection" do
+    sign_in_as(users(:three))
 
-    get collections_url
-
-    assert_response :success
-    assert_select ".collections--name", text: "Grillrecept", count: 0
-  end
-
-  test "404s renaming a group collection here, even for the member who created it" do
-    sign_in_as(users(:one))
-
-    patch collection_url(collections(:private_group_grillrecept)), params: { collection: { name: "Kapad" } }
+    patch collection_url(collections(:delad_collection)), params: { collection: { name: "Kapad" } }
 
     assert_response :not_found
-    assert_equal "Grillrecept", collections(:private_group_grillrecept).reload.name
+    assert_equal "Delad med vänner", collections(:delad_collection).reload.name
   end
 
-  test "404s destroying a group collection here, even for the member who created it" do
-    sign_in_as(users(:one))
+  test "404s when a collaborator who isn't the owner tries to destroy a collection" do
+    sign_in_as(users(:three))
 
     assert_no_difference "Collection.count" do
-      delete collection_url(collections(:private_group_grillrecept))
+      delete collection_url(collections(:delad_collection))
     end
 
     assert_response :not_found

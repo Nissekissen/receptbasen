@@ -128,12 +128,27 @@ class RecipeTest < ActiveSupport::TestCase
     assert_not recipes(:kottbullar).visible_to?(nil)
   end
 
-  test "visible_to? is true for a fellow group member once the recipe is saved in a group collection" do
-    assert recipes(:manual_recipe_in_group).visible_to?(users(:one))
+  test "visible_to? is true for anyone when the recipe is in a public collection" do
+    assert recipes(:manual_recipe_shared).visible_to?(users(:four))
   end
 
-  test "visible_to? is false for a user outside the group the recipe was saved into" do
-    assert_not recipes(:manual_recipe_in_group).visible_to?(users(:three))
+  # The regression case: the public-collection check has to run before the
+  # nil-user bailout, or an anonymous visitor on a public profile would never
+  # see a manual recipe there at all.
+  test "visible_to? is true for a nil (anonymous) user when the recipe is in a public collection" do
+    assert recipes(:manual_recipe_shared).visible_to?(nil)
+  end
+
+  test "visible_to? is true for a viewer collaborator on a collection containing the recipe" do
+    assert recipes(:manual_recipe_collab_shared).visible_to?(users(:two))
+  end
+
+  test "visible_to? is true for an editor collaborator on a collection containing the recipe" do
+    assert recipes(:manual_recipe_collab_shared).visible_to?(users(:three))
+  end
+
+  test "visible_to? is false for a user with no relationship to any collection containing the recipe" do
+    assert_not recipes(:manual_recipe_collab_shared).visible_to?(users(:four))
   end
 
   test "catalog includes done, unowned, published recipes" do

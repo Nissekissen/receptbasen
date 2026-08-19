@@ -18,7 +18,7 @@ class Collection < ApplicationRecord
   end
 
   def accessible_to?(user)
-    user == self.user || public || collaborators.where(user: user).exists?
+    user == self.user || public || collection_collaborators.exists?(user: user)
   end
 
   def editable_by?(user)

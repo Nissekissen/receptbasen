@@ -1,12 +1,33 @@
 class CollectionsController < ApplicationController
   before_action :set_collection, only: %i[update destroy]
+  allow_unauthenticated_access only: %i[show]
 
   def index
-    @collections = Current.user.collections
+    @owned = Current.user.collections
                                 .left_joins(:saved_recipes)
                                 .select("collections.*, COUNT(saved_recipes.id) AS recipes_count")
                                 .group(:id)
                                 .order(locked: :desc, name: :asc)
+    @shared_with_me = Collection.joins(:collection_collaborators).where(collection_collaborators: { user: Current.user })
+  end
+
+  def show
+    @collection = Collection.find(params[:id])
+    raise ActiveRecord::RecordNotFound unless @collection.accessible_to?(authenticated? ? Current.user : nil)
+
+    @recipes = @collection.recipes
+    @recipes = @recipes.where(id: Tagging.where(tag_id: params[:maltidstyp_tag_id]).select(:recipe_id)) if params[:maltidstyp_tag_id].present?
+    @recipes = @recipes.where(id: Tagging.where(tag_id: params[:kok_tag_id]).select(:recipe_id)) if params[:kok_tag_id].present?
+    @recipes = @recipes.where(id: Tagging.where(tag_id: params[:kost_tag_id]).select(:recipe_id)) if params[:kost_tag_id].present?
+
+    @maltidstyp_tags = Tag.maltidstyp.order(:name)
+    @kok_tags = Tag.kok.order(:name)
+    @kost_tags = Tag.kost.order(:name)
+
+    @can_manage = authenticated? && @collection.owned_by?(Current.user)
+    @can_edit   = authenticated? && @collection.editable_by?(Current.user)
+
+    @attributions = SavedRecipe.where(collection: @collection).includes(:user).index_by(&:recipe_id)
   end
 
   def create
