@@ -1,9 +1,10 @@
 class Collection < ApplicationRecord
   belongs_to :user
-  belongs_to :group, optional: true
 
   has_many :saved_recipes
   has_many :recipes, through: :saved_recipes
+  has_many :collection_collaborators
+  has_many :collaborators, through: :collection_collaborators, source: :user
 
   validates :name, presence: true
 
@@ -17,10 +18,16 @@ class Collection < ApplicationRecord
   end
 
   def accessible_to?(user)
-    return false unless user
-    return true if self.user == user
+    user == self.user || public || collaborators.where(user: user).exists?
+  end
 
-    group.present? && group.member?(user)
+  def editable_by?(user)
+    return true if user == self.user
+    collection_collaborators.exists?(user: user, role: :editor)
+  end
+
+  def owned_by?(user)
+    user == self.user
   end
 
   private

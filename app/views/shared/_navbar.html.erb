@@ -11,9 +11,6 @@
         <%= link_to "Mina recept", recipes_path, class: class_names("navbar--nav-link", "is-active" => current_page?(recipes_path)) %>
       <% end %>
       <%= link_to "Utforska", explore_path, class: class_names("navbar--nav-link", "is-active" => current_page?(explore_path)) %>
-      <% if authenticated? %>
-        <%= link_to "Grupper", groups_path, class: class_names("navbar--nav-link", "is-active" => current_page?(groups_path)) %>
-      <% end %>
     </nav>
 
     <% if authenticated? %>
@@ -61,7 +58,6 @@
         <div class="navbar--drawer-list">
           <%= link_to "Mina recept", recipes_path, class: "navbar--drawer-link" %>
           <%= link_to "Utforska", explore_path, class: "navbar--drawer-link" %>
-          <%= link_to "Grupper", groups_path, class: "navbar--drawer-link" %>
 
           <div class="navbar--drawer-divider"></div>
 

@@ -1,5 +1,4 @@
-<% scopes = [ [ "personal", "Mina samlingar", Current.user.collections.where(group_id: nil), nil ] ] +
-            Current.user.groups.map { |group| [ "group-#{group.id}", group.name, group.collections, group ] } %>
+<% scopes = [ [ "personal", "Mina samlingar", Current.user.collections, nil ] ] %>
 
 <div class="recipe-preview--save-menu" data-dropdown-target="menu" data-save-menu-target="menu" hidden>
   <div class="recipe-preview--scope-list" data-save-menu-target="scopeList">
@@ -31,11 +30,7 @@
         <% end %>
       <% end %>
 
-      <% if group %>
-        <%= link_to "Hantera samlingar", group_collections_path(group), class: "recipe-preview--manage-link" %>
-      <% else %>
-        <%= link_to "Hantera samlingar", collections_path, class: "recipe-preview--manage-link" %>
-      <% end %>
+      <%= link_to "Hantera samlingar", collections_path, class: "recipe-preview--manage-link" %>
     </div>
   <% end %>
 </div>

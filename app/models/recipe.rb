@@ -135,10 +135,12 @@ class Recipe < ApplicationRecord
 
   def visible_to?(user)
     return true unless manual?
+    return true if collections.where(public: true).exists?
     return false unless user
     return true if user == owner
 
-    Membership.exists?(user: user, group_id: collections.where.not(group_id: nil).select(:group_id))
+    # Whether you are the owner or a collaborator of a collection that the recipe is saved in
+    collections.where(user: user).or(collections.where(id: CollectionCollaborator.where(user: user).select(:collection_id))).exists?
   end
 
   # Loops through all the words, find all recipes where the query
