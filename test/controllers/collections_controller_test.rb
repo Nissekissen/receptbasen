@@ -196,6 +196,15 @@ class CollectionsControllerTest < ActionDispatch::IntegrationTest
     assert_select ".collection-show--actions"
   end
 
+  test "the sharing panel is collapsed by default, behind a 'Dela' toggle" do
+    sign_in_as(users(:one))
+
+    get collection_url(collections(:delad_collection))
+
+    assert_select "button.collection-share--toggle[aria-expanded=?]", "false", text: "Dela"
+    assert_select "#collection_share_panel[hidden]"
+  end
+
   test "editor collaborator can view a shared collection's show page, without manage controls" do
     sign_in_as(users(:three))
 

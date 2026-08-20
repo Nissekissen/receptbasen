@@ -12,6 +12,9 @@
         <%= link_to "Samlingar", collections_path, class: class_names("navbar--nav-link", "is-active" => current_page?(collections_path)) %>
       <% end %>
       <%= link_to "Utforska", explore_path, class: class_names("navbar--nav-link", "is-active" => current_page?(explore_path)) %>
+      <% if authenticated? %>
+        <%= link_to "Inköpslista", shopping_list_items_path, class: class_names("navbar--nav-link", "is-active" => current_page?(shopping_list_items_path)) %>
+      <% end %>
     </nav>
 
     <% if authenticated? %>
@@ -31,7 +34,6 @@
 
 
             <div class="navbar--dropdown" data-dropdown-target="menu" hidden>
-            <%= link_to "Inköpslista", shopping_list_items_path, class: "navbar--dropdown-item" %>
             <%= link_to "Profil", profile_path, class: "navbar--dropdown-item" %>
             <%= button_to "Logga ut", session_path, method: :delete, class: "navbar--dropdown-item" %>
             </div>
@@ -59,10 +61,10 @@
           <%= link_to "Mina recept", recipes_path, class: "navbar--drawer-link" %>
           <%= link_to "Samlingar", collections_path, class: "navbar--drawer-link" %>
           <%= link_to "Utforska", explore_path, class: "navbar--drawer-link" %>
+          <%= link_to "Inköpslista", shopping_list_items_path, class: "navbar--drawer-link" %>
 
           <div class="navbar--drawer-divider"></div>
 
-          <%= link_to "Inköpslista", shopping_list_items_path, class: "navbar--drawer-sublink" %>
           <%= link_to "Profil", profile_path, class: "navbar--drawer-sublink" %>
           <%= button_to "Logga ut", session_path, method: :delete, class: "navbar--drawer-sublink" %>
         </div>

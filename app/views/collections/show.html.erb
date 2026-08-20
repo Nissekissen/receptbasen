@@ -72,21 +72,29 @@
     </header>
 
     <% if @can_manage %>
-      <div class="collection-share">
-        <h2 class="collection-share--title">Delning</h2>
+      <div class="collection-share" data-controller="disclosure">
+        <button type="button" class="collection-share--toggle" data-disclosure-target="trigger"
+              aria-expanded="false" aria-controls="collection_share_panel" data-action="click->disclosure#toggle">
+          <%= render "icons/link" %>
+          Dela
+        </button>
 
-        <%= form_with url: search_collection_collaborators_path(@collection), method: :get,
-              class: "collection-share--search",
-              data: { controller: "auto-submit", auto_submit_delay_value: 300, turbo_frame: "collaborator_search_results" } do %>
-          <%= text_field_tag :q, nil, placeholder: "Sök på namn eller användarnamn", autocomplete: "off",
-                class: "collection-share--search-field", data: { action: "input->auto-submit#submit" } %>
-        <% end %>
+        <div id="collection_share_panel" class="collection-share--panel" data-disclosure-target="content" hidden>
+          <h2 class="collection-share--title">Delning</h2>
 
-        <%= turbo_frame_tag "collaborator_search_results", class: "collection-share--results" %>
+          <%= form_with url: search_collection_collaborators_path(@collection), method: :get,
+                class: "collection-share--search",
+                data: { controller: "auto-submit", auto_submit_delay_value: 300, turbo_frame: "collaborator_search_results" } do %>
+            <%= text_field_tag :q, nil, placeholder: "Sök på namn eller användarnamn", autocomplete: "off",
+                  class: "collection-share--search-field", data: { action: "input->auto-submit#submit" } %>
+          <% end %>
 
-        <div id="collection_collaborators" class="collection-share--list">
-          <%= render partial: "collection_collaborators/collection_collaborator",
-                collection: @collection.collection_collaborators.includes(:user), as: :collaborator %>
+          <%= turbo_frame_tag "collaborator_search_results", class: "collection-share--results" %>
+
+          <div id="collection_collaborators" class="collection-share--list">
+            <%= render partial: "collection_collaborators/collection_collaborator",
+                  collection: @collection.collection_collaborators.includes(:user), as: :collaborator %>
+          </div>
         </div>
       </div>
     <% end %>

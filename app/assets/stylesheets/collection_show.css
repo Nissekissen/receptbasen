@@ -95,10 +95,34 @@
 }
 
 .collection-share {
+    margin-bottom: 1.5rem;
+}
+
+.collection-share--toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.02em;
+    color: var(--accent-color);
+    background: white;
+    border: 1px solid var(--accent-color);
+    border-radius: 20px;
+    padding: 8px 14px;
+    cursor: pointer;
+}
+
+.collection-share--toggle svg {
+    width: 14px;
+    height: 14px;
+}
+
+.collection-share--panel {
     background: white;
     border-radius: 12px;
     padding: 1.25rem 1.5rem;
-    margin-bottom: 1.5rem;
+    margin-top: 0.75rem;
 }
 
 .collection-share--title {
