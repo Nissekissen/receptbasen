@@ -33,7 +33,7 @@ class User < ApplicationRecord
       suffix += 1
       candidate = "#{base}#{suffix}"
     end
-    
+
     self.username = candidate
   end
 end
