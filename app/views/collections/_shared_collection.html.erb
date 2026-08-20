@@ -12,6 +12,10 @@
         <span class="collections--role"><%= role_label %></span>
       <% end %>
       <%= link_to "Visa", collection_path(collection), class: "collections--action" %>
+
+      <%= button_to "Lämna", leave_collection_path(collection), method: :delete,
+            class: "collections--action collections--action-delete",
+            form: { data: { turbo_confirm: "Lämna \"#{collection.name}\"? Du tappar tillgång till samlingen." } } %>
     </div>
   </div>
 </div>

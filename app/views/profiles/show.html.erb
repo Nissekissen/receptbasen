@@ -1,5 +1,13 @@
 <section class="auth-flow">
   <div class="auth-flow--card profile-card">
+    <% if flash[:alert] %>
+      <div class="collections--alert"><%= flash[:alert] %></div>
+    <% end %>
+
+    <% if flash[:notice] %>
+      <div class="collections--notice"><%= flash[:notice] %></div>
+    <% end %>
+
     <div class="profile-card--avatar"><%= @user.name.first.upcase %></div>
 
     <h1 class="auth-flow--title"><%= @user.name %></h1>
@@ -9,5 +17,17 @@
       <span class="profile-card--label">Medlem sedan</span>
       <span class="profile-card--value"><%= @user.created_at.strftime("%Y-%m-%d") %></span>
     </div>
+
+    <div class="profile-card--field">
+      <%= form_with model: @user, url: profile_path, method: :patch, class: "profile-card--field-form" do |form| %>
+        <%= form.label :username, "Användarnamn", class: "profile-card--field-label" %>
+        <div class="profile-card--field-row">
+          <%= form.text_field :username, class: "profile-card--field-input" %>
+          <%= form.submit "Spara", class: "profile-card--field-submit" %>
+        </div>
+      <% end %>
+    </div>
+
+    <%= link_to "Visa min publika profil", public_profile_path(@user.username), class: "profile-card--public-link" %>
   </div>
 </section>

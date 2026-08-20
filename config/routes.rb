@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   resources :saved_recipes, only: [ :create, :destroy ]
   resources :users, only: %i[new create]
   resources :collections, only: %i[index show create update destroy] do
+    member { delete :leave }
     resources :collaborators, only: %i[create update destroy], controller: "collection_collaborators" do
       collection do
         get :search
@@ -24,8 +25,9 @@ Rails.application.routes.draw do
       delete :destroy_all
     end
   end
-  resource :profile, only: [ :show ]
-  resource :manual_recipe, only: [ :new, :create ]
+  resource :profile, only: %i[show update]
+  get "u/:username", to: "public_profiles#show", as: :public_profile
+  resource :manual_recipe, only: %i[new create]
   get "home/index"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

@@ -1,5 +1,13 @@
 <section class="collection-show">
   <div class="collection-show--inner">
+    <% if flash[:alert] %>
+      <div class="collections--alert"><%= flash[:alert] %></div>
+    <% end %>
+
+    <% if flash[:notice] %>
+      <div class="collections--notice"><%= flash[:notice] %></div>
+    <% end %>
+
     <header class="collection-show--header">
       <div class="collection-show--info" data-controller="collection-form">
         <div data-collection-form-target="display">
@@ -19,6 +27,13 @@
           </div>
 
           <% if @can_manage %>
+            <%= form_with model: @collection, class: "collection-show--visibility-form", data: { controller: "auto-submit" } do |form| %>
+              <label class="collection-show--visibility-toggle">
+                <%= form.check_box :public, data: { action: "change->auto-submit#submit" } %>
+                Publik samling
+              </label>
+            <% end %>
+
             <% if @collection.locked? %>
               <span class="collections--locked">
                 <%= render "icons/lock" %>
@@ -35,6 +50,12 @@
             <% end %>
           <% else %>
             <p class="collection-show--owner">Skapad av <%= @collection.user.name %></p>
+
+            <% if authenticated? && @collection.collection_collaborators.exists?(user: Current.user) %>
+              <%= button_to "Lämna samlingen", leave_collection_path(@collection), method: :delete,
+                    class: "collections--action collections--action-delete",
+                    form: { data: { turbo_confirm: "Lämna \"#{@collection.name}\"? Du tappar tillgång till samlingen." } } %>
+            <% end %>
           <% end %>
         </div>
 
@@ -77,7 +98,13 @@
         <% @recipes.each do |recipe| %>
           <div class="recipes-index--card-wrap">
             <%= link_to recipe, class: "recipes-index--card" do %>
-              <%= render "recipes/preview_card", recipe: recipe, index_card: true, attribution: @attributions[recipe.id], attribution_show_collection: false %>
+              <%= render "recipes/preview_card", recipe: recipe, index_card: true %>
+            <% end %>
+
+            <% if (attribution = @attributions[recipe.id]) %>
+              <p class="recipes-index--attribution">
+                Sparad av <%= link_to attribution.user.name, public_profile_path(attribution.user.username), class: "recipes-index--attribution-link" %>
+              </p>
             <% end %>
 
             <% if authenticated? %>

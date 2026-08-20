@@ -45,9 +45,9 @@ class CollectionsController < ApplicationController
   # blank name and an attempt to rename "Favoriter".
   def update
     if @collection.update(collection_params)
-      redirect_back fallback_location: collections_path, notice: "Namnet ändrades."
+      redirect_back fallback_location: collections_path, notice: "Ändringarna sparades."
     else
-      redirect_back fallback_location: collections_path, alert: "Det gick inte att byta namn på samlingen."
+      redirect_back fallback_location: collections_path, alert: "Det gick inte att spara ändringarna."
     end
   end
 
@@ -62,6 +62,16 @@ class CollectionsController < ApplicationController
     end
   end
 
+  def leave
+    @collection = Collection.find(params[:id])
+    collaborator = @collection.collection_collaborators.find_by(user: Current.user)
+    raise ActiveRecord::RecordNotFound if collaborator.nil?
+
+    collaborator.destroy
+
+    redirect_to collections_path, notice: "Du lämnade samlingen."
+  end
+
   private
 
   # Scoped through Current.user so one user can't rename/destroy another user's
@@ -72,6 +82,6 @@ class CollectionsController < ApplicationController
   end
 
   def collection_params
-    params.expect(collection: [ :name ])
+    params.expect(collection: [ :name, :public ])
   end
 end
