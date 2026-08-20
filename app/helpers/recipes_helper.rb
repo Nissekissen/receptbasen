@@ -10,7 +10,8 @@ module RecipesHelper
   end
 
   def saved_recipe_lookup(recipe)
-    SavedRecipe.where(recipe: recipe, collection: Current.user.collections).index_by(&:collection_id)
+    collections = Current.user.collections.or(Collection.where(id: Current.user.collection_collaborators.select(:collection_id)))
+    SavedRecipe.where(recipe: recipe, collection: collections).index_by(&:collection_id)
   end
 
   def current_user_note_for(recipe)

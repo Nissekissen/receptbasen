@@ -38,4 +38,20 @@ class UserTest < ActiveSupport::TestCase
     assert_not user.valid?
     assert_includes user.errors[:username], "is invalid"
   end
+
+  test "editable_shared_collections includes collections the user is an editor on" do
+    assert_includes users(:three).editable_shared_collections, collections(:delad_collection)
+  end
+
+  test "editable_shared_collections excludes collections the user is only a viewer on" do
+    assert_not_includes users(:two).editable_shared_collections, collections(:delad_collection)
+  end
+
+  test "editable_shared_collections excludes the user's own collections" do
+    assert_not_includes users(:one).editable_shared_collections, collections(:delad_collection)
+  end
+
+  test "editable_shared_collections is empty for a user with no collaborations" do
+    assert_empty users(:four).editable_shared_collections
+  end
 end

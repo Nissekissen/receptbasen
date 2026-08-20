@@ -45,9 +45,9 @@ class CollectionsController < ApplicationController
   # blank name and an attempt to rename "Favoriter".
   def update
     if @collection.update(collection_params)
-      redirect_to collections_path, notice: "Namnet ändrades."
+      redirect_back fallback_location: collections_path, notice: "Namnet ändrades."
     else
-      redirect_to collections_path, alert: "Det gick inte att byta namn på samlingen."
+      redirect_back fallback_location: collections_path, alert: "Det gick inte att byta namn på samlingen."
     end
   end
 

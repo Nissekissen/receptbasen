@@ -153,6 +153,29 @@
 
 .collections--new {
     margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.collections--new > button {
+    align-self: start
+}
+
+.collections--subtitle {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 1.15rem;
+    color: var(--accent-color-dark);
+    margin: 2rem 0 0.75rem;
+}
+
+.collections--role {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: #8a8a86;
 }
 
 @media (max-width: 480px) {

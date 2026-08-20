@@ -1,36 +1,19 @@
-<% scopes = [ [ "personal", "Mina samlingar", Current.user.collections, nil ] ] %>
 
 <div class="recipe-preview--save-menu" data-dropdown-target="menu" data-save-menu-target="menu" hidden>
-  <div class="recipe-preview--scope-list" data-save-menu-target="scopeList">
-    <% scopes.each do |scope_id, label, _collections| %>
-      <button type="button" class="recipe-preview--scope-row" data-action="click->save-menu#showCollections" data-save-menu-scope-param="<%= scope_id %>">
-        <%= label %>
-        <span aria-hidden="true">&rsaquo;</span>
-      </button>
+  <% collections = Current.user.collections + Current.user.editable_shared_collections %>
+  <% collections.each do |collection| %>
+    <% saved_recipe = saved[collection.id] %>
+
+    <%= form_with url: toggle_saved_recipe_path, method: :post, class: "recipe-preview--save-option", data: { controller: "auto-submit" } do |form| %>
+      <%= form.hidden_field :recipe_id, value: recipe.id %>
+      <%= form.hidden_field :collection_id, value: collection.id %>
+
+      <label>
+        <%= check_box_tag "collection_#{collection.id}", "1", saved_recipe.present?, data: { action: "change->auto-submit#submit change->save-menu#refresh", save_menu_target: "checkbox" } %>
+        <%= collection.name %>
+      </label>
     <% end %>
-  </div>
-
-  <% scopes.each do |scope_id, label, collections, group| %>
-    <div class="recipe-preview--collection-panel" data-save-menu-target="collectionPanel" data-scope="<%= scope_id %>" hidden>
-      <button type="button" class="recipe-preview--back-row" data-action="click->save-menu#showScopes">
-        <span aria-hidden="true">&lsaquo;</span> <%= label %>
-      </button>
-
-      <% collections.each do |collection| %>
-        <% saved_recipe = saved[collection.id] %>
-
-        <%= form_with url: toggle_saved_recipe_path, method: :post, class: "recipe-preview--save-option", data: { controller: "auto-submit" } do |form| %>
-          <%= form.hidden_field :recipe_id, value: recipe.id %>
-          <%= form.hidden_field :collection_id, value: collection.id %>
-
-          <label>
-            <%= check_box_tag "collection_#{collection.id}", "1", saved_recipe.present?, data: { action: "change->auto-submit#submit change->save-menu#refresh", save_menu_target: "checkbox" } %>
-            <%= collection.name %>
-          </label>
-        <% end %>
-      <% end %>
-
-      <%= link_to "Hantera samlingar", collections_path, class: "recipe-preview--manage-link" %>
-    </div>
   <% end %>
+
+  <%= link_to "Hantera samlingar", collections_path, class: "recipe-preview--manage-link" %>
 </div>

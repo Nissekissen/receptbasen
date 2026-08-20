@@ -1,0 +1,207 @@
+.collection-show {
+    padding: 7rem 2.5rem 4rem;
+    min-height: 100vh;
+    background: var(--background-color);
+}
+
+.collection-show--inner {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.collection-show--header {
+    margin-bottom: 1.5rem;
+}
+
+.collection-show--heading {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.6rem;
+}
+
+.collection-show--title {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: clamp(1.5rem, 3vw + 1rem, 2rem);
+    color: var(--accent-color-dark);
+    margin: 0;
+}
+
+.collection-show--badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--accent-color-dark);
+    border: 1px solid var(--accent-color);
+    padding: 5px 12px;
+    border-radius: 20px;
+}
+
+.collection-show--role {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: #8a8a86;
+    background: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+}
+
+.collection-show--owner {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: #8a8a86;
+    margin: 0;
+}
+
+.collection-show--actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.collection-show--rename-form {
+    margin-top: 0.75rem;
+}
+
+.collection-show--placeholder {
+    font-family: var(--font-sans);
+    color: #8a8a86;
+    background: white;
+    border-radius: 12px;
+    padding: 3rem 1.5rem;
+    text-align: center;
+}
+
+.collection-share {
+    background: white;
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.collection-share--title {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 1.1rem;
+    color: var(--accent-color-dark);
+    margin: 0 0 1rem;
+}
+
+.collection-share--search {
+    margin-bottom: 0.25rem;
+}
+
+.collection-share--search-field {
+    width: 100%;
+    box-sizing: border-box;
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    color: var(--accent-color-dark);
+    background: var(--background-color);
+    border: 1px solid var(--accent-color);
+    border-radius: 3px;
+    padding: 9px 12px;
+    outline: none;
+}
+
+.collection-share--row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #ece7da;
+}
+
+.collection-share--list .collection-share--row:last-child,
+.collection-share--results .collection-share--row:last-child {
+    border-bottom: none;
+}
+
+.collection-share--name {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    color: var(--accent-color-dark);
+}
+
+.collection-share--username {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: #8a8a86;
+}
+
+.collection-share--row-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.collection-share--role-form {
+    display: inline;
+}
+
+.collection-share--role-select {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent-color-dark);
+    background: white;
+    border: 1px solid var(--accent-color);
+    border-radius: 20px;
+    padding: 4px 8px;
+    cursor: pointer;
+}
+
+.collection-share--remove-form,
+.collection-share--add-form {
+    display: inline;
+    margin: 0;
+}
+
+.collection-share--remove,
+.collection-share--add {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.02em;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.collection-share--remove {
+    color: #a94442;
+}
+
+.collection-share--add {
+    color: var(--accent-color);
+    flex-shrink: 0;
+}
+
+.collection-share--empty {
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    color: #8a8a86;
+    margin: 0.5rem 0 0;
+}
+
+@media (max-width: 480px) {
+    .collection-show {
+        padding: 6rem 1.25rem 3rem;
+    }
+
+    .collection-share--row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

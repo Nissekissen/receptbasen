@@ -13,7 +13,7 @@
         </span>
       <% end %>
 
-      <%= link_to "Visa", recipes_path(collection_id: collection.id), class: "collections--action" %>
+      <%= link_to "Visa", collection_path(collection), class: "collections--action" %>
 
       <% unless collection.locked? %>
         <button type="button" class="collections--action" data-action="click->collection-form#show">Byt namn</button>

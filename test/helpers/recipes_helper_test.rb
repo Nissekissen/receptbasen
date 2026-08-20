@@ -163,4 +163,30 @@ class RecipesHelperTest < ActionView::TestCase
     recipe = Recipe.new(servings: "Efter smak")
     assert_nil recipe_base_servings(recipe)
   end
+
+  test "saved_recipe_lookup includes saves in the current user's own collections" do
+    Current.session = users(:one).sessions.create!
+
+    lookup = saved_recipe_lookup(recipes(:pannkakor))
+
+    assert_includes lookup.keys, collections(:vardagsmat).id
+  end
+
+  test "saved_recipe_lookup includes saves in collections the user collaborates on" do
+    saved_recipe = SavedRecipe.create!(user: users(:one), collection: collections(:delad_collection), recipe: recipes(:pannkakor))
+    Current.session = users(:two).sessions.create!
+
+    lookup = saved_recipe_lookup(recipes(:pannkakor))
+
+    assert_equal saved_recipe, lookup[collections(:delad_collection).id]
+  end
+
+  test "saved_recipe_lookup does not include saves in collections the user has no relationship to" do
+    SavedRecipe.create!(user: users(:one), collection: collections(:delad_collection), recipe: recipes(:pannkakor))
+    Current.session = users(:four).sessions.create!
+
+    lookup = saved_recipe_lookup(recipes(:pannkakor))
+
+    assert_not_includes lookup.keys, collections(:delad_collection).id
+  end
 end

@@ -1,0 +1,14 @@
+<div id="<%= dom_id(collaborator) %>" class="collection-share--row">
+  <span class="collection-share--name"><%= collaborator.user.name %></span>
+
+  <div class="collection-share--row-actions">
+    <%= form_with url: collection_collaborator_path(@collection, collaborator), method: :patch,
+          class: "collection-share--role-form", data: { controller: "auto-submit" } do %>
+      <%= select_tag :role, options_for_select([ [ "Visa", "viewer" ], [ "Redigera", "editor" ] ], collaborator.role),
+            class: "collection-share--role-select", data: { action: "change->auto-submit#submit" } %>
+    <% end %>
+
+    <%= button_to "Ta bort", collection_collaborator_path(@collection, collaborator), method: :delete,
+          class: "collection-share--remove", form: { class: "collection-share--remove-form" } %>
+  </div>
+</div>

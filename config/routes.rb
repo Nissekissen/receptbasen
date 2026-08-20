@@ -12,7 +12,13 @@ Rails.application.routes.draw do
   end
   resources :saved_recipes, only: [ :create, :destroy ]
   resources :users, only: %i[new create]
-  resources :collections, only: %i[index show create update destroy]
+  resources :collections, only: %i[index show create update destroy] do
+    resources :collaborators, only: %i[create update destroy], controller: "collection_collaborators" do
+      collection do
+        get :search
+      end
+    end
+  end
   resources :shopping_list_items, only: %i[index create update destroy], path: "shopping-list" do
     collection do
       delete :destroy_all

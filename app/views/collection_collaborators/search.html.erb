@@ -1,0 +1,3 @@
+<%= turbo_frame_tag "collaborator_search_results" do %>
+  <%= render "collection_collaborators/search_results", users: @users, query: params[:q].to_s.strip %>
+<% end %>

@@ -1,0 +1,2 @@
+<%= turbo_stream.append "collection_collaborators", partial: "collection_collaborators/collection_collaborator", locals: { collaborator: @collaborator } %>
+<%= turbo_stream.update "collaborator_search_results", "" %>

@@ -7,10 +7,15 @@ class User < ApplicationRecord
   has_many :shopping_list_items
   has_many :personal_recipe_notes
   has_many :cook_logs
+  has_many :collection_collaborators
 
   normalizes :email_address, with: ->(e) { e.strip.downcase }
   normalizes :username, with: ->(u) { u.strip.downcase }
 
   validates :name, presence: true
   validates :username, presence: true, uniqueness: true, format: { with: /\A[a-z0-9_]+\z/ }
+
+  def editable_shared_collections
+    Collection.where(id: collection_collaborators.editor.select(:collection_id))
+  end
 end
