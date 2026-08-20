@@ -1,0 +1,21 @@
+<div class="collections--row">
+  <div class="collections--row-display">
+    <div class="collections--meta">
+      <p class="collections--name"><%= collection.name %></p>
+      <span class="collections--count">
+        <%= collection_count_label(collection) %> &middot; <%= collection.user.name %>
+      </span>
+    </div>
+
+    <div class="collections--actions">
+      <% if (role_label = collection_role_label(collection)) && role_label != "Visa" %>
+        <span class="collections--role"><%= role_label %></span>
+      <% end %>
+      <%= link_to "Visa", collection_path(collection), class: "collections--action" %>
+
+      <%= button_to "Lämna", leave_collection_path(collection), method: :delete,
+            class: "collections--action collections--action-delete",
+            form: { data: { turbo_confirm: "Lämna \"#{collection.name}\"? Du tappar tillgång till samlingen." } } %>
+    </div>
+  </div>
+</div>

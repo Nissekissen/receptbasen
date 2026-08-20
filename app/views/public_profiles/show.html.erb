@@ -1,0 +1,45 @@
+<section class="public-profile">
+  <div class="public-profile--inner">
+    <header class="public-profile--header">
+      <div class="profile-card--avatar public-profile--avatar"><%= @user.name.first.upcase %></div>
+
+      <div class="public-profile--identity">
+        <div class="public-profile--name-row">
+          <h1 class="public-profile--name"><%= @user.name %></h1>
+          <span class="public-profile--handle">@<%= @user.username %></span>
+        </div>
+
+        <p class="public-profile--meta">
+          Medlem sedan <%= @user.created_at.strftime("%Y-%m-%d") %>
+          &middot; <%= pluralize(@public_collections.size, "publik samling", plural: "publika samlingar") %>
+        </p>
+      </div>
+
+      <% if authenticated? && Current.user == @user %>
+        <%= link_to "Redigera profil", profile_path, class: "public-profile--edit-link" %>
+      <% end %>
+    </header>
+
+    <h2 class="public-profile--section-title">Publika samlingar</h2>
+
+    <% if @public_collections.any? %>
+      <div class="public-profile--grid">
+        <% @public_collections.each do |collection| %>
+          <%= link_to collection_path(collection), class: "public-profile--card" do %>
+            <div class="public-profile--card-cover"></div>
+            <div class="public-profile--card-body">
+              <p class="public-profile--card-name"><%= collection.name %></p>
+              <span class="public-profile--card-count"><%= collection_count_label(collection) %></span>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    <% elsif authenticated? && Current.user == @user %>
+      <p class="public-profile--empty">
+        Du har inga publika samlingar än. Öppna en av <%= link_to "dina samlingar", collections_path, class: "public-profile--empty-link" %> och gör den publik för att visa den här.
+      </p>
+    <% else %>
+      <p class="public-profile--empty"><%= @user.name %> har inga publika samlingar än.</p>
+    <% end %>
+  </div>
+</section>

@@ -40,20 +40,26 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
-  test "shows a manual recipe to a fellow group member once it's saved in a group collection" do
-    sign_in_as(users(:one))
+  test "shows a manual recipe to a collaborator once it's saved in a shared collection" do
+    sign_in_as(users(:two))
 
-    get recipe_url(recipes(:manual_recipe_in_group))
+    get recipe_url(recipes(:manual_recipe_collab_shared))
 
     assert_response :success
   end
 
-  test "404s a manual recipe saved in a group collection for a user outside that group" do
-    sign_in_as(users(:three))
+  test "404s a manual recipe saved in a shared collection for a user with no relationship to it" do
+    sign_in_as(users(:four))
 
-    get recipe_url(recipes(:manual_recipe_in_group))
+    get recipe_url(recipes(:manual_recipe_collab_shared))
 
     assert_response :not_found
+  end
+
+  test "shows a manual recipe in a public collection to an anonymous visitor" do
+    get recipe_url(recipes(:manual_recipe_shared))
+
+    assert_response :success
   end
 
   test "redirects to the existing recipe instead of creating a duplicate" do
@@ -125,24 +131,6 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select ".recipe-preview--title", text: "Pannkakor"
     assert_select ".recipe-preview--title", text: "Mormors köttbullar", count: 0
-  end
-
-  test "the collection filter does not include group collections, even ones the user created" do
-    sign_in_as(users(:one))
-
-    get recipes_url
-
-    assert_response :success
-    assert_select "option", text: "Grillrecept", count: 0
-  end
-
-  test "the post-parse collection picker does not include group collections" do
-    sign_in_as(users(:one))
-
-    get recipe_url(recipes(:parsed_unpublished_recipe))
-
-    assert_response :success
-    assert_select "option", text: "Grillrecept", count: 0
   end
 
   test "requires authentication to extract tags" do

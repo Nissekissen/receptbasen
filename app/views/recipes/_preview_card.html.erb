@@ -22,12 +22,6 @@
   <div class="recipe-preview--body">
     <p class="recipe-preview--title"><%= local_assigns[:truncate_title] ? truncate(recipe.title, length: truncate_title) : recipe.title %></p>
 
-    <% if local_assigns[:attribution] %>
-      <p class="recipe-preview--attribution" >
-        Sparad av <%= attribution.user.name %> i <%= attribution.collection.name %>
-      </p>
-    <% end %>
-
     <% if local_assigns[:index_card] && recipe.source_domain.present? %>
       <p class="recipe-preview--source"><%= recipe.source_domain %></p>
     <% end %>

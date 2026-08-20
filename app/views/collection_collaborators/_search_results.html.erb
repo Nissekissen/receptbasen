@@ -1,0 +1,15 @@
+<% if users.any? %>
+  <% users.each do |user| %>
+    <div class="collection-share--row">
+      <span class="collection-share--name">
+        <%= user.name %>
+        <span class="collection-share--username">@<%= user.username %></span>
+      </span>
+
+      <%= button_to "Lägg till", collection_collaborators_path(@collection), params: { user_id: user.id },
+            class: "collection-share--add", form: { class: "collection-share--add-form" } %>
+    </div>
+  <% end %>
+<% elsif query.length >= 2 %>
+  <p class="collection-share--empty">Inga användare hittades.</p>
+<% end %>

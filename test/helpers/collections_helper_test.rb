@@ -35,4 +35,24 @@ class CollectionsHelperTest < ActionView::TestCase
       collection_delete_confirm(collection)
     )
   end
+
+  test "collection_role_label is Ägare for the owner" do
+    assert_equal "Ägare", collection_role_label(collections(:delad_collection), users(:one))
+  end
+
+  test "collection_role_label is Redigera for an editor collaborator" do
+    assert_equal "Redigera", collection_role_label(collections(:delad_collection), users(:three))
+  end
+
+  test "collection_role_label is Visa for a viewer collaborator" do
+    assert_equal "Visa", collection_role_label(collections(:delad_collection), users(:two))
+  end
+
+  test "collection_role_label is nil for a user with no relationship to the collection" do
+    assert_nil collection_role_label(collections(:delad_collection), users(:four))
+  end
+
+  test "collection_role_label is nil for a nil user" do
+    assert_nil collection_role_label(collections(:delad_collection), nil)
+  end
 end

@@ -1,0 +1,11 @@
+# Viewer on delad_collection (owned by one) — can see, cannot add/remove recipes.
+two_viewer_on_delad:
+  collection: delad_collection
+  user: two
+  role: viewer
+
+# Editor on delad_collection (owned by one) — can see and add/remove recipes.
+three_editor_on_delad:
+  collection: delad_collection
+  user: three
+  role: editor

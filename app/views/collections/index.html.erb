@@ -11,7 +11,7 @@
     <% end %>
 
     <div class="collections--card">
-      <%= render @collections %>
+      <%= render @owned %>
     </div>
 
     <div class="collections--new" data-controller="collection-form">
@@ -28,5 +28,13 @@
         <% end %>
       </div>
     </div>
+
+    <% if @shared_with_me.any? %>
+      <h2 class="collections--subtitle">Delade med mig</h2>
+
+      <div class="collections--card">
+        <%= render partial: "shared_collection", collection: @shared_with_me, as: :collection %>
+      </div>
+    <% end %>
   </div>
 </section>

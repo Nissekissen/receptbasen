@@ -12,22 +12,22 @@ Rails.application.routes.draw do
   end
   resources :saved_recipes, only: [ :create, :destroy ]
   resources :users, only: %i[new create]
-  resources :collections, only: %i[index create update destroy]
-  resources :groups, only: %i[index new create show edit update destroy] do
-    member do
-      post :join
+  resources :collections, only: %i[index show create update destroy] do
+    member { delete :leave }
+    resources :collaborators, only: %i[create update destroy], controller: "collection_collaborators" do
+      collection do
+        get :search
+      end
     end
-    resources :collections, only: %i[index create update destroy], controller: "group_collections"
-    resources :memberships, only: %i[index update destroy], controller: "group_memberships"
-    resources :invites, only: %i[index new create destroy], controller: "group_invites"
   end
   resources :shopping_list_items, only: %i[index create update destroy], path: "shopping-list" do
     collection do
       delete :destroy_all
     end
   end
-  resource :profile, only: [ :show ]
-  resource :manual_recipe, only: [ :new, :create ]
+  resource :profile, only: %i[show update]
+  get "u/:username", to: "public_profiles#show", as: :public_profile
+  resource :manual_recipe, only: %i[new create]
   get "home/index"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -48,8 +48,6 @@ Rails.application.routes.draw do
   get "login", to: "sessions#new", as: :login
 
   get "signup", to: "users#new", as: :signup
-
-  get "/invite/:token", to: "invites#show", as: :invite
 
   post "saved_recipes/toggle", to: "saved_recipes#toggle", as: :toggle_saved_recipe
 end

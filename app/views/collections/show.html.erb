@@ -1,0 +1,137 @@
+<section class="collection-show">
+  <div class="collection-show--inner">
+    <% if flash[:alert] %>
+      <div class="collections--alert"><%= flash[:alert] %></div>
+    <% end %>
+
+    <% if flash[:notice] %>
+      <div class="collections--notice"><%= flash[:notice] %></div>
+    <% end %>
+
+    <header class="collection-show--header">
+      <div class="collection-show--info" data-controller="collection-form">
+        <div data-collection-form-target="display">
+          <div class="collection-show--heading">
+            <h1 class="collection-show--title"><%= @collection.name %></h1>
+
+            <span class="collection-show--badge">
+              <% unless @collection.public? %>
+                <%= render "icons/lock" %>
+              <% end %>
+              <%= @collection.public? ? "PUBLIK" : "PRIVAT" %>
+            </span>
+
+            <% if (role_label = collection_role_label(@collection)) && role_label != "Visa" %>
+              <span class="collection-show--role"><%= role_label %></span>
+            <% end %>
+          </div>
+
+          <% if @can_manage %>
+            <%= form_with model: @collection, class: "collection-show--visibility-form", data: { controller: "auto-submit" } do |form| %>
+              <label class="collection-show--visibility-toggle">
+                <%= form.check_box :public, data: { action: "change->auto-submit#submit" } %>
+                Publik samling
+              </label>
+            <% end %>
+
+            <% if @collection.locked? %>
+              <span class="collections--locked">
+                <%= render "icons/lock" %>
+                Låst
+              </span>
+            <% else %>
+              <div class="collection-show--actions">
+                <button type="button" class="collections--action" data-action="click->collection-form#show">Byt namn</button>
+
+                <%= button_to "Ta bort", collection_path(@collection), method: :delete,
+                      class: "collections--action collections--action-delete",
+                      form: { class: "collections--delete-form", data: { turbo_confirm: collection_delete_confirm(@collection) } } %>
+              </div>
+            <% end %>
+          <% else %>
+            <p class="collection-show--owner">Skapad av <%= @collection.user.name %></p>
+
+            <% if authenticated? && @collection.collection_collaborators.exists?(user: Current.user) %>
+              <%= button_to "Lämna samlingen", leave_collection_path(@collection), method: :delete,
+                    class: "collections--action collections--action-delete",
+                    form: { data: { turbo_confirm: "Lämna \"#{@collection.name}\"? Du tappar tillgång till samlingen." } } %>
+            <% end %>
+          <% end %>
+        </div>
+
+        <% if @can_manage && !@collection.locked? %>
+          <div class="collection-show--rename-form" data-collection-form-target="form" hidden>
+            <%= form_with model: @collection, class: "collections--form" do |form| %>
+              <%= form.text_field :name, class: "collections--field", data: { collection_form_target: "field" } %>
+              <%= form.submit "Spara", class: "collections--submit" %>
+              <button type="button" class="collections--action" data-action="click->collection-form#hide">Avbryt</button>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </header>
+
+    <% if @can_manage %>
+      <div class="collection-share" data-controller="disclosure">
+        <button type="button" class="collection-share--toggle" data-disclosure-target="trigger"
+              aria-expanded="false" aria-controls="collection_share_panel" data-action="click->disclosure#toggle">
+          <%= render "icons/link" %>
+          Dela
+        </button>
+
+        <div id="collection_share_panel" class="collection-share--panel" data-disclosure-target="content" hidden>
+          <h2 class="collection-share--title">Delning</h2>
+
+          <%= form_with url: search_collection_collaborators_path(@collection), method: :get,
+                class: "collection-share--search",
+                data: { controller: "auto-submit", auto_submit_delay_value: 300, turbo_frame: "collaborator_search_results" } do %>
+            <%= text_field_tag :q, nil, placeholder: "Sök på namn eller användarnamn", autocomplete: "off",
+                  class: "collection-share--search-field", data: { action: "input->auto-submit#submit" } %>
+          <% end %>
+
+          <%= turbo_frame_tag "collaborator_search_results", class: "collection-share--results" %>
+
+          <div id="collection_collaborators" class="collection-share--list">
+            <%= render partial: "collection_collaborators/collection_collaborator",
+                  collection: @collection.collection_collaborators.includes(:user), as: :collaborator %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <%= render "recipes/filter_bar", url: collection_path(@collection), collection_filter: false, manage_path: nil %>
+
+    <% if @recipes.any? %>
+      <div class="recipes-index--grid">
+        <% @recipes.each do |recipe| %>
+          <div class="recipes-index--card-wrap">
+            <%= link_to recipe, class: "recipes-index--card" do %>
+              <%= render "recipes/preview_card", recipe: recipe, index_card: true %>
+            <% end %>
+
+            <% if (attribution = @attributions[recipe.id]) %>
+              <p class="recipes-index--attribution">
+                Sparad av <%= link_to attribution.user.name, public_profile_path(attribution.user.username), class: "recipes-index--attribution-link" %>
+              </p>
+            <% end %>
+
+            <% if authenticated? %>
+              <% saved = saved_recipe_lookup(recipe) %>
+              <div class="recipe-preview--save-wrap" data-controller="dropdown save-menu">
+                <button type="button" class="recipe-preview--save" data-action="click->dropdown#toggle" data-save-menu-target="trigger" aria-label="Spara">
+                  <%= render "icons/bookmark", filled: saved.any? %>
+                </button>
+
+                <%= render "recipes/save_menu", recipe: recipe, saved: saved %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    <% elsif active_recipe_filters(collections: Collection.none).any? %>
+      <p class="recipes-index--empty">Inga recept matchar filtren.</p>
+    <% else %>
+      <p class="collection-show--placeholder">Inga recept sparade här ännu.</p>
+    <% end %>
+  </div>
+</section>

@@ -1,13 +1,33 @@
 class CollectionsController < ApplicationController
   before_action :set_collection, only: %i[update destroy]
+  allow_unauthenticated_access only: %i[show]
 
   def index
-    @collections = Current.user.collections
-                                .where(group_id: nil)
+    @owned = Current.user.collections
                                 .left_joins(:saved_recipes)
                                 .select("collections.*, COUNT(saved_recipes.id) AS recipes_count")
                                 .group(:id)
                                 .order(locked: :desc, name: :asc)
+    @shared_with_me = Collection.joins(:collection_collaborators).where(collection_collaborators: { user: Current.user })
+  end
+
+  def show
+    @collection = Collection.find(params[:id])
+    raise ActiveRecord::RecordNotFound unless @collection.accessible_to?(authenticated? ? Current.user : nil)
+
+    @recipes = @collection.recipes
+    @recipes = @recipes.where(id: Tagging.where(tag_id: params[:maltidstyp_tag_id]).select(:recipe_id)) if params[:maltidstyp_tag_id].present?
+    @recipes = @recipes.where(id: Tagging.where(tag_id: params[:kok_tag_id]).select(:recipe_id)) if params[:kok_tag_id].present?
+    @recipes = @recipes.where(id: Tagging.where(tag_id: params[:kost_tag_id]).select(:recipe_id)) if params[:kost_tag_id].present?
+
+    @maltidstyp_tags = Tag.maltidstyp.order(:name)
+    @kok_tags = Tag.kok.order(:name)
+    @kost_tags = Tag.kost.order(:name)
+
+    @can_manage = authenticated? && @collection.owned_by?(Current.user)
+    @can_edit   = authenticated? && @collection.editable_by?(Current.user)
+
+    @attributions = SavedRecipe.where(collection: @collection).includes(:user).index_by(&:recipe_id)
   end
 
   def create
@@ -25,9 +45,9 @@ class CollectionsController < ApplicationController
   # blank name and an attempt to rename "Favoriter".
   def update
     if @collection.update(collection_params)
-      redirect_to collections_path, notice: "Namnet ändrades."
+      redirect_back fallback_location: collections_path, notice: "Ändringarna sparades."
     else
-      redirect_to collections_path, alert: "Det gick inte att byta namn på samlingen."
+      redirect_back fallback_location: collections_path, alert: "Det gick inte att spara ändringarna."
     end
   end
 
@@ -42,22 +62,26 @@ class CollectionsController < ApplicationController
     end
   end
 
+  def leave
+    @collection = Collection.find(params[:id])
+    collaborator = @collection.collection_collaborators.find_by(user: Current.user)
+    raise ActiveRecord::RecordNotFound if collaborator.nil?
+
+    collaborator.destroy
+
+    redirect_to collections_path, notice: "Du lämnade samlingen."
+  end
+
   private
 
-  # Scoped through Current.user and group_id: nil so one user can't touch another
-  # user's collections — and, just as importantly, so a group collection can't be
-  # renamed/destroyed here at all, even by the member who happened to create it.
-  # Collection#user_id records who created the row for accountability, not
-  # personal ownership; a group's collections must always go through
-  # GroupCollectionsController, which re-checks *current* manager status on every
-  # request, rather than this controller's "did I create it" check, which would
-  # otherwise still let someone who's since been demoted or removed from the
-  # group keep managing its collections forever.
+  # Scoped through Current.user so one user can't rename/destroy another user's
+  # collection — Collection#user_id is unambiguous ownership now that collections
+  # are never group-owned, so this scope alone is sufficient authorization.
   def set_collection
-    @collection = Current.user.collections.where(group_id: nil).find(params[:id])
+    @collection = Current.user.collections.find(params[:id])
   end
 
   def collection_params
-    params.expect(collection: [ :name ])
+    params.expect(collection: [ :name, :public ])
   end
 end

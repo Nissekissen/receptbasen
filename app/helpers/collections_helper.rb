@@ -12,4 +12,17 @@ module CollectionsHelper
     recipes = count == 1 ? "1 sparat recept" : "#{count} sparade recept"
     "Ta bort \"#{collection.name}\" och #{recipes} i den? Recepten finns kvar i Receptbasen, men du behöver spara dem igen."
   end
+
+  # nil for a public collection viewed anonymously/by an unrelated user — there's
+  # no relationship to label in that case, as opposed to owner/editor/viewer which
+  # always describes a real relationship between the given user and the collection.
+  def collection_role_label(collection, user = Current.user)
+    return nil unless user
+    return "Ägare" if collection.owned_by?(user)
+
+    collaborator = collection.collection_collaborators.find_by(user: user)
+    return nil unless collaborator
+
+    collaborator.editor? ? "Redigera" : "Visa"
+  end
 end

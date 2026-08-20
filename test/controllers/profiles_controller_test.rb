@@ -13,4 +13,22 @@ class ProfilesControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
   end
+
+  test "updates the current user's username" do
+    sign_in_as(users(:one))
+
+    patch profile_url, params: { user: { username: "alice2" } }
+
+    assert_redirected_to profile_path
+    assert_equal "alice2", users(:one).reload.username
+  end
+
+  test "rejects a duplicate username" do
+    sign_in_as(users(:one))
+
+    patch profile_url, params: { user: { username: users(:two).username } }
+
+    assert_redirected_to profile_path
+    assert_not_equal users(:two).username, users(:one).reload.username
+  end
 end

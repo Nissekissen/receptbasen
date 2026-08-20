@@ -35,10 +35,20 @@ kottbullar:
   status: done
   published_at: <%= 1.day.ago %>
 
-# A manual recipe owned by a group member (not the group's owner), saved into
-# a group's collection — exercises Recipe#visible_to?'s group-membership branch.
-manual_recipe_in_group:
+# A manual recipe saved into a public collection (see saved_recipes.yml) —
+# exercises Recipe#visible_to?'s public-collection branch, including for an
+# anonymous (nil) visitor.
+manual_recipe_shared:
   owner: two
   title: Farmors kanelbullar
+  status: done
+  published_at: <%= 1.day.ago %>
+
+# A manual recipe saved into a private, collaborator-shared collection (see
+# saved_recipes.yml/collection_collaborators.yml) — exercises
+# Recipe#visible_to?'s collaborator branch, distinct from ownership.
+manual_recipe_collab_shared:
+  owner: one
+  title: Mormors ärtsoppa
   status: done
   published_at: <%= 1.day.ago %>

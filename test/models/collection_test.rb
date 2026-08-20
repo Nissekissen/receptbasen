@@ -60,11 +60,47 @@ class CollectionTest < ActiveSupport::TestCase
     assert_not collections(:vardagsmat).accessible_to?(nil)
   end
 
-  test "accessible_to? is true for a fellow group member on a group collection" do
-    assert collections(:private_group_favoriter).accessible_to?(users(:three))
+  test "accessible_to? is true for a public collection, even for an unrelated user" do
+    assert collections(:public_collection).accessible_to?(users(:four))
   end
 
-  test "accessible_to? is false for a user outside the collection's group" do
-    assert_not collections(:public_group_favoriter).accessible_to?(users(:three))
+  test "accessible_to? is true for a public collection, even for a nil user" do
+    assert collections(:public_collection).accessible_to?(nil)
+  end
+
+  test "accessible_to? is true for a viewer collaborator" do
+    assert collections(:delad_collection).accessible_to?(users(:two))
+  end
+
+  test "accessible_to? is true for an editor collaborator" do
+    assert collections(:delad_collection).accessible_to?(users(:three))
+  end
+
+  test "accessible_to? is false for a user with no relationship to a private collection" do
+    assert_not collections(:delad_collection).accessible_to?(users(:four))
+  end
+
+  test "editable_by? is true for the owner" do
+    assert collections(:delad_collection).editable_by?(users(:one))
+  end
+
+  test "editable_by? is true for an editor collaborator" do
+    assert collections(:delad_collection).editable_by?(users(:three))
+  end
+
+  test "editable_by? is false for a viewer collaborator" do
+    assert_not collections(:delad_collection).editable_by?(users(:two))
+  end
+
+  test "editable_by? is false for a nil user" do
+    assert_not collections(:delad_collection).editable_by?(nil)
+  end
+
+  test "owned_by? is true for the owner" do
+    assert collections(:delad_collection).owned_by?(users(:one))
+  end
+
+  test "owned_by? is false for a collaborator" do
+    assert_not collections(:delad_collection).owned_by?(users(:three))
   end
 end
