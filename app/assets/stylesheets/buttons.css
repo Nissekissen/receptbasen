@@ -14,42 +14,42 @@
 }
 
 .btn--primary {
-    background-color: var(--accent-color);
-    color: white;
+    background-color: var(--color-accent);
+    color: var(--color-on-accent);
 }
 
 .btn--primary:hover {
-    background-color: var(--accent-color-dark);
+    background-color: var(--color-accent-hover);
 }
 
 .btn--secondary.inverted {
     background: none;
-    color: white;
-    border: 1px solid white;
+    color: var(--color-on-dark);
+    border: 1px solid var(--color-on-dark);
 }
 
 .btn--secondary.inverted:hover {
-    background-color: var(--accent-transparent);
-    color: white;
+    background-color: var(--color-invert-hover);
+    color: var(--color-on-dark);
 }
 
 
 .btn--secondary {
     background: none;
-    color: var(--accent-color);
-    border: 1px solid var(--accent-color);
+    color: var(--color-accent);
+    border: 1px solid var(--color-accent);
 }
 .btn--secondary:hover {
-    background-color: var(--accent-color);
-    color: white;
+    background-color: var(--color-accent);
+    color: var(--color-on-accent);
 }
 
 .btn--spinner {
     display: inline-block;
     width: 13px;
     height: 13px;
-    border: 2px solid var(--accent-color-light);
-    border-top-color: var(--accent-color-dark);
+    border: 2px solid var(--color-accent-soft);
+    border-top-color: var(--color-accent-hover);
     border-radius: 50%;
     animation: recipe-spin 0.8s linear infinite;
     margin-right: 6px;

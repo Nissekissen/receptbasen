@@ -11,19 +11,127 @@
 
 
 :root {
-    --accent-color: #33492F;
-    --accent-color-dark: #233021;
-    --accent-color-light: #D9E4C9;
-    --accent-transparent: rgba(251, 247, 238, 0.14);
-    --ink: #252B22;
-    --parchment: #F5EFDD;
-    --accent-half-transparent: #33492f80;
+    /* Primitives — the raw scales. Nothing outside this block should ever
+       reference these directly; components use the semantic layer below. */
+    --accent-1: #E2EBE0;
+    --accent-2: #B8CFB4;
+    --accent-3: #33492F;
+    --accent-4: #253522;
+    --accent-5: #161F14;
 
-    --background-color: #FBF7EE;
+    --neutral-1: #F8F8F7;
+    --neutral-2: #E5E4E1;
+    --neutral-3: #C2BFB7;
+    --neutral-4: #918C7E;
+    --neutral-5: #696559;
+    --neutral-6: #424038;
+    --neutral-7: #272521;
+
+    --danger-1: #F7EAE9;
+    --danger-2: #AA4941;
+    --danger-3: #6F302A;
+
+    --surface-page: #FBF7EE;
+    --surface-card: #FFFFFF;
+    --surface-parchment: #F5EFDD;
+
+    /* Semantic layer — what components actually reference. Light mode only
+       for now; dark mode redefines these same names under a media query. */
+    --color-bg: var(--surface-page);
+    --color-surface: var(--surface-card);
+    --color-surface-alt: var(--surface-parchment);
+    --color-surface-subtle: var(--neutral-1);
+    --color-on-dark: #FFFFFF;
+
+    --color-text: var(--neutral-7);
+    --color-text-secondary: var(--neutral-6);
+    --color-text-muted: var(--neutral-4);
+
+    --color-border: var(--neutral-2);
+    --color-border-strong: var(--neutral-3);
+
+    --color-accent: var(--accent-3);
+    --color-accent-strong: var(--accent-4);
+    --color-accent-hover: var(--accent-4);
+    --color-accent-soft: var(--accent-2);
+    --color-accent-soft-text: var(--accent-4);
+
+    --color-danger: var(--danger-2);
+    --color-danger-bg: var(--danger-1);
+    --color-danger-strong: var(--danger-3);
+
+    --color-invert-hover: rgba(255, 255, 255, 0.14);
+    --color-on-image: rgba(255, 255, 255, 0.85);
+    --color-on-image-muted: rgba(255, 255, 255, 0.7);
+    --color-on-accent: #FFFFFF;
+
+    /* Fixed dark base for photo-darkening scrims/gradients — deliberately does
+       NOT redefine under dark mode, unlike --color-accent-strong. Text sitting
+       on a hero photo needs a dark backdrop regardless of the site's own theme;
+       what's behind the text never becomes "the page," so it shouldn't follow
+       the page's light/dark toggle. */
+    --color-scrim-base: #181A14;
+    --color-scrim: color-mix(in srgb, var(--color-scrim-base) 40%, transparent);
 
     --font-serif: "Fraunces", Georgia, serif;
     --font-sans: "Karla", system-ui, sans-serif;
     --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+}
+
+/* Dark mode — redefines only the semantic layer, never the primitive scales.
+   Two selectors intentionally duplicate the same values: the media query covers
+   "System" (no explicit choice made, or explicitly chosen), the attribute covers
+   an explicit override from the theme picker on /profile. `:not([data-theme="light"])`
+   is what lets an explicit "dark" choice win even for a light-OS user, while an
+   explicit "light" choice overrides a dark-OS user via the second block below. */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --color-bg: var(--neutral-7);
+        --color-surface: var(--neutral-6);
+        --color-surface-alt: var(--neutral-6);
+        --color-surface-subtle: var(--neutral-6);
+
+        --color-text: var(--neutral-1);
+        --color-text-secondary: var(--neutral-2);
+        --color-text-muted: var(--neutral-4);
+
+        --color-border: var(--neutral-5);
+        --color-border-strong: var(--neutral-4);
+
+        --color-accent: var(--accent-2);
+        --color-accent-strong: var(--accent-1);
+        --color-accent-hover: var(--accent-1);
+        --color-accent-soft: var(--accent-5);
+        --color-accent-soft-text: var(--accent-2);
+        --color-on-accent: var(--accent-5);
+
+        --color-danger: #D28F89;
+        --color-danger-bg: #351F1D;
+    }
+}
+
+:root[data-theme="dark"] {
+    --color-bg: var(--neutral-7);
+    --color-surface: var(--neutral-6);
+    --color-surface-alt: var(--neutral-6);
+    --color-surface-subtle: var(--neutral-6);
+
+    --color-text: var(--neutral-1);
+    --color-text-secondary: var(--neutral-2);
+    --color-text-muted: var(--neutral-4);
+
+    --color-border: var(--neutral-5);
+    --color-border-strong: var(--neutral-4);
+
+    --color-accent: var(--accent-2);
+    --color-accent-strong: var(--accent-1);
+    --color-accent-hover: var(--accent-1);
+    --color-accent-soft: var(--accent-5);
+    --color-accent-soft-text: var(--accent-2);
+    --color-on-accent: var(--accent-5);
+
+    --color-danger: #D28F89;
+    --color-danger-bg: #351F1D;
 }
 
 * {
@@ -32,6 +140,7 @@
 
 body {
     font-family: var(--font-sans);
-    background-color: var(--background-color);
+    background-color: var(--color-bg);
+    color: var(--color-text);
     margin: 0;
 }

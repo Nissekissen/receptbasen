@@ -1,7 +1,7 @@
 .recipe-detail {
     padding: 7rem 2.5rem 4rem;
     min-height: 100vh;
-    background: var(--background-color);
+    background: var(--color-bg);
 }
 
 .recipe-detail--inner {
@@ -25,7 +25,7 @@
 }
 
 .recipe-detail--info-panel {
-    border: 1px solid var(--accent-color-light);
+    border: 1px solid var(--color-accent-soft);
     border-radius: 10px;
     padding: 1.6rem 1.85rem;
     display: flex;
@@ -37,7 +37,7 @@
     display: inline-block;
     font-family: var(--font-sans);
     font-size: 13px;
-    color: #8a8a86;
+    color: var(--color-text-muted);
     text-decoration: none;
     margin-bottom: 1.25rem;
 }
@@ -50,7 +50,7 @@
 }
 
 .recipe-detail--image-placeholder {
-    background: linear-gradient(135deg, var(--accent-color-light) 0%, var(--accent-color) 100%);
+    background: linear-gradient(135deg, var(--color-accent-soft) 0%, var(--color-accent) 100%);
 }
 
 .recipe-detail--hero-scrim {
@@ -60,7 +60,7 @@
     flex-direction: column;
     justify-content: flex-end;
     padding: 2rem 2.25rem;
-    background: linear-gradient(to top, rgba(35, 48, 33, 0.92) 0%, rgba(35, 48, 33, 0.25) 55%, transparent 85%);
+    background: linear-gradient(to top, color-mix(in srgb, var(--color-scrim-base) 92%, transparent) 0%, color-mix(in srgb, var(--color-scrim-base) 25%, transparent) 55%, transparent 85%);
 }
 
 .recipe-detail--title {
@@ -68,7 +68,7 @@
     font-weight: 500;
     font-size: clamp(2rem, 4vw + 0.5rem, 2.9rem);
     line-height: 1.1;
-    color: white;
+    color: var(--color-on-dark);
     text-wrap: balance;
     margin: 0 0 0.75rem;
 }
@@ -100,9 +100,9 @@
     font-family: var(--font-mono);
     font-size: 0.82rem;
     font-weight: 700;
-    color: var(--accent-color-dark);
+    color: var(--color-accent-strong);
     padding: 0.45rem 0.7rem;
-    background: var(--accent-color-light);
+    background: var(--color-accent-soft);
     border-radius: 5px;
 }
 
@@ -113,8 +113,8 @@
 }
 
 .recipe-detail--cook-count:hover {
-    background: var(--accent-color);
-    color: white;
+    background: var(--color-accent);
+    color: var(--color-on-accent);
 }
 
 /* button_to wraps the button in its own <form> — display: contents lets the
@@ -132,7 +132,7 @@
 .recipe-detail--rating-stars {
     display: flex;
     gap: 2px;
-    color: var(--accent-color-light);
+    color: var(--color-accent-soft);
     margin-bottom: 4px;
 }
 
@@ -145,7 +145,7 @@
     display: block;
     font-family: var(--font-sans);
     font-size: 13px;
-    color: rgba(255, 255, 255, 0.85);
+    color: var(--color-on-image);
 }
 
 .recipe-detail--rating-menu-stars {
@@ -165,15 +165,15 @@
     background: none;
     padding: 2px;
     cursor: pointer;
-    color: #ccc;
+    color: var(--color-border-strong);
 }
 
 .recipe-detail--rating-star.is-selected {
-    color: var(--accent-color);
+    color: var(--color-accent);
 }
 
 .recipe-detail--rating-star:hover {
-    color: var(--accent-color);
+    color: var(--color-accent);
 }
 
 .recipe-detail--source {
@@ -182,7 +182,7 @@
     font-size: 11px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.7);
+    color: var(--color-on-image-muted);
     text-decoration: none;
     margin-bottom: 0.75rem;
 }
@@ -197,8 +197,8 @@
 .recipe-detail--tag {
     font-family: var(--font-mono);
     font-size: 11px;
-    color: #5f6b56;
-    border: 1px solid var(--accent-color-light);
+    color: var(--color-accent-soft-text);
+    border: 1px solid var(--color-accent-soft);
     padding: 3px 8px;
     border-radius: 4px;
 }
@@ -206,7 +206,7 @@
 .recipe-detail--description {
     font-family: var(--font-sans);
     font-size: 1.1rem;
-    color: var(--ink);
+    color: var(--color-text);
     line-height: 1.6;
     margin: 0;
 }
@@ -223,9 +223,9 @@
     width: 100%;
     font-family: var(--font-sans);
     font-size: 14px;
-    color: var(--ink);
-    background: white;
-    border: 1px solid var(--accent-color-light);
+    color: var(--color-text);
+    background: var(--color-surface);
+    border: 1px solid var(--color-accent-soft);
     border-radius: 6px;
     padding: 10px 12px;
     resize: vertical;
@@ -242,10 +242,10 @@
 }
 
 .recipe-detail--ticket {
-    background: var(--parchment);
+    background: var(--color-surface-alt);
     min-width: 0;
     padding: 1.25rem;
-    border: 1px dashed var(--accent-half-transparent);
+    border: 1px dashed color-mix(in srgb, var(--color-accent) 50%, transparent);
     border-radius: 5px;
     display: flex;
     flex-direction: column;
@@ -254,7 +254,7 @@
 }
 
 .recipe-detail--ticket-divider {
-    border-top: 1px dashed var(--accent-half-transparent);
+    border-top: 1px dashed color-mix(in srgb, var(--color-accent) 50%, transparent);
 }
 
 .recipe-detail--heading {
@@ -263,6 +263,7 @@
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.1em;
+    color: var(--color-accent-strong);
     margin: 0;
     margin-top: 0.5rem;
 }
@@ -291,23 +292,23 @@
     font-family: var(--font-mono);
     font-size: 14px;
     line-height: 1;
-    color: var(--accent-color);
+    color: var(--color-accent);
     background: none;
-    border: 1px solid var(--accent-color);
+    border: 1px solid var(--color-accent);
     border-radius: 3px;
     cursor: pointer;
 }
 
 .recipe-scaling--button:hover {
-    background: var(--accent-color);
-    color: white;
+    background: var(--color-accent);
+    color: var(--color-on-accent);
 }
 
 .recipe-detail--servings-count {
     min-width: 1.2em;
     font-family: var(--font-mono);
     font-size: 12px;
-    color: var(--accent-color-dark);
+    color: var(--color-accent-strong);
     text-align: center;
 }
 
@@ -315,12 +316,12 @@
     font-family: var(--font-mono);
     font-size: 11px;
     letter-spacing: 0.02em;
-    color: var(--accent-color-dark);
+    color: var(--color-accent-strong);
     text-align: center;
 }
 
 .recipe-detail--shopping-list-link {
-    color: var(--accent-color);
+    color: var(--color-accent);
     text-decoration: underline;
 }
 
@@ -340,7 +341,7 @@
 .recipe-detail--ingredients-list li {
     font-family: var(--font-mono);
     font-size: 0.8rem;
-    color: var(--ink);
+    color: var(--color-text);
     display: flex;
     justify-content: space-between;
     gap: 0.75rem;
@@ -361,7 +362,7 @@
 
 .recipe-detail--ingredient-amount {
     font-family: var(--font-mono);
-    color: var(--accent-color);
+    color: var(--color-accent);
     flex-shrink: 0;
     white-space: nowrap;
     align-self: end;
@@ -374,7 +375,7 @@
 .recipe-detail--step {
     display: flex;
     gap: 14px;
-    border-bottom: 1px dashed var(--accent-half-transparent);
+    border-bottom: 1px dashed color-mix(in srgb, var(--color-accent) 50%, transparent);
     padding-bottom: 1rem;
 }
 
@@ -387,14 +388,14 @@
     font-family: var(--font-mono);
     font-weight: 700;
     font-size: 1.1rem;
-    color: var(--accent-color);
+    color: var(--color-accent);
     flex-shrink: 0;
 }
 
 .recipe-detail--step-text {
     font-family: var(--font-mono);
     font-size: 14px;
-    color: var(--ink);
+    color: var(--color-text);
     line-height: 1.6;
     padding-top: 2px;
 }

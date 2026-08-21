@@ -9,7 +9,7 @@
 .auth-flow--card {
     width: 100%;
     max-width: 420px;
-    background: white;
+    background: var(--color-surface);
     border-radius: 12px;
     padding: 1.75rem;
 }
@@ -18,14 +18,14 @@
     font-family: var(--font-serif);
     font-weight: 500;
     font-size: 1.3rem;
-    color: var(--accent-color-dark);
+    color: var(--color-accent-strong);
     margin: 0 0 0.35rem;
 }
 
 .auth-flow--subtitle {
     font-family: var(--font-sans);
     font-size: 13px;
-    color: #8a8a86;
+    color: var(--color-text-muted);
     margin: 0 0 1.5rem;
 }
 
@@ -36,16 +36,16 @@
     padding: 13px 15px;
     margin-bottom: 10px;
     border-radius: 3px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--color-border);
     outline: none;
-    color: var(--ink);
-    background: var(--background-color);
+    color: var(--color-text);
+    background: var(--color-bg);
     font-family: var(--font-sans);
     box-sizing: border-box;
 }
 
 .auth-flow--field:focus {
-    border-color: var(--accent-color);
+    border-color: var(--color-accent);
 }
 
 .auth-flow--actions {
@@ -62,19 +62,19 @@
     text-align: center;
     font-family: var(--font-sans);
     font-size: 13px;
-    color: #8a8a86;
+    color: var(--color-text-muted);
 }
 
 .auth-flow--footer a {
-    color: var(--accent-color-dark);
+    color: var(--color-accent-strong);
     font-weight: 500;
 }
 
 .auth-flow--error {
     font-family: var(--font-sans);
     font-size: 13px;
-    color: #a94442;
-    background: #fbe9e7;
+    color: var(--color-danger);
+    background: var(--color-danger-bg);
     border-radius: 8px;
     padding: 10px 12px;
     margin: 0 0 1.25rem;
@@ -83,8 +83,8 @@
 .auth-flow--notice {
     font-family: var(--font-sans);
     font-size: 13px;
-    color: var(--accent-color-dark);
-    background: var(--accent-color-light);
+    color: var(--color-accent-strong);
+    background: var(--color-accent-soft);
     border-radius: 8px;
     padding: 10px 12px;
     margin: 0 0 1.25rem;

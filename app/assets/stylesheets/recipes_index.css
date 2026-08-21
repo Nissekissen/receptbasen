@@ -1,7 +1,7 @@
 .recipes-index {
     padding: 7rem 2.5rem 4rem;
     min-height: 100vh;
-    background: var(--background-color);
+    background: var(--color-bg);
 }
 
 .recipes-index--inner {
@@ -13,7 +13,7 @@
     font-family: var(--font-serif);
     font-weight: 500;
     font-size: clamp(1.5rem, 3vw + 1rem, 2rem);
-    color: var(--accent-color-dark);
+    color: var(--color-accent-strong);
     margin: 0 0 1.5rem;
 }
 
@@ -28,13 +28,15 @@
     appearance: none;
     -webkit-appearance: none;
     padding: 8px 30px 8px 14px;
-    border: 1px solid var(--accent-color);
+    border: 1px solid var(--color-accent);
     border-radius: 20px;
-    background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='m6 9 6 6 6-6' stroke='%2333492F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 10px center / 12px;
+    /* The accent color inside this SVG data URI is a literal, unavoidable exception —
+       data URIs are static strings, custom properties can't be substituted inside one. */
+    background: var(--color-surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='m6 9 6 6 6-6' stroke='%2333492F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 10px center / 12px;
     font-family: var(--font-mono);
     font-size: 12px;
     letter-spacing: 0.02em;
-    color: var(--accent-color);
+    color: var(--color-accent);
     cursor: pointer;
 }
 
@@ -43,7 +45,7 @@
     margin-left: 0.4rem;
     font-family: var(--font-sans);
     font-size: 12.5px;
-    color: #8a8a86;
+    color: var(--color-text-muted);
     text-decoration: underline;
 }
 
@@ -61,8 +63,8 @@
     gap: 6px;
     font-family: var(--font-sans);
     font-size: 12.5px;
-    color: var(--accent-color-dark);
-    background: var(--accent-color-light);
+    color: var(--color-accent-strong);
+    background: var(--color-accent-soft);
     padding: 5px 10px;
     border-radius: 20px;
     text-decoration: none;
@@ -71,7 +73,7 @@
 .filter-bar--clear {
     font-family: var(--font-sans);
     font-size: 12.5px;
-    color: #8a8a86;
+    color: var(--color-text-muted);
     text-decoration: underline;
 }
 
@@ -90,7 +92,7 @@
 
 .recipes-index--card {
     display: block;
-    background: white;
+    background: var(--color-surface);
     border-radius: 12px;
     overflow: hidden;
     text-decoration: none;
@@ -105,18 +107,18 @@
 .recipes-index--attribution {
     font-family: var(--font-sans);
     font-size: 0.8rem;
-    color: #8a8a86;
+    color: var(--color-text-muted);
     margin: 0.5rem 0 0;
 }
 
 .recipes-index--attribution-link {
-    color: var(--accent-color);
+    color: var(--color-accent);
     text-decoration: underline;
 }
 
 .recipes-index--empty {
     font-family: var(--font-sans);
-    color: #8a8a86;
+    color: var(--color-text-muted);
 }
 
 @media (max-width: 480px) {

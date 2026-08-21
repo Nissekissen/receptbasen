@@ -7,8 +7,8 @@
     height: 56px;
     margin: 0 auto 1rem;
     border-radius: 50%;
-    background: var(--accent-color-light);
-    color: var(--accent-color-dark);
+    background: var(--color-accent-soft);
+    color: var(--color-accent-strong);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -23,24 +23,24 @@
     align-items: center;
     margin-top: 1.5rem;
     padding-top: 1.25rem;
-    border-top: 1px solid #ece7da;
+    border-top: 1px solid var(--color-border);
     font-family: var(--font-sans);
     font-size: 0.9rem;
 }
 
 .profile-card--label {
-    color: #8a8a86;
+    color: var(--color-text-muted);
 }
 
 .profile-card--value {
-    color: var(--accent-color-dark);
+    color: var(--color-accent-strong);
     font-weight: 500;
 }
 
 .profile-card--field {
     margin-top: 1.5rem;
     padding-top: 1.25rem;
-    border-top: 1px solid #ece7da;
+    border-top: 1px solid var(--color-border);
     text-align: left;
 }
 
@@ -50,7 +50,7 @@
     font-size: 10.5px;
     letter-spacing: 0.03em;
     text-transform: uppercase;
-    color: #8a8a86;
+    color: var(--color-text-muted);
     margin-bottom: 0.5rem;
 }
 
@@ -64,9 +64,9 @@
     min-width: 0;
     font-family: var(--font-sans);
     font-size: 0.9rem;
-    color: var(--accent-color-dark);
-    background: var(--background-color);
-    border: 1px solid var(--accent-color);
+    color: var(--color-accent-strong);
+    background: var(--color-bg);
+    border: 1px solid var(--color-accent);
     border-radius: 3px;
     padding: 8px 10px;
     outline: none;
@@ -75,21 +75,44 @@
 .profile-card--field-submit {
     font-family: var(--font-mono);
     font-size: 11px;
-    background: var(--accent-color);
-    color: white;
+    background: var(--color-accent);
+    color: var(--color-on-accent);
     border: none;
     border-radius: 3px;
     padding: 0 14px;
     cursor: pointer;
 }
 
+.theme-picker {
+    display: inline-flex;
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.theme-picker--option {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.02em;
+    color: var(--color-text-muted);
+    background: var(--color-surface);
+    border: none;
+    padding: 7px 14px;
+    cursor: pointer;
+}
+
+.theme-picker--option.is-active {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+}
+
 .profile-card--public-link {
     display: block;
     margin-top: 1.5rem;
     padding-top: 1.25rem;
-    border-top: 1px solid #ece7da;
+    border-top: 1px solid var(--color-border);
     font-family: var(--font-mono);
     font-size: 11.5px;
-    color: var(--accent-color);
+    color: var(--color-accent);
     text-decoration: none;
 }

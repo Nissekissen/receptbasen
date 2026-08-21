@@ -9,6 +9,18 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
+    <script>
+      // Applies a saved theme override before first paint, so there's no flash of
+      // the wrong theme. No stored preference (the common case) means "System" —
+      // nothing to do here, the CSS's prefers-color-scheme media query handles it.
+      (function () {
+        var theme = localStorage.getItem("theme");
+        if (theme === "light" || theme === "dark") {
+          document.documentElement.dataset.theme = theme;
+        }
+      })();
+    </script>
+
     <%= yield :head %>
 
     <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>

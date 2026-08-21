@@ -44,7 +44,7 @@
     gap: 0.5rem;
     font-size: 1.5rem;
     font-weight: bold;
-    color: white;
+    color: var(--color-on-dark);
     font-family: var(--font-serif);
     text-decoration: none;
     transition: color 0.2s ease;
@@ -55,7 +55,7 @@
 }
 
 .navbar--nav-link {
-    color: white;
+    color: var(--color-on-dark);
     font-family: var(--font-sans);
     font-size: 0.95rem;
     font-weight: 500;
@@ -71,22 +71,22 @@
 }
 
 .navbar--scrolled .logo {
-    color: var(--accent-color-dark);
+    color: var(--color-accent-strong);
 }
 
 .navbar--scrolled .navbar--nav-link {
-    color: var(--accent-color-dark);
+    color: var(--color-accent-strong);
 }
 
 .navbar--scrolled .btn--secondary.inverted {
     background: none;
-    color: var(--accent-color);
-    border: 1px solid var(--accent-color);
+    color: var(--color-accent);
+    border: 1px solid var(--color-accent);
 }
 
 .navbar--scrolled .btn--secondary.inverted:hover {
-    background-color: var(--accent-color);
-    color: white;
+    background-color: var(--color-accent);
+    color: var(--color-on-accent);
 }
 
 @media (max-width: 480px) {
@@ -116,7 +116,7 @@
     border: none;
     cursor: pointer;
     padding: 0;
-    color: white;
+    color: var(--color-on-dark);
     font-family: var(--font-sans);
     font-size: 0.95rem;
     font-weight: 500;
@@ -124,14 +124,14 @@
 }
 
 .navbar--scrolled .navbar--user-toggle {
-    color: var(--accent-color-dark);
+    color: var(--color-accent-strong);
 }
 
 .navbar--dropdown {
     position: absolute;
     top: calc(100% + 12px);
     right: 0;
-    background: white;
+    background: var(--color-surface);
     border-radius: 8px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
     min-width: 160px;
@@ -155,13 +155,13 @@
     cursor: pointer;
     font-family: var(--font-sans);
     font-size: 0.9rem;
-    color: var(--accent-color-dark);
+    color: var(--color-accent-strong);
     text-decoration: none;
     box-sizing: border-box;
 }
 
 .navbar--dropdown-item:hover {
-    background: var(--background-color);
+    background: var(--color-bg);
 }
 
 .navbar--menu-toggle {
@@ -174,19 +174,19 @@
     border: none;
     border-radius: 50%;
     background: none;
-    color: white;
+    color: var(--color-on-dark);
     cursor: pointer;
     transition: color 0.2s ease, background-color 0.2s ease;
 }
 
 .navbar--scrolled .navbar--menu-toggle {
-    color: var(--accent-color-dark);
+    color: var(--color-accent-strong);
 }
 
 .navbar--scrim {
     position: fixed;
     inset: 0;
-    background: rgba(24, 26, 20, 0.4);
+    background: var(--color-scrim);
     opacity: 0;
     transition: opacity 0.25s ease;
     z-index: 4;
@@ -203,7 +203,7 @@
     bottom: 0;
     width: 78%;
     max-width: 300px;
-    background: white;
+    background: var(--color-surface);
     z-index: 5;
     display: flex;
     flex-direction: column;
@@ -230,7 +230,7 @@
 .navbar--drawer-close {
     background: none;
     border: none;
-    color: var(--accent-color-dark);
+    color: var(--color-accent-strong);
     cursor: pointer;
     padding: 6px;
 }
@@ -246,14 +246,14 @@
     font-family: var(--font-sans);
     font-size: 1.05rem;
     font-weight: 600;
-    color: var(--accent-color-dark);
+    color: var(--color-accent-strong);
     text-decoration: none;
     padding: 12px 0;
 }
 
 .navbar--drawer-divider {
     height: 1px;
-    background: #ece7da;
+    background: var(--color-border);
     margin: 12px 0;
 }
 
@@ -268,7 +268,7 @@
     text-align: left;
     font-family: var(--font-sans);
     font-size: 0.92rem;
-    color: #6b6a5f;
+    color: var(--color-text-secondary);
     text-decoration: none;
     border: none;
     background: none;

@@ -14,6 +14,16 @@ class ProfilesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "shows the theme picker with all three options" do
+    sign_in_as(users(:one))
+
+    get profile_url
+
+    assert_select ".theme-picker--option", "Ljust"
+    assert_select ".theme-picker--option", "Mörkt"
+    assert_select ".theme-picker--option", "System"
+  end
+
   test "updates the current user's username" do
     sign_in_as(users(:one))
 

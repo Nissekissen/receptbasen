@@ -1,7 +1,7 @@
 .shopping-list {
     padding: 7rem 2.5rem 4rem;
     min-height: 100vh;
-    background: var(--background-color);
+    background: var(--color-bg);
 }
 
 .shopping-list--inner {
@@ -21,7 +21,7 @@
     font-family: var(--font-serif);
     font-weight: 500;
     font-size: clamp(1.5rem, 3vw + 1rem, 2rem);
-    color: var(--accent-color-dark);
+    color: var(--color-accent-strong);
     margin: 0;
 }
 
@@ -29,7 +29,7 @@
     font-family: var(--font-mono);
     font-size: 11px;
     letter-spacing: 0.02em;
-    color: #a94442;
+    color: var(--color-danger);
     background: none;
     border: none;
     padding: 0;
@@ -47,13 +47,13 @@
 }
 
 .shopping-list--alert {
-    color: #a94442;
-    background: #fbe9e7;
+    color: var(--color-danger);
+    background: var(--color-danger-bg);
 }
 
 .shopping-list--notice {
-    color: var(--accent-color-dark);
-    background: var(--accent-color-light);
+    color: var(--color-accent-strong);
+    background: var(--color-accent-soft);
 }
 
 .shopping-list--add-form {
@@ -67,9 +67,9 @@
     min-width: 0;
     font-family: var(--font-sans);
     font-size: 0.95rem;
-    color: var(--ink);
-    background: white;
-    border: 1px solid #ccc;
+    color: var(--color-text);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
     border-radius: 3px;
     padding: 11px 14px;
     outline: none;
@@ -77,15 +77,15 @@
 }
 
 .shopping-list--add-field:focus {
-    border-color: var(--accent-color);
+    border-color: var(--color-accent);
 }
 
 .shopping-list--add-submit {
     font-family: var(--font-mono);
     font-size: 11px;
     letter-spacing: 0.02em;
-    background: var(--accent-color);
-    color: white;
+    background: var(--color-accent);
+    color: var(--color-on-accent);
     border: none;
     border-radius: 3px;
     padding: 0 18px;
@@ -93,7 +93,7 @@
 }
 
 .shopping-list--card {
-    background: white;
+    background: var(--color-surface);
     border-radius: 12px;
     padding: 0.5rem 1.25rem;
 }
@@ -101,7 +101,7 @@
 .shopping-list--empty {
     font-family: var(--font-sans);
     font-size: 13px;
-    color: #8a8a86;
+    color: var(--color-text-muted);
     padding: 20px 0;
     margin: 0;
     text-align: center;
@@ -113,7 +113,7 @@
     justify-content: space-between;
     gap: 12px;
     padding: 14px 0;
-    border-bottom: 1px solid #ece7da;
+    border-bottom: 1px solid var(--color-border);
 }
 
 .shopping-list--row:last-child {
@@ -137,7 +137,7 @@
 .shopping-list--checkbox {
     width: 18px;
     height: 18px;
-    accent-color: var(--accent-color);
+    accent-color: var(--color-accent);
     flex-shrink: 0;
     cursor: pointer;
 }
@@ -145,20 +145,20 @@
 .shopping-list--content {
     font-family: var(--font-sans);
     font-size: 0.95rem;
-    color: var(--ink);
+    color: var(--color-text);
     min-width: 0;
     overflow-wrap: break-word;
 }
 
 .shopping-list--amount {
     font-family: var(--font-mono);
-    color: var(--accent-color);
+    color: var(--color-accent);
     margin-right: 6px;
 }
 
 .shopping-list--row.is-checked .shopping-list--content {
     text-decoration: line-through;
-    color: #8a8a86;
+    color: var(--color-text-muted);
 }
 
 .shopping-list--row-meta {
@@ -173,14 +173,14 @@
     font-family: var(--font-mono);
     font-size: 10.5px;
     letter-spacing: 0.02em;
-    color: #8a8a86;
+    color: var(--color-text-muted);
     text-decoration: none;
     min-width: 0;
     overflow-wrap: break-word;
 }
 
 .shopping-list--source-link:hover {
-    color: var(--accent-color);
+    color: var(--color-accent);
 }
 
 .shopping-list--remove-form {
@@ -193,7 +193,7 @@
     font-family: var(--font-mono);
     font-size: 11px;
     letter-spacing: 0.02em;
-    color: #a94442;
+    color: var(--color-danger);
     background: none;
     border: none;
     padding: 0;

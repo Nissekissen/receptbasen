@@ -28,6 +28,15 @@
       <% end %>
     </div>
 
+    <div class="profile-card--field" data-controller="theme-picker">
+      <span class="profile-card--field-label">Utseende</span>
+      <div class="theme-picker">
+        <button type="button" class="theme-picker--option" data-theme-picker-target="option" data-value="light" data-action="click->theme-picker#choose">Ljust</button>
+        <button type="button" class="theme-picker--option" data-theme-picker-target="option" data-value="dark" data-action="click->theme-picker#choose">Mörkt</button>
+        <button type="button" class="theme-picker--option" data-theme-picker-target="option" data-value="system" data-action="click->theme-picker#choose">System</button>
+      </div>
+    </div>
+
     <%= link_to "Visa min publika profil", public_profile_path(@user.username), class: "profile-card--public-link" %>
   </div>
 </section>

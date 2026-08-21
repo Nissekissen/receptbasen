@@ -1,5 +1,5 @@
 .cook-mode-body {
-    background: var(--background-color);
+    background: var(--color-bg);
 }
 
 /* Fixed to the viewport rather than min-height so the page itself never
@@ -36,13 +36,13 @@
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    background: white;
-    color: var(--accent-color-dark);
+    background: var(--color-surface);
+    color: var(--color-accent-strong);
     text-decoration: none;
 }
 
 .cook-mode--exit:hover {
-    background: var(--accent-color-light);
+    background: var(--color-accent-soft);
 }
 
 .cook-mode--title {
@@ -51,7 +51,7 @@
     font-family: var(--font-sans);
     font-weight: 500;
     font-size: 14px;
-    color: var(--accent-color-dark);
+    color: var(--color-accent-strong);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -63,11 +63,11 @@
     justify-content: center;
     width: 36px;
     height: 36px;
-    color: #c9c5b8;
+    color: var(--color-border-strong);
 }
 
 .cook-mode--wakelock.is-active {
-    color: var(--accent-color);
+    color: var(--color-accent);
 }
 
 .cook-mode--wakelock.is-unsupported {
@@ -82,7 +82,7 @@
 .cook-mode--progress-track {
     height: 6px;
     border-radius: 3px;
-    background: var(--accent-color-light);
+    background: var(--color-accent-soft);
     overflow: hidden;
     margin-bottom: 8px;
 }
@@ -90,7 +90,7 @@
 .cook-mode--progress-fill {
     height: 100%;
     border-radius: 3px;
-    background: var(--accent-color);
+    background: var(--color-accent);
     transition: width 0.25s ease-in-out;
 }
 
@@ -100,7 +100,7 @@
     font-size: 11px;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: #8a8a86;
+    color: var(--color-text-muted);
 }
 
 /* min-height: 0 lets this flex item shrink below its content's natural size
@@ -131,13 +131,13 @@
     font-weight: 500;
     font-size: clamp(1.3rem, 4vw + 1rem, 1.9rem);
     line-height: 1.45;
-    color: var(--ink);
+    color: var(--color-text);
     margin: 0 0 1.25rem;
 }
 
 .cook-mode--step-number {
     font-family: var(--font-mono);
-    color: var(--accent-color);
+    color: var(--color-accent);
 }
 
 .cook-mode--timer-chip {
@@ -146,8 +146,8 @@
     gap: 6px;
     font-family: var(--font-mono);
     font-size: 13px;
-    color: var(--accent-color-dark);
-    background: var(--accent-color-light);
+    color: var(--color-accent-strong);
+    background: var(--color-accent-soft);
     border: none;
     border-radius: 6px;
     padding: 6px 12px;
@@ -155,13 +155,13 @@
 }
 
 .cook-mode--timer-chip.is-running {
-    background: var(--accent-color);
-    color: white;
+    background: var(--color-accent);
+    color: var(--color-on-accent);
 }
 
 .cook-mode--timer-chip.is-done {
-    background: var(--accent-color-dark);
-    color: white;
+    background: var(--color-accent-hover);
+    color: var(--color-on-accent);
 }
 
 .cook-mode--preview summary {
@@ -169,7 +169,7 @@
     cursor: pointer;
     font-family: var(--font-sans);
     font-size: 1rem;
-    color: #8a8a86;
+    color: var(--color-text-muted);
 }
 
 .cook-mode--preview summary::-webkit-details-marker {
@@ -183,7 +183,7 @@
     gap: 4px;
     font-family: var(--font-sans);
     font-size: 1rem;
-    color: #8a8a86;
+    color: var(--color-text-muted);
 }
 
 .cook-mode--preview-list p {
@@ -192,7 +192,7 @@
 
 .cook-mode--ingredients {
     position: relative;
-    background: white;
+    background: var(--color-surface);
     border-radius: 10px;
     padding: 0.9rem 1.1rem;
     margin-bottom: 1.5rem;
@@ -211,7 +211,7 @@
     font-family: var(--font-serif);
     font-weight: 500;
     font-size: 1rem;
-    color: var(--accent-color-dark);
+    color: var(--color-accent-strong);
 }
 
 .cook-mode--ingredients-chevron {
@@ -239,7 +239,7 @@
     right: 0;
     bottom: 100%;
     margin-bottom: 8px;
-    background: white;
+    background: var(--color-surface);
     border-radius: 10px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
     max-height: 0;
@@ -264,12 +264,12 @@
 .cook-mode--ingredients-list li {
     font-family: var(--font-sans);
     font-size: 14px;
-    color: var(--ink);
+    color: var(--color-text);
 }
 
 .cook-mode--ingredient-amount {
     font-family: var(--font-mono);
-    color: var(--accent-color);
+    color: var(--color-accent);
     margin-right: 6px;
 }
 
@@ -279,7 +279,7 @@
     position: sticky;
     bottom: 0;
     padding-top: 0.5rem;
-    background: var(--background-color);
+    background: var(--color-bg);
     flex-shrink: 0;
 }
 
